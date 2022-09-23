@@ -1,12 +1,11 @@
-import {Copyright} from "@mui/icons-material";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import {
   Badge,
   Box,
+  Collapse,
   Container,
   createTheme,
   CssBaseline,
@@ -17,17 +16,16 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
-  Paper,
   styled,
   Toolbar,
   Typography
 } from "@mui/material";
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
-import {mainListItems, secondaryListItems} from "../Sidebar/listItems";
-import Chart from "../Chart/Chart";
 import React, {useState} from 'react'
+import ChartPerYear from '../Chart/ChartPerYear'
+import CreateDocument from "../CreateDocument/CreateDocument";
+import {mainListItems, secondaryListItems} from "../Sidebar/listItems";
 
 
 const mdTheme = createTheme();
@@ -86,6 +84,14 @@ const App = () => {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const [openC, setOpenC] = React.useState(true);
+
+  const handleClick = () => {
+    setOpenC(!openC);
+  };
+
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -117,12 +123,15 @@ const App = () => {
           >
             Dashboard
           </Typography>
+
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <ExpandCircleDownIcon />
             </Badge>
           </IconButton>
+
         </Toolbar>
+
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <Toolbar
@@ -142,8 +151,31 @@ const App = () => {
           {mainListItems}
           <Divider sx={{ my: 1 }} />
           {secondaryListItems}
+
+          <ListItemButton onClick={handleClick}>
+            <ListItemIcon>
+              <Badge />
+            </ListItemIcon>
+            <ListItemText primary="Inbox" />
+            {openC ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={openC} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <StarBorder />
+                </ListItemIcon>
+                <ListItemText primary="Starred" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+
+
         </List>
+
       </Drawer>
+
+
       <Box
         component="main"
         sx={{
@@ -157,42 +189,14 @@ const App = () => {
         }}
       >
         <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper
-                sx={{
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: 240,
-                }}
-              >
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper
-                sx={{
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: 240,
-                }}
-              >
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                <Chart />
-              </Paper>
-            </Grid>
+        <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
+          <Grid container>
+
+            <ChartPerYear/>
+
+            <CreateDocument/>
+
           </Grid>
-          <Copyright sx={{ pt: 4 }} />
         </Container>
       </Box>
     </Box>
