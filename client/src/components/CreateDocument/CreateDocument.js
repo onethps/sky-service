@@ -29,6 +29,7 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
 import React, {useState} from 'react';
+import FreeSoloCreateOption from "../../content/AutoCompleteWithSuggestions";
 
 const CreateDocument = () => {
 
@@ -38,6 +39,22 @@ const CreateDocument = () => {
   const [valueTime, setValueTime] = useState(dayjs());
   const [incomeProduct, setIncomeProduct] = useState('Приход товара')
   const [supplier, setSupplier] = useState('Нет')
+  const [age, setAge] = useState('');
+
+
+  const [srows, setSRows] = useState([
+    {
+      name:'',
+      count:'',
+      scale:'',
+      price:'',
+      fullPrice:'',
+      retailPrice:''
+    }
+  ])
+
+  console.log(srows)
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -56,63 +73,28 @@ const CreateDocument = () => {
   };
 
 
-  const [age, setAge] = useState('');
+
 
   const handleChange = (event) => {
     setAge(event.target.value);
   };
 
 
-  const createData = (name, count, scale, price, fullPrice, retailPrice) => {
-    return { name, count, scale, price, fullPrice, retailPrice };
-  }
-
-  const rows = [
-    {
-      name:'',
-      count:'',
-      scale:'',
-      price:'',
-      fullPrice:'',
-      retailPrice:''
-    },
-    {
-      name:'',
-      count:'',
-      scale:'',
-      price:'',
-      fullPrice:'',
-      retailPrice:''
-    },
-  ];
-
-  const [srows, setSRows] = useState([
-    {
-      name:'',
-      count:'',
-      scale:'',
-      price:'',
-      fullPrice:'',
-      retailPrice:''
-    }
-  ])
 
   const handleInputs = (index, event) => {
     const value = [...srows];
     value[index][event.target.name] = event.target.value
     setSRows(value)
-    console.log(srows)
-    console.log(event.target.name)
   }
 
   const handleAddInputs = () => {
     setSRows([...srows, {
-        name:'',
-        count:'',
-        scale:'',
-        price:'',
-        fullPrice:'',
-        retailPrice:''
+      name:'',
+      count:'',
+      scale:'',
+      price:'',
+      fullPrice:'',
+      retailPrice:''
     }])
   }
 
@@ -120,11 +102,7 @@ const CreateDocument = () => {
     const values = [...srows]
     values.splice(index, 1)
     setSRows(values)
-
-
-
   }
-
 
   return (
     <>
@@ -145,8 +123,7 @@ const CreateDocument = () => {
         >
           <DialogTitle sx={{m:0, p:0}}>Дата</DialogTitle>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box sx={{display:'flex',   m: 'auto', gap:'50px',
-              width: 'fit-content',p:'10px'}}>
+            <Box sx={{display:'flex', gap:'50px',p:'10px'}}>
               <DesktopDatePicker
                 sx={{pt:10}}
                 label="Date desktop"
@@ -192,8 +169,8 @@ const CreateDocument = () => {
                 defaultValue="Нет"
                 name="radio-buttons-group"
               >
-                <FormControlLabel value="female" control={<Radio />} label="Да" />
-                <FormControlLabel value="male" control={<Radio />} label="Нет" />
+                <FormControlLabel value="yes" control={<Radio />} label="Да" />
+                <FormControlLabel value="no" control={<Radio />} label="Нет" />
               </RadioGroup>
             </FormControl>
           </Box>
@@ -222,11 +199,15 @@ const CreateDocument = () => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 }, }}
                 >
                   <TableCell>
-                    <TextField size="small" value={row.name}  name='name' onChange={(e) => handleInputs(index, e)}/>
+                    <FreeSoloCreateOption
+                      value={row.name} index={index} name={'name'}
+                      handle={handleInputs}
+                    />
                   </TableCell>
 
                   <TableCell>
-                    <TextField size="small" value={row.count}  name='count' onChange={(e) => handleInputs(index, e)}/>
+                    <TextField
+                      size="small" value={row.count}  name='count' onChange={(e) => handleInputs(index, e)}/>
                   </TableCell>
                   <TableCell>
                     <TextField
@@ -250,13 +231,16 @@ const CreateDocument = () => {
 
                   </TableCell>
                   <TableCell>
-                    <TextField   onChange={(e) => handleInputs(index, e)} size="small" sx={{ width: '10ch' }} value={row.price} name={'price'}/>
+                    <TextField
+                      onChange={(e) => handleInputs(index, e)} size="small" sx={{ width: '10ch' }} value={row.price} name={'price'}/>
                   </TableCell>
                   <TableCell>
-                    <TextField   onChange={(e) => handleInputs(index, e)} size="small" sx={{ width: '10ch' }} value={row.fullPrice} name={'fullPrice'}/>
+                    <TextField
+                      onChange={(e) => handleInputs(index, e)} size="small" sx={{ width: '10ch' }} value={row.fullPrice} name={'fullPrice'}/>
                   </TableCell>
                   <TableCell>
-                    <TextField   onChange={(e) => handleInputs(index, e)} size="small" sx={{ width: '10ch' }} value={row.retailPrice} name={'retailPrice'}/>
+                    <TextField
+                      onChange={(e) => handleInputs(index, e)} size="small" sx={{ width: '10ch' }} value={row.retailPrice} name={'retailPrice'}/>
                   </TableCell>
                   <TableCell>
                     <IconButton color="primary" aria-label="upload picture" component="label">
@@ -270,9 +254,9 @@ const CreateDocument = () => {
             </TableBody>
           </Table>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+        <DialogActions sx={{display:'flex', width:'100%'}}>
+          <Button onClick={handleClose} sx={{display:'flex', flexGrow:1}}  variant="contained" color="error">Очистить</Button>
+          <Button onClick={handleClose} sx={{display:'flex', flexGrow:1}} variant="contained" color="success">Выполнить</Button>
         </DialogActions>
       </Dialog>
 

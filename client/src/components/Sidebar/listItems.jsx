@@ -1,7 +1,10 @@
+import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import {ListItemButton, ListItemIcon, ListItemText, ListSubheader} from "@mui/material";
-import React from 'react'
+import {Badge, Collapse, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader} from "@mui/material";
+import React, {useState} from 'react'
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import LabelIcon from '@mui/icons-material/Label';
 
 export const secondaryListItems = (
   <>
@@ -29,37 +32,56 @@ export const secondaryListItems = (
   </>
 );
 
-export const mainListItems = (
-  <>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AddShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AddShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AddShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AddShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItemButton>
-  </>
-);
+export const MainListItems = () => {
+
+  const [openC, setOpenC] = useState(true);
+
+  const handleClick = () => {
+    setOpenC(!openC);
+  };
+
+
+  return (
+    <>
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Главная" />
+      </ListItemButton>
+      <ListItemButton onClick={handleClick}>
+        <ListItemIcon>
+          <Inventory2Icon />
+        </ListItemIcon>
+        <ListItemText primary="Товары" />
+        {openC ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={openC} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <LabelIcon />
+            </ListItemIcon>
+            <ListItemText primary="Все товары" />
+          </ListItemButton>
+        </List>
+      </Collapse>
+
+      <ListItemButton>
+        <ListItemIcon>
+          <AddShoppingCartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Статистика" />
+      </ListItemButton>
+      <ListItemButton>
+        <ListItemIcon>
+          <AddShoppingCartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Финансы" />
+      </ListItemButton>
+    </>
+
+  )
+
+
+}
