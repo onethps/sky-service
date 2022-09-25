@@ -34,7 +34,7 @@ import FreeSoloCreateOption from "../../content/AutoCompleteWithSuggestions";
 const CreateDocument = () => {
 
 
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [valueDate, setValueDate] = useState(dayjs());
   const [valueTime, setValueTime] = useState(dayjs());
   const [incomeProduct, setIncomeProduct] = useState('Приход товара')

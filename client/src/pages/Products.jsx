@@ -18,6 +18,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import {visuallyHidden} from '@mui/utils';
+import EditProductModal from "../components/EditProductModal/EditProductModal";
 import PropTypes from 'prop-types';
 import * as React from "react";
 import {useState} from "react";
@@ -93,6 +94,7 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Категория',
+    editable:false
   },
   {
     id: 'prime_cost',
@@ -296,8 +298,13 @@ export default function EnhancedTable() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+
+  const [openModal, setOpenModal] = useState(false)
+
+
   return (
     <Layout>
+      <EditProductModal open={openModal} setOpen={setOpenModal}/>
       <Box sx={{ width: '100%' }}>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
@@ -325,7 +332,6 @@ export default function EnhancedTable() {
                     return (
                       <TableRow
                         hover
-                        ///put here onClick on ROW
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -347,10 +353,11 @@ export default function EnhancedTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
+                          onClick={() => setOpenModal(true)}
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="left">{row.type}</TableCell>
+                        <TableCell align="left"  onClick={() => setOpenModal(true)}>{row.type}</TableCell>
                         <TableCell align={'left'}>
                           <FormControl  size="small">
                             <Select
@@ -367,9 +374,9 @@ export default function EnhancedTable() {
                           </FormControl>
 
                         </TableCell>
-                        <TableCell align="right">{row.prime_cost} ₴</TableCell>
-                        <TableCell align="right">{row.price} ₴</TableCell>
-                        <TableCell align="right">{row.margin_price} ₴</TableCell>
+                        <TableCell align="right"  onClick={() => setOpenModal(true)}>{row.prime_cost} ₴</TableCell>
+                        <TableCell align="right"  onClick={() => setOpenModal(true)}>{row.price} ₴</TableCell>
+                        <TableCell align="right"  onClick={() => setOpenModal(true)}>{row.margin_price} ₴</TableCell>
                         <TableCell align="left">
                           <FormControl size="small">
                             <Select

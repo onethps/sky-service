@@ -6,7 +6,7 @@ import React, {useState} from 'react';
 const Layout = (props) => {
 
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);

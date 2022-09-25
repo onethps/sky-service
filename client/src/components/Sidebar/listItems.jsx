@@ -5,6 +5,8 @@ import {Badge, Collapse, List, ListItemButton, ListItemIcon, ListItemText, ListS
 import React, {useState} from 'react'
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import LabelIcon from '@mui/icons-material/Label';
+import { useNavigate } from "react-router-dom";
+
 
 export const secondaryListItems = (
   <>
@@ -33,19 +35,23 @@ export const secondaryListItems = (
 );
 
 export const MainListItems = () => {
-
-  const [openC, setOpenC] = useState(true);
+  const navigate = useNavigate();
+  const [openCollapseMenu, setOpenCollapseMenu] = useState(false);
 
   const handleClick = () => {
-    setOpenC(!openC);
+    setOpenCollapseMenu(!openCollapseMenu);
   };
 
 
+  const handleRouteClick = (link) => {
+    navigate(link)
+  }
+
   return (
     <>
-      <ListItemButton>
+      <ListItemButton onClick={() => handleRouteClick('/')}>
         <ListItemIcon>
-          <DashboardIcon />
+          <DashboardIcon  />
         </ListItemIcon>
         <ListItemText primary="Главная" />
       </ListItemButton>
@@ -54,13 +60,13 @@ export const MainListItems = () => {
           <Inventory2Icon />
         </ListItemIcon>
         <ListItemText primary="Товары" />
-        {openC ? <ExpandLess /> : <ExpandMore />}
+        {openCollapseMenu ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={openC} timeout="auto" unmountOnExit>
+      <Collapse in={openCollapseMenu} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton sx={{ pl: 4 }} onClick={() => handleRouteClick('/products/all')}>
             <ListItemIcon>
-              <LabelIcon />
+              <LabelIcon  />
             </ListItemIcon>
             <ListItemText primary="Все товары" />
           </ListItemButton>
