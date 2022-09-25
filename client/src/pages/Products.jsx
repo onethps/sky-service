@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {FormControl, MenuItem, Select} from "@mui/material";
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
@@ -38,9 +38,9 @@ function createData(name, type, category, prime_cost, price,  margin_price, in_s
 const rows = [
   createData('Cupcake', 'Поштучно', 10, 67, 4.3, 1.2, true),
   createData('Donut', 'Teх.карта', 20, 51, 4.9, 1.2, false),
-   createData('Ha', 'Поштучно', 10, 67, 4.3, 1.2, false),
+  createData('Ha', 'Поштучно', 10, 67, 4.3, 1.2, false),
   createData('WE', 'Teх.карта', 10, 51, 4.9, 1.2, true),
-   createData('V', 'Поштучно', 20, 67, 4.3, 1.2, true),
+  createData('V', 'Поштучно', 20, 67, 4.3, 1.2, true),
   createData('S', 'Teх.карта', 20, 51, 4.9, 1.2, false),
 
 ];
@@ -325,7 +325,7 @@ export default function EnhancedTable() {
                     return (
                       <TableRow
                         hover
-///put here onClick on ROW
+                        ///put here onClick on ROW
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -352,21 +352,21 @@ export default function EnhancedTable() {
                         </TableCell>
                         <TableCell align="left">{row.type}</TableCell>
                         <TableCell align={'left'}>
-                            <FormControl  size="small">
-                              <Select
-                                autoWidth
-                                id="demo-simple-select"
-                                value={row.category}
-                                // label="Age"
-                                onChange={handleChange}
-                              >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                              </Select>
-                            </FormControl>
+                          <FormControl  size="small">
+                            <Select
+                              autoWidth
+                              id="demo-simple-select"
+                              value={row.category}
+                              // label="Age"
+                              onChange={handleChange}
+                            >
+                              <MenuItem value={10}>Ten</MenuItem>
+                              <MenuItem value={20}>Twenty</MenuItem>
+                              <MenuItem value={30}>Thirty</MenuItem>
+                            </Select>
+                          </FormControl>
 
-                         </TableCell>
+                        </TableCell>
                         <TableCell align="right">{row.prime_cost} ₴</TableCell>
                         <TableCell align="right">{row.price} ₴</TableCell>
                         <TableCell align="right">{row.margin_price} ₴</TableCell>
