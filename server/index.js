@@ -14,8 +14,7 @@ app.use(cors());
 app.use("/dashboard/products", productRoutes);
 app.use("/dashboard/reports", reportRoutes);
 
-const CONNECTION_URL =
-  "mongodb+srv://onethps:wwwwww@cluster0.kbfdi.mongodb.net/skyservice?retryWrites=true&w=majority";
+const CONNECTION_URL = process.env.MONGO_DB;
 
 const PORT = process.env.PORT || 5500;
 
@@ -25,7 +24,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log("SErver running on port 5500"));
+    app.listen(PORT, () => console.log("Server running on port 5500"));
   })
   .catch((err) => {
     console.log(err);
