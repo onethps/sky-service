@@ -1,13 +1,15 @@
 import express from "express";
 
-import { getDataDashboard } from "../controllers/dashboard.js";
+import {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+} from "../controllers/product.js";
 
 const router = express.Router();
 
-router.get("/all", getDataDashboard);
-router.get("/sklad", getDataDashboard);
-router.get("/routings", getDataDashboard);
-router.get("/sales", getDataDashboard);
-router.get("/remains", getDataDashboard);
+router.get("/", getAllProducts);
+router.post("/", createProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;

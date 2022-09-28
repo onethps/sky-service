@@ -15,7 +15,8 @@ app.use("/dashboard/products", productRoutes);
 app.use("/dashboard/reports", reportRoutes);
 
 const CONNECTION_URL =
-  "mongodb+srv://onethps:wwwwww@cluster0.kbfdi.mongodb.net/?retryWrites=true&w=majority";
+  "mongodb+srv://onethps:wwwwww@cluster0.kbfdi.mongodb.net/skyservice?retryWrites=true&w=majority";
+
 const PORT = process.env.PORT || 5500;
 
 mongoose

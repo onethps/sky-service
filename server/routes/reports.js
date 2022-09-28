@@ -1,13 +1,10 @@
 import express from "express";
 
-import { getDataDashboard } from "../controllers/dashboard.js";
+import { createProduct } from "../controllers/product.js";
 
 const router = express.Router();
 
-router.get("/main", getDataDashboard);
-router.get("/motion/sales", getDataDashboard);
-router.get("/motion/sale", getDataDashboard);
-router.get("/motion/commings", getDataDashboard);
-router.get("/open-shifts", getDataDashboard);
+router.get("/main", createProduct);
+router.get("/motion/sales", createProduct);
 
 export default router;
