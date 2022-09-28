@@ -1,4 +1,4 @@
-import { Table as MuiTable, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Table as MuiTable, TableCell, TableHead, TableRow } from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { IconButton, TableBody } from '@mui/material';
 import React, { useState } from 'react';

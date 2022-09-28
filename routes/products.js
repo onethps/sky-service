@@ -12,4 +12,4 @@ router.get("/", getAllProducts);
 router.post("/", createProduct);
 router.delete("/:id", deleteProduct);
 
-export default router;
+export default router

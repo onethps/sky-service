@@ -4,12 +4,14 @@ import mongoose from "mongoose";
 import cors from "cors";
 import productRoutes from "./routes/products.js";
 import reportRoutes from "./routes/reports.js";
+import dotenv from 'dotenv'
 
 const app = express();
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
+dotenv.config()
 
 app.use("/dashboard/products", productRoutes);
 app.use("/dashboard/reports", reportRoutes);
