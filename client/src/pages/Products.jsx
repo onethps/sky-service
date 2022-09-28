@@ -1,11 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {FormControl, MenuItem, Select} from "@mui/material";
+import { FormControl, MenuItem, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
-import {alpha} from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,33 +17,34 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import {visuallyHidden} from '@mui/utils';
-import EditProductModal from "../components/EditProductModal/EditProductModal";
+import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
-import * as React from "react";
-import {useState} from "react";
-import Layout from "../components/Layout/Layout";
+import * as React from 'react';
+import { useState } from 'react';
+import EditProductModal from '../components/EditProductModal/EditProductModal';
+import Layout from '../components/Layout/Layout';
 
-function createData(name, type, category, prime_cost, price,  margin_price, in_sale) {
+function createData(name, type, category, prime_cost, price, margin_price, in_sale) {
   return {
     name,
     type,
-    category,
     prime_cost,
     price,
     margin_price,
-    in_sale
+    in_sale,
+    category,
   };
 }
 
-const rows = [
-  createData('Cupcake', 'Поштучно', 10, 67, 4.3, 1.2, true),
-  createData('Donut', 'Teх.карта', 20, 51, 4.9, 1.2, false),
-  createData('Ha', 'Поштучно', 10, 67, 4.3, 1.2, false),
-  createData('WE', 'Teх.карта', 10, 51, 4.9, 1.2, true),
-  createData('V', 'Поштучно', 20, 67, 4.3, 1.2, true),
-  createData('S', 'Teх.карта', 20, 51, 4.9, 1.2, false),
+const arrayOfCategories = ['Роллы', 'Напитки', 'Лапша'];
 
+const rows = [
+  createData('Cupcake', 'Поштучно', 'Роллы', 67, 4.3, 1.2, true),
+  createData('Donut', 'Teх.карта', 'Напитки', 51, 4.9, 1.2, false),
+  createData('Ha', 'Поштучно', 'Напитки', 67, 4.3, 1.2, false),
+  createData('WE', 'Teх.карта', 'Роллы', 51, 4.9, 1.2, true),
+  createData('V', 'Поштучно', 'Роллы', 67, 4.3, 1.2, true),
+  createData('S', 'Teх.карта', 'Роллы', 51, 4.9, 1.2, false),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -94,7 +95,7 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Категория',
-    editable:false
+    editable: false,
   },
   {
     id: 'prime_cost',
@@ -291,29 +292,21 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-
-  const [openModal, setOpenModal] = useState(false)
-
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <Layout>
-      <EditProductModal open={openModal} setOpen={setOpenModal}/>
+      <EditProductModal open={openModal} setOpen={setOpenModal} />
       <Box sx={{ width: '100%' }}>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
-            <Table
-              sx={{ minWidth: 750 }}
-              aria-labelledby="tableTitle"
-              size={'medium'}
-            >
+            <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
               <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
@@ -337,7 +330,7 @@ export default function EnhancedTable() {
                         tabIndex={-1}
                         key={row.name}
                         selected={isItemSelected}
-                        sx={{cursor:'pointer'}}
+                        sx={{ cursor: 'pointer' }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -358,26 +351,32 @@ export default function EnhancedTable() {
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="left"  onClick={() => setOpenModal(true)}>{row.type}</TableCell>
+                        <TableCell align="left" onClick={() => setOpenModal(true)}>
+                          {row.type}
+                        </TableCell>
                         <TableCell align={'left'}>
-                          <FormControl  size="small">
+                          <FormControl size="small">
                             <Select
                               autoWidth
                               id="demo-simple-select"
                               value={row.category}
-                              // label="Age"
                               onChange={handleChange}
                             >
-                              <MenuItem value={10}>Ten</MenuItem>
-                              <MenuItem value={20}>Twenty</MenuItem>
-                              <MenuItem value={30}>Thirty</MenuItem>
+                              {arrayOfCategories.map((el) => (
+                                <MenuItem value={el}>{el}</MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
-
                         </TableCell>
-                        <TableCell align="right"  onClick={() => setOpenModal(true)}>{row.prime_cost} ₴</TableCell>
-                        <TableCell align="right"  onClick={() => setOpenModal(true)}>{row.price} ₴</TableCell>
-                        <TableCell align="right"  onClick={() => setOpenModal(true)}>{row.margin_price} ₴</TableCell>
+                        <TableCell align="right" onClick={() => setOpenModal(true)}>
+                          {row.prime_cost} ₴
+                        </TableCell>
+                        <TableCell align="right" onClick={() => setOpenModal(true)}>
+                          {row.price} ₴
+                        </TableCell>
+                        <TableCell align="right" onClick={() => setOpenModal(true)}>
+                          {row.margin_price} ₴
+                        </TableCell>
                         <TableCell align="left">
                           <FormControl size="small">
                             <Select
@@ -390,14 +389,15 @@ export default function EnhancedTable() {
                               <MenuItem value={true}>Да</MenuItem>
                               <MenuItem value={false}>Нет</MenuItem>
                             </Select>
-                          </FormControl></TableCell>
+                          </FormControl>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
-                      height: (53) * emptyRows,
+                      height: 53 * emptyRows,
                     }}
                   >
                     <TableCell colSpan={6} />
@@ -416,7 +416,6 @@ export default function EnhancedTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-
       </Box>
     </Layout>
   );

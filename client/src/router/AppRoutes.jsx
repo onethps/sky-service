@@ -1,8 +1,7 @@
-
-import Dashboard from "../pages/Dashboard";
+import Products from '../pages/Products';
+import Dashboard from '../pages/Dashboard/Dashboard';
 import React from 'react';
-import {Route, Routes} from 'react-router-dom'
-import Products from "../pages/Products";
+import { Route, Routes } from 'react-router-dom';
 
 const AppRoutes = () => {
   return (
