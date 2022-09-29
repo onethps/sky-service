@@ -79,7 +79,7 @@ const IncomeProductModal = (props) => {
   };
 
   return (
-    <Controls.Modal open={open} setOpen={setOpen} modalTitle={'Новый приход'}>
+    <Controls.BasicModal open={open} setOpen={setOpen} modalTitle={'Новый приход'}>
       <Grid container>
         <Grid item xs={6} md={12}>
           <Form onSubmit={handleSubmit}>
@@ -145,7 +145,7 @@ const IncomeProductModal = (props) => {
           </Form>
         </Grid>
       </Grid>
-    </Controls.Modal>
+    </Controls.BasicModal>
   );
 };
 

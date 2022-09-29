@@ -1,11 +1,11 @@
 import AutoCompleteInput from './AutoComplete';
-import Input from './Input';
-import RadioGroup from './RadioGroup';
-import Select from './Select';
 import Button from './Button';
 import Checkbox from './CheckBox';
-import Modal from './Dialog';
 import DatePicker from './DataPicker';
+import Input from './Input';
+import BasicModal from './Modal';
+import RadioGroup from './RadioGroup';
+import Select from './Select';
 import TimePicker from './TimePicker';
 
 const Controls = {
@@ -14,7 +14,7 @@ const Controls = {
   Select,
   Checkbox,
   Button,
-  Modal,
+  BasicModal,
   DatePicker,
   TimePicker,
   AutoCompleteInput,

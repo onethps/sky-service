@@ -10,6 +10,10 @@ const productSchema = mongoose.Schema({
     required: true,
   },
   category: String,
+  netCost: {
+    type: Object,
+    default: { value: 0, unit: "₴" },
+  },
   price: {
     type: Object,
     default: { value: 0, unit: "₴" },
@@ -18,10 +22,7 @@ const productSchema = mongoose.Schema({
     type: Object,
     default: { value: 0, unit: "%" },
   },
-  inSale: {
-    type: Boolean,
-    required: true,
-  },
+  inSale: Boolean,
   createdAt: {
     type: Date,
     default: new Date(),

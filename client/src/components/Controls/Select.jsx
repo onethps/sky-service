@@ -10,7 +10,7 @@ import React from 'react';
 export default function Select(props) {
   const { name, label, value, error = null, onChange, options } = props;
   return (
-    <FormControl variant="outlined" {...(error && { error: true })}>
+    <FormControl variant="outlined" sx={{ minWidth: '20ch' }}>
       <InputLabel>{label}</InputLabel>
       <MuiSelect label={label} name={name} value={value} onChange={onChange}>
         {options.map((item) => (

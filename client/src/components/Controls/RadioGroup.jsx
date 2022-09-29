@@ -8,19 +8,18 @@ import {
 } from '@mui/material';
 
 export default function RadioGroup(props) {
-  const { name, label, value, onChange, items, error } = props;
+  const { name, label, value, onChange, items, errorMessage } = props;
 
   return (
     <FormControl>
-      <FormLabel id="demo-radio-buttons-group-label">{label}</FormLabel>
+      <FormLabel id="radio-buttons-group-label">{label}</FormLabel>
       <MuiRadioGroup
-        sx={error ? { p: 1, border: '1px solid red' } : { p: 1 }}
+        sx={errorMessage ? { p: 1, border: '1px solid red' } : { p: 1 }}
         row
         name={name}
         value={value}
         onChange={onChange}
-        aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="female"
+        aria-labelledby="radio-buttons-group-label"
       >
         {items.map((item) => (
           <FormControlLabel
@@ -31,7 +30,7 @@ export default function RadioGroup(props) {
           />
         ))}
       </MuiRadioGroup>
-      {error && (
+      {errorMessage && (
         <Typography color={'error'} padding={1}>
           Required
         </Typography>

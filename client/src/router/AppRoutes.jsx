@@ -1,4 +1,4 @@
-import Products from '../pages/Products';
+import Products from '../pages/Products/Products';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';

@@ -1,11 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { FormControl, MenuItem, Select } from '@mui/material';
+import {FormControl, MenuItem, Select} from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
-import { alpha } from '@mui/material/styles';
+import {alpha} from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,35 +17,17 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { visuallyHidden } from '@mui/utils';
+import {visuallyHidden} from '@mui/utils';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { useState } from 'react';
-import EditProductModal from '../components/EditProductModal/EditProductModal';
-import Layout from '../components/Layout/Layout';
+import {useEffect, useState} from 'react';
+import {instance} from "../../api/config";
+import EditProductModal from '../../components/EditProductModal/EditProductModal';
+import Layout from '../../components/Layout/Layout';
+import {headCells} from "../Products/tableData";
 
-function createData(name, type, category, prime_cost, price, margin_price, in_sale) {
-  return {
-    name,
-    type,
-    prime_cost,
-    price,
-    margin_price,
-    in_sale,
-    category,
-  };
-}
 
-const arrayOfCategories = ['Роллы', 'Напитки', 'Лапша'];
-
-const rows = [
-  createData('Cupcake', 'Поштучно', 'Роллы', 67, 4.3, 1.2, true),
-  createData('Donut', 'Teх.карта', 'Напитки', 51, 4.9, 1.2, false),
-  createData('Ha', 'Поштучно', 'Напитки', 67, 4.3, 1.2, false),
-  createData('WE', 'Teх.карта', 'Роллы', 51, 4.9, 1.2, true),
-  createData('V', 'Поштучно', 'Роллы', 67, 4.3, 1.2, true),
-  createData('S', 'Teх.карта', 'Роллы', 51, 4.9, 1.2, false),
-];
+const arrayOfCategories = ['--', 'Напитки', 'Лапша'];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -77,51 +59,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Наименование',
-  },
-  {
-    id: 'type',
-    numeric: false,
-    disablePadding: false,
-    label: 'Тип',
-  },
-  {
-    id: 'category',
-    numeric: false,
-    disablePadding: false,
-    label: 'Категория',
-    editable: false,
-  },
-  {
-    id: 'prime_cost',
-    numeric: true,
-    disablePadding: false,
-    label: 'Себест.',
-  },
-  {
-    id: 'price',
-    numeric: true,
-    disablePadding: false,
-    label: 'Цена',
-  },
-  {
-    id: 'margin_price',
-    numeric: true,
-    disablePadding: false,
-    label: 'Наценка',
-  },
-  {
-    id: 'in_sale',
-    numeric: false,
-    disablePadding: false,
-    label: 'В продаже',
-  },
-];
+
 
 function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
@@ -237,10 +175,14 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EnhancedTable() {
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('inSale');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [categoryEl, setCategoryEl] = useState('--')
+  const [inSaleStatus, setInSaleStatus] = useState(false)
+  const [data, setData] = useState([])
+  const [openModal, setOpenModal] = useState(false);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -248,15 +190,18 @@ export default function EnhancedTable() {
     setOrderBy(property);
   };
 
-  const [age, setAge] = React.useState('');
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleCategory = (event) => {
+    setCategoryEl(event.target.value);
+  };
+
+  const handleSaleStatus = (event) => {
+    setInSaleStatus(event.target.value);
   };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = data.map((n) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -295,9 +240,20 @@ export default function EnhancedTable() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const [openModal, setOpenModal] = useState(false);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await instance.get('dashboard/products/')
+      setData(data.data)
+    }
+    fetchData().catch(err => console.log(err))
+
+  }, [])
+
+
 
   return (
     <Layout>
@@ -313,87 +269,87 @@ export default function EnhancedTable() {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={data.length}
               />
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                {
+                  stableSort(data, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.name}
-                        selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            onClick={(event) => handleClick(event, row.name)}
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                          onClick={() => setOpenModal(true)}
+
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row._id}
+                          selected={isItemSelected}
+                          sx={{ cursor: 'pointer' }}
                         >
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="left" onClick={() => setOpenModal(true)}>
-                          {row.type}
-                        </TableCell>
-                        <TableCell align={'left'}>
-                          <FormControl size="small">
-                            <Select
-                              autoWidth
-                              id="demo-simple-select"
-                              value={row.category}
-                              onChange={handleChange}
-                            >
-                              {arrayOfCategories.map((el) => (
-                                <MenuItem value={el}>{el}</MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell align="right" onClick={() => setOpenModal(true)}>
-                          {row.prime_cost} ₴
-                        </TableCell>
-                        <TableCell align="right" onClick={() => setOpenModal(true)}>
-                          {row.price} ₴
-                        </TableCell>
-                        <TableCell align="right" onClick={() => setOpenModal(true)}>
-                          {row.margin_price} ₴
-                        </TableCell>
-                        <TableCell align="left">
-                          <FormControl size="small">
-                            <Select
-                              autoWidth
-                              id="demo-simple-select"
-                              value={row.in_sale}
-                              // label="Age"
-                              onChange={handleChange}
-                            >
-                              <MenuItem value={true}>Да</MenuItem>
-                              <MenuItem value={false}>Нет</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              color="primary"
+                              onClick={(event) => handleClick(event, row.name)}
+                              checked={isItemSelected}
+                              inputProps={{
+                                'aria-labelledby': labelId,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                            onClick={() => setOpenModal(true)}
+                          >
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="left" onClick={() => setOpenModal(true)}>
+                            {row.productType}
+                          </TableCell>
+                          <TableCell align={'left'}>
+                            <FormControl >
+                              <Select
+                                autoWidth
+                                id="category-select"
+                                value={row.category || categoryEl }
+                                onChange={handleCategory}
+                              >
+                                {arrayOfCategories.map((el) => (
+                                  <MenuItem value={el}>{el}</MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </TableCell>
+                          <TableCell align="right" onClick={() => setOpenModal(true)}>
+                            {row.netCost.value} {row.netCost.unit}
+                          </TableCell>
+                          <TableCell align="right" onClick={() => setOpenModal(true)}>
+                            {row.price.value} {row.price.unit}
+                          </TableCell>
+                          <TableCell align="right" onClick={() => setOpenModal(true)}>
+                            {row.marginPrice.value} {row.marginPrice.unit}
+                          </TableCell>
+                          <TableCell align="left">
+                            <FormControl size="small">
+                              <Select
+                                autoWidth
+                                id="select-inSale-status"
+                                value={row.inSale}
+                                onChange={handleSaleStatus}>
+                                <MenuItem value={true}>Да</MenuItem>
+                                <MenuItem value={false}>Нет</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
@@ -409,7 +365,7 @@ export default function EnhancedTable() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

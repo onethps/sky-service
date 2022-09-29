@@ -10,24 +10,29 @@ const app = express();
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 dotenv.config()
 
 app.use("/dashboard/products", productRoutes);
 app.use("/dashboard/reports", reportRoutes);
 
-const CONNECTION_URL = process.env.MONGO_DB;
 
 const PORT = process.env.PORT || 5500;
 
-mongoose
-  .connect(CONNECTION_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    app.listen(PORT, () => console.log("Server running on port 5500"));
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+const connect = () => {
+  mongoose.connect(process.env.MONGO_DB)
+    .then(() => {
+      console.log("connected to DB");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
+app.listen(PORT, () => {
+  connect();
+});
