@@ -22,6 +22,9 @@ export default function Input(props) {
         InputProps={{
           endAdornment: <InputAdornment position="start">{endAdornment}</InputAdornment>,
         }}
+        InputLabelProps={{
+          shrink: true,
+        }}
         {...(error && { error: true, helperText: error })}
       />
     </Box>

@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const productSchema = mongoose.Schema({
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
   name: {
     type: String,
     required: true,
@@ -10,34 +14,36 @@ const productSchema = mongoose.Schema({
     required: true,
   },
   category: String,
-  netCost: {
-    type: Object,
-    default: { value: 0, unit: "₴" },
+
+  inSale: {
+    type: Boolean,
+    default: true,
   },
-  price: {
-    type: Object,
-    default: { value: 0, unit: "₴" },
+
+  netCost: {
+    type: Number,
+    default: 0,
   },
   marginPrice: {
-    type: Object,
-    default: { value: 0, unit: "%" },
+    type: Number,
+    default: 0,
   },
-  inSale: Boolean,
-  createdAt: {
-    type: Date,
-    default: new Date(),
+  price: {
+    type: Number,
+    default: 0,
   },
+
   quantity: {
-    type: Object,
-    default: { value: 0, unit: "шт" },
+    type: Number,
+    default: 0,
+  },
+  unit: {
+    type: String,
+    default: "шт",
   },
   minQuantity: {
-    type: Object,
-    default: { value: 0, unit: "шт" },
-  },
-  spending: {
-    type: Object,
-    default: { value: 0, unit: "шт" },
+    type: Number,
+    default: 0,
   },
 });
 

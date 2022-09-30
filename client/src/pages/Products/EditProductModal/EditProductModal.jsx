@@ -1,25 +1,24 @@
 import { Box, Divider } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
-import Controls from '../Controls';
-
-const PRODUCT_TYPES = [
-  { id: 1, title: 'Поштучно/Ингридиент' },
-  { id: 2, title: 'Тех.карта/Приготовление' },
-];
+import { instance } from '../../../api/config';
+import Controls from '../../../components/Controls';
 
 const CATEGORIES_ARRAY = [{ id: 1, title: '--' }];
 const NAME_LABEL = 'Наименование';
 const CATEGORIES_LABEL = 'Категория';
 const IN_SALE_CHECKBOX_LABEL = 'Выставить на продажу';
 const QUANTITY_LABEL = 'Колличество';
-
 const MIN_QUANTITY_LABEL = 'Минимальный остаток';
 const MARGIN_PERCENT = 'Наценка';
-
 const UNIT_VALUE_LABEL = 'Еденица Измерения';
 const NET_COST = 'Еденица Измерения';
 const PRICE = 'Цена';
+
+const PRODUCT_TYPES = [
+  { id: 1, title: 'Поштучно/Ингридиент' },
+  { id: 2, title: 'Тех.карта/Приготовление' },
+];
 
 const unitValues = [
   { id: 1, title: 'шт.' },
@@ -61,115 +60,135 @@ export const modalStyles = {
 };
 
 const EditProductModal = ({ open, setOpen }) => {
-  const [price, setPrice] = useState(null);
-  const [marginPricePercent, setMarginPricePercent] = useState(null);
-  const [salePrice, setSalePrice] = useState(null);
+  const [fields, setFields] = useState({
+    name: null,
+    productType: PRODUCT_TYPES[0].title,
+    category: '--',
+    inSale: true,
+    quantity: null,
+    unit: 'шт.',
+    minQuantity: null,
+    netCost: null,
+    marginPrice: null,
+    price: null,
+  });
 
-  const handleChangePrice = (e) => {
-    setPrice(e.target.value);
-    setMarginPricePercent(
-      ((+(salePrice - e.target.value) / e.target.value) * 100).toFixed(2),
-    );
+  const handleInputs = (e) => {
+    setFields({
+      ...fields,
+      [e.target.name]: e.target.value,
+    });
   };
-
-  const handlePercent = (e) => {
-    setMarginPricePercent(e.target.value);
-    setSalePrice(+((price / 100) * e.target.value + +price).toFixed(2));
-  };
-
-  const handleSalePrice = (e) => {
-    setSalePrice(e.target.value);
-    setMarginPricePercent(((+(e.target.value - price) / price) * 100).toFixed(2));
-  };
-
-  const [productType, setProductType] = useState(PRODUCT_TYPES[0].title);
-  const [currentCategory, setCurrentCategory] = useState(CATEGORIES_ARRAY[0].title);
-  const [inSaleCheckBox, setInSaleCheckBox] = useState(true);
-
-  const [quantity, setQuantity] = useState(null);
-  const [unitValue, setUnitValue] = useState(null);
-  const [minQuantity, setMinQuantity] = useState(null);
-
-  const handleQuantity = (e) => setQuantity(e.currentTarget.value);
-  const handleUnitValue = (e) => setUnitValue(e.currentTarget.value);
-  const handleMinQuantity = (e) => setMinQuantity(e.currentTarget.value);
-
-  const handleProductType = (e) => setProductType(e.currentTarget.value);
-  const handleCategoryType = (e) => setCurrentCategory(e.currentTarget.value);
-  const handleInSaleCheckBox = () => setInSaleCheckBox(!inSaleCheckBox);
 
   const toggleModal = () => setOpen(false);
 
+  const handleChangePrice = (e) => {
+    setFields({
+      ...fields,
+      [e.target.name]: e.target.value,
+      marginPrice: ((+(fields.price - e.target.value) / e.target.value) * 100).toFixed(2),
+    });
+  };
+
+  const handlePercent = (e) => {
+    setFields({
+      ...fields,
+      [e.target.name]: e.target.value,
+      price: +((fields.netCost / 100) * e.target.value + +fields.netCost).toFixed(2),
+    });
+  };
+
+  const handleSalePrice = (e) => {
+    setFields({
+      ...fields,
+      [e.target.name]: e.target.value,
+      marginPrice: ((+(e.target.value - fields.netCost) / fields.netCost) * 100).toFixed(
+        2,
+      ),
+    });
+  };
+
+  const handleAddNewProduct = () => {
+    if (!fields.name) {
+      return;
+    }
+
+    instance
+      .post('dashboard/products', {
+        ...fields,
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Controls.BasicModal modalTitle={'Карточка'} open={open} setOpen={toggleModal}>
       <Box sx={modalStyles.wrapper}>
         <Controls.RadioGroup
-          name={'product_type'}
+          name={'productType'}
           label={'Тип товара'}
-          value={productType}
-          onChange={handleProductType}
+          value={fields.productType}
+          onChange={handleInputs}
           items={PRODUCT_TYPES}
         />
-        <TextField
-          id="filled-search"
+        <Controls.Input
+          name={'name'}
           label={NAME_LABEL}
-          type="search"
-          variant="outlined"
+          value={fields.name}
+          onChange={handleInputs}
         />
         <Divider sx={modalStyles.divider} />
         <Controls.Select
-          name={'catergories'}
-          value={currentCategory}
+          name={'category'}
+          value={fields.category}
           label={CATEGORIES_LABEL}
-          onChange={handleCategoryType}
+          onChange={handleInputs}
           options={CATEGORIES_ARRAY}
         />
         <Controls.Checkbox
-          name={'in-sale-status'}
+          name={'inSale'}
           label={IN_SALE_CHECKBOX_LABEL}
-          value={inSaleCheckBox}
-          onChange={handleInSaleCheckBox}
+          value={fields.inSale}
+          onChange={handleInputs}
         />
         <Divider sx={modalStyles.divider} />
         <Controls.Input
-          name={'QUANTITY'}
+          name={'quantity'}
           label={QUANTITY_LABEL}
-          value={quantity}
-          onChange={handleQuantity}
+          value={fields.quantity}
+          onChange={handleInputs}
         />
         <Controls.Select
-          name={'UNIT_VALUE'}
+          name={'unit'}
           label={UNIT_VALUE_LABEL}
-          value={unitValue}
-          onChange={handleUnitValue}
+          value={fields.unit}
+          onChange={handleInputs}
           options={unitValues}
         />
         <Controls.Input
-          name={'MIN_QUANTITY'}
+          name={'minQuantity'}
           label={MIN_QUANTITY_LABEL}
-          value={minQuantity}
-          onChange={handleMinQuantity}
+          value={fields.minQuantity}
+          onChange={handleInputs}
         />
 
         <Box sx={modalStyles.calculatePrice}>
           <Controls.Input
-            name={'NET_COST'}
+            name={'netCost'}
             label={NET_COST}
-            value={price}
+            value={fields.netCost}
             onChange={handleChangePrice}
             endAdornment={'₴'}
           />
           <Controls.Input
-            name={'MARGIN_PERCENT'}
+            name={'marginPrice'}
             label={MARGIN_PERCENT}
-            value={marginPricePercent}
+            value={fields.marginPrice}
             onChange={handlePercent}
             endAdornment={'%'}
           />
           <Controls.Input
-            name={'PRICE'}
+            name={'price'}
             label={PRICE}
-            value={salePrice}
+            value={fields.price}
             onChange={handleSalePrice}
             endAdornment={'₴'}
           />
@@ -177,7 +196,12 @@ const EditProductModal = ({ open, setOpen }) => {
 
         <Box sx={modalStyles.buttons}>
           <Controls.Button variant="contained" color="error" text={'Удалить'} />
-          <Controls.Button variant="contained" color="primary" text={'Сохранить'} />
+          <Controls.Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddNewProduct}
+            text={'Сохранить'}
+          />
         </Box>
       </Box>
     </Controls.BasicModal>
