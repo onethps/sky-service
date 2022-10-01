@@ -22,6 +22,15 @@ export const deleteProduct = async (req, res, next) => {
   }
 };
 
+export const findProduct = async (req, res, next) => {
+  try {
+    await Product.findById(req.body.id);
+    res.status(200).json("Succeffully find");
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const getAllProducts = async (req, res, next) => {
   try {
     let products = await Product.find().sort({ createdAt: -1 });

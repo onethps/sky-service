@@ -22,11 +22,16 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { instance } from '../../api/config';
+import Controls from '../../components/Controls';
 import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
 import { headCells } from './tableData';
 
-const arrayOfCategories = ['--', 'Напитки', 'Лапша'];
+const arrayOfCategories = [
+  { id: 1, title: '--' },
+  { id: 2, title: 'Напитки' },
+  { id: 3, title: 'Лапша' },
+];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -246,9 +251,24 @@ export default function EnhancedTable() {
     fetchData().catch((err) => console.log(err));
   }, []);
 
+  const [currentProduct, setCurrentProduct] = useState(null);
+
+  const findProduct = (id) => {
+    setCurrentProduct(data.filter((el) => el._id === id));
+  };
+
+  const handleModal = (id) => {
+    setOpenModal(true);
+    findProduct(id);
+  };
+
   return (
     <Layout>
-      <EditProductModal open={openModal} setOpen={setOpenModal} />
+      <EditProductModal
+        open={openModal}
+        setOpen={setOpenModal}
+        currentProduct={currentProduct}
+      />
       <Box sx={{ width: '100%' }}>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
@@ -294,11 +314,11 @@ export default function EnhancedTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
-                          onClick={() => setOpenModal(true)}
+                          onClick={() => handleModal(row._id)}
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="left" onClick={() => setOpenModal(true)}>
+                        <TableCell align="left" onClick={() => handleModal(row._id)}>
                           {row.productType}
                         </TableCell>
                         <TableCell align={'left'}>
@@ -310,18 +330,20 @@ export default function EnhancedTable() {
                               onChange={handleCategory}
                             >
                               {arrayOfCategories.map((el) => (
-                                <MenuItem value={el}>{el}</MenuItem>
+                                <MenuItem value={el.title} key={el.id}>
+                                  {el.title}
+                                </MenuItem>
                               ))}
                             </Select>
                           </FormControl>
                         </TableCell>
-                        <TableCell align="right" onClick={() => setOpenModal(true)}>
+                        <TableCell align="right" onClick={() => handleModal(row._id)}>
                           {row.netCost} ₴
                         </TableCell>
-                        <TableCell align="right" onClick={() => setOpenModal(true)}>
+                        <TableCell align="right" onClick={() => handleModal(row._id)}>
                           {row.price} ₴
                         </TableCell>
-                        <TableCell align="right" onClick={() => setOpenModal(true)}>
+                        <TableCell align="right" onClick={() => handleModal(row._id)}>
                           {row.marginPrice} %
                         </TableCell>
                         <TableCell align="left">
@@ -362,6 +384,7 @@ export default function EnhancedTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
+        <Controls.Button text={'ADD'} onClick={() => setOpenModal(true)} />
       </Box>
     </Layout>
   );

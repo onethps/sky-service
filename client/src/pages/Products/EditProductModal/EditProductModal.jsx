@@ -1,8 +1,9 @@
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { instance } from '../../../api/config';
 import Controls from '../../../components/Controls';
+import CompositionTable from '../CompostionTable/CompositionTable';
 
 const CATEGORIES_ARRAY = [{ id: 1, title: '--' }];
 const NAME_LABEL = 'Наименование';
@@ -14,11 +15,28 @@ const MARGIN_PERCENT = 'Наценка';
 const UNIT_VALUE_LABEL = 'Еденица Измерения';
 const NET_COST = 'Еденица Измерения';
 const PRICE = 'Цена';
+const COMPOSITION_NAME = 'Наименовние состава';
 
 const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },
   { id: 2, title: 'Тех.карта/Приготовление' },
 ];
+
+const initValues = {
+  name: '',
+  productType: PRODUCT_TYPES[0].title,
+  category: '--',
+  inSale: true,
+  quantity: null,
+  unit: 'шт.',
+  minQuantity: null,
+  netCost: null,
+  marginPrice: null,
+  price: null,
+  compositions: {
+    compositionName: null,
+  },
+};
 
 const unitValues = [
   { id: 1, title: 'шт.' },
@@ -59,23 +77,40 @@ export const modalStyles = {
   },
 };
 
-const EditProductModal = ({ open, setOpen }) => {
-  const [fields, setFields] = useState({
-    name: null,
-    productType: PRODUCT_TYPES[0].title,
-    category: '--',
-    inSale: true,
-    quantity: null,
-    unit: 'шт.',
-    minQuantity: null,
-    netCost: null,
-    marginPrice: null,
-    price: null,
-  });
+const initComposition = {
+  compostionName: '',
+  ingridients: [
+    {
+      name: '',
+      count: null,
+      brutto: 0,
+      netto: 0,
+      price: null,
+      summ: 0.0,
+    },
+  ],
+};
+
+const EditProductModal = ({ open, setOpen, currentProduct }) => {
+  const [initState, setInitState] = useState({ ...initValues });
+  const [initComposition, setInitComposition] = useState({ ...initValues });
+
+  useEffect(() => {
+    if (currentProduct) {
+      setInitState(currentProduct[0]);
+    }
+  }, [currentProduct]);
 
   const handleInputs = (e) => {
-    setFields({
-      ...fields,
+    setInitState({
+      ...initState,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleComposition = (e) => {
+    setInitComposition({
+      ...initComposition,
       [e.target.name]: e.target.value,
     });
   };
@@ -83,39 +118,44 @@ const EditProductModal = ({ open, setOpen }) => {
   const toggleModal = () => setOpen(false);
 
   const handleChangePrice = (e) => {
-    setFields({
-      ...fields,
+    setInitState({
+      ...initState,
       [e.target.name]: e.target.value,
-      marginPrice: ((+(fields.price - e.target.value) / e.target.value) * 100).toFixed(2),
-    });
-  };
-
-  const handlePercent = (e) => {
-    setFields({
-      ...fields,
-      [e.target.name]: e.target.value,
-      price: +((fields.netCost / 100) * e.target.value + +fields.netCost).toFixed(2),
-    });
-  };
-
-  const handleSalePrice = (e) => {
-    setFields({
-      ...fields,
-      [e.target.name]: e.target.value,
-      marginPrice: ((+(e.target.value - fields.netCost) / fields.netCost) * 100).toFixed(
+      marginPrice: ((+(initState.price - e.target.value) / e.target.value) * 100).toFixed(
         2,
       ),
     });
   };
 
+  const handlePercent = (e) => {
+    setInitState({
+      ...initState,
+      [e.target.name]: e.target.value,
+      price: +((initState.netCost / 100) * e.target.value + +initState.netCost).toFixed(
+        2,
+      ),
+    });
+  };
+
+  const handleSalePrice = (e) => {
+    setInitState({
+      ...initState,
+      [e.target.name]: e.target.value,
+      marginPrice: (
+        (+(e.target.value - initState.netCost) / initState.netCost) *
+        100
+      ).toFixed(2),
+    });
+  };
+
   const handleAddNewProduct = () => {
-    if (!fields.name) {
+    if (!initState.name) {
       return;
     }
 
     instance
       .post('dashboard/products', {
-        ...fields,
+        ...initState,
       })
       .catch((err) => console.log(err));
   };
@@ -125,20 +165,20 @@ const EditProductModal = ({ open, setOpen }) => {
         <Controls.RadioGroup
           name={'productType'}
           label={'Тип товара'}
-          value={fields.productType}
+          value={initState.productType}
           onChange={handleInputs}
           items={PRODUCT_TYPES}
         />
         <Controls.Input
           name={'name'}
           label={NAME_LABEL}
-          value={fields.name}
+          value={initState.name}
           onChange={handleInputs}
         />
         <Divider sx={modalStyles.divider} />
         <Controls.Select
           name={'category'}
-          value={fields.category}
+          value={initState.category}
           label={CATEGORIES_LABEL}
           onChange={handleInputs}
           options={CATEGORIES_ARRAY}
@@ -146,52 +186,65 @@ const EditProductModal = ({ open, setOpen }) => {
         <Controls.Checkbox
           name={'inSale'}
           label={IN_SALE_CHECKBOX_LABEL}
-          value={fields.inSale}
+          value={initState.inSale}
           onChange={handleInputs}
         />
         <Divider sx={modalStyles.divider} />
         <Controls.Input
           name={'quantity'}
+          type={'Number'}
           label={QUANTITY_LABEL}
-          value={fields.quantity}
+          value={initState.quantity}
           onChange={handleInputs}
         />
         <Controls.Select
           name={'unit'}
           label={UNIT_VALUE_LABEL}
-          value={fields.unit}
+          value={initState.unit}
           onChange={handleInputs}
           options={unitValues}
         />
         <Controls.Input
           name={'minQuantity'}
+          type={'Number'}
           label={MIN_QUANTITY_LABEL}
-          value={fields.minQuantity}
+          value={initState.minQuantity}
           onChange={handleInputs}
         />
 
         <Box sx={modalStyles.calculatePrice}>
           <Controls.Input
             name={'netCost'}
+            type={'Number'}
             label={NET_COST}
-            value={fields.netCost}
+            value={initState.netCost}
             onChange={handleChangePrice}
             endAdornment={'₴'}
           />
           <Controls.Input
             name={'marginPrice'}
+            type={'Number'}
             label={MARGIN_PERCENT}
-            value={fields.marginPrice}
+            value={initState.marginPrice}
             onChange={handlePercent}
             endAdornment={'%'}
           />
           <Controls.Input
             name={'price'}
+            type={'Number'}
             label={PRICE}
-            value={fields.price}
+            value={initState.price}
             onChange={handleSalePrice}
             endAdornment={'₴'}
           />
+        </Box>
+
+        <Box name={'compositions'} sx={modalStyles.wrapper}>
+          <Divider sx={modalStyles.divider} />
+          <Typography variant={'h5'}>Составы</Typography>
+          <Controls.Button text={'Добавить состав'} />
+
+          <CompositionTable />
         </Box>
 
         <Box sx={modalStyles.buttons}>

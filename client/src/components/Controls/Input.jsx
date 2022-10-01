@@ -3,7 +3,7 @@ import React from 'react';
 import { TextField } from '@mui/material';
 
 export default function Input(props) {
-  const { name, label, value, error = null, onChange, endAdornment } = props;
+  const { name, label, value, error = null, onChange, endAdornment, type } = props;
   return (
     <Box
       component="form"
@@ -19,6 +19,7 @@ export default function Input(props) {
         name={name}
         value={value}
         onChange={onChange}
+        type={type}
         InputProps={{
           endAdornment: <InputAdornment position="start">{endAdornment}</InputAdornment>,
         }}
