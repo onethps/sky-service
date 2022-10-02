@@ -42,6 +42,9 @@ const initDefaultValues = {
 const initNewIngredient = {
   id: uuidv4(),
   name: '',
+  priceForPortion: 0,
+  price: '',
+  marginPricePercent: 0,
   ingredients: [
     {
       id: uuidv4(),
@@ -87,6 +90,7 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
       ...initIngredientsState,
       {
         ...initNewIngredient,
+        id: uuidv4(),
       },
     ]);
   };
@@ -132,6 +136,10 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
         ...initState,
       })
       .catch((err) => console.log(err));
+  };
+
+  const removeIngredientsTable = (id) => {
+    setInitIngredientsState(initIngredientsState.filter((el) => el.id !== id));
   };
 
   return (
@@ -219,21 +227,25 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
 
           <Typography variant={'h5'}>Составы</Typography>
           {initIngredientsState.map((ingredient) => (
-            <CompositionTable key={ingredient.id} initIngredients={ingredient} />
+            <CompositionTable
+              key={ingredient.id}
+              initIngredients={ingredient}
+              removeIngredientsTable={removeIngredientsTable}
+              id={ingredient.id}
+            />
           ))}
 
           <Controls.Button onClick={handleNewIngredient} text={'Добавить состав'} />
         </Box>
-
-        <Box sx={modalStyles.buttons}>
-          <Controls.Button variant="contained" color="error" text={'Удалить'} />
-          <Controls.Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddNewProduct}
-            text={'Сохранить'}
-          />
-        </Box>
+      </Box>
+      <Box sx={modalStyles.buttons}>
+        <Controls.Button variant="contained" color="error" text={'Удалить'} />
+        <Controls.Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddNewProduct}
+          text={'Сохранить'}
+        />
       </Box>
     </Controls.BasicModal>
   );

@@ -3,17 +3,23 @@ import React from 'react';
 import { Modal as MuiModal } from '@mui/material';
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  overflow: 'scroll',
-  display: 'block',
-  height: '80%',
+  modal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: '#fafafa',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  },
+  window: {
+    position: 'relative',
+    overflow: 'scroll',
+    height: '80vh',
+    bgcolor: 'background.paper',
+    paddingBottom: 5,
+  },
 };
 
 export default function BasicModal(props) {
@@ -31,10 +37,10 @@ export default function BasicModal(props) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <Typography variant={'h4'}>{modalTitle}</Typography>
-        <Divider sx={{ m: '20px 0' }} />
-        {children}
+      <Box sx={style.modal}>
+        <Typography variant={'h5'}>{modalTitle}</Typography>
+        <Divider sx={{ m: '10px 0' }} />
+        <Box sx={style.window}>{children}</Box>
       </Box>
     </MuiModal>
   );

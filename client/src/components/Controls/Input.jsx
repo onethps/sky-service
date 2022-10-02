@@ -1,16 +1,30 @@
-import { Box, InputAdornment } from '@mui/material';
+import { Box, FormControl, InputAdornment } from '@mui/material';
 import React from 'react';
 import { TextField } from '@mui/material';
 
 export default function Input(props) {
-  const { name, label, value, error = null, onChange, endAdornment, type, width } = props;
+  const {
+    disabled,
+    name,
+    label,
+    value,
+    error = null,
+    onChange,
+    endAdornment,
+    type,
+    minWidth,
+    maxWidth,
+    ...restProps
+  } = props;
   return (
     <TextField
+      {...restProps}
       variant="outlined"
       label={label}
-      style={{ width: width || '25ch' }}
+      style={{ minWidth: minWidth || '25ch', maxWidth: maxWidth }}
       name={name}
       value={value}
+      disabled={disabled}
       onChange={onChange}
       type={type}
       InputProps={{

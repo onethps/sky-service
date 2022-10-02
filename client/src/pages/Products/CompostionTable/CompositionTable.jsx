@@ -1,19 +1,20 @@
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import {
   Box,
   Button,
   Divider,
+  IconButton,
   Table as MuiTable,
+  TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
 } from '@mui/material';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import { IconButton, TableBody } from '@mui/material';
-import React, { useState } from 'react';
-import Controls from '../../../components/Controls';
 import { grey } from '@mui/material/colors';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import Controls from '../../../components/Controls';
 
 const greyBg = grey[200];
 
@@ -48,6 +49,12 @@ const categories = [
   },
 ];
 
+const optionsPriceFor = [
+  { id: 1, title: 'Порцию' },
+  { id: 2, title: 'за 100гр.' },
+  { id: 3, title: 'за 100мл.' },
+];
+
 const initState = {
   id: uuidv4(),
   name: '',
@@ -58,19 +65,24 @@ const initState = {
   summ: 0.0,
 };
 
-export default function CompositionTable({ initIngredients }) {
+export default function CompositionTable({
+  initIngredients,
+  removeIngredientsTable,
+  id,
+}) {
   const [state, setState] = useState([
     {
       ...initIngredients.ingredients,
     },
   ]);
 
+  const [priceForOption, setPriceForOption] = useState(optionsPriceFor[0].title);
+
   const handleInputs = (index, event) => {
     const value = state;
     value[index][event.target.name] = event.target.value;
     setState({
       ...state,
-      id: uuidv4(),
       value,
     });
   };
@@ -82,18 +94,22 @@ export default function CompositionTable({ initIngredients }) {
     setState([...values]);
   };
 
-  const addNewRowHandleButton = () => {
-    setState([...state, { ...initState }]);
+  const handleChangePriceForOption = (e) => {
+    setPriceForOption(e.currentTarget.value);
   };
+
+  const addNewRowHandleButton = () => {
+    setState([...state, { ...initState, id: uuidv4() }]);
+  };
+
   return (
     <Box sx={{ bgcolor: greyBg, padding: 4 }}>
       <Controls.AutoCompleteInput />
-
       <Typography variant={'h5'} sx={{ fontWeight: '700', padding: '15px 0' }}>
         Состав
       </Typography>
       <Divider sx={{ m: '20px 0' }} />
-      <MuiTable>
+      <MuiTable sx={{ maxWidth: '400px' }}>
         <TableHead>
           <TableRow>
             {categories.map((headText) => (
@@ -120,7 +136,8 @@ export default function CompositionTable({ initIngredients }) {
                 </TableCell>
                 <TableCell>
                   <Controls.Input
-                    width={'100px'}
+                    minWidth={'50px'}
+                    maxWidth={'80px'}
                     type={'Number'}
                     name={'count'}
                     value={row.count}
@@ -132,6 +149,8 @@ export default function CompositionTable({ initIngredients }) {
                 </TableCell>
                 <TableCell>
                   <Controls.Input
+                    minWidth={'50px'}
+                    maxWidth={'80px'}
                     name={'netto'}
                     value={row.netto}
                     onChange={(e) => handleInputs(index, e)}
@@ -156,6 +175,8 @@ export default function CompositionTable({ initIngredients }) {
             );
           })}
         </TableBody>
+      </MuiTable>
+      <Box name={'buttonsAddRow'}>
         <IconButton onClick={addNewRowHandleButton}>
           <Button variant={'contained'} color={'success'}>
             +
@@ -166,7 +187,74 @@ export default function CompositionTable({ initIngredients }) {
             Добавить товары
           </Button>
         </IconButton>
-      </MuiTable>
+      </Box>
+      <Box
+        name={'calculate netValue'}
+        sx={{
+          margin: '30px 0',
+          alignItems: 'center',
+          display: 'flex',
+          gap: '20px',
+          justifyContent: 'center',
+        }}
+      >
+        <Controls.Select
+          minWidth={'45%'}
+          type={'Number'}
+          label={'Цена за'}
+          value={priceForOption}
+          onChange={handleChangePriceForOption}
+          options={optionsPriceFor}
+        />
+        <Controls.Input
+          minWidth={'45%'}
+          disabled
+          label={'Себестоимость'}
+          value={'0 / порцию'}
+        />
+      </Box>
+      <Box
+        component={'form'}
+        autoComplete="off"
+        name={'calculateMarginPrice'}
+        sx={{
+          maxWidth: '100%',
+          bgcolor: '#e3f2fd',
+          padding: '10px',
+          gap: '10px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Controls.Input
+          label={'Цена'}
+          minWidth={'45%'}
+          endAdornment={'₴'}
+          value={initIngredients.price}
+        />
+        <Controls.Input
+          label={'Наценка'}
+          minWidth={'45%'}
+          endAdornment={'%'}
+          value={initIngredients.marginPricePercent}
+        />
+      </Box>
+      <Box sx={{ display: 'flex' }}>
+        <IconButton>
+          <Button
+            onClick={() => removeIngredientsTable(id)}
+            variant={'contained'}
+            color={'error'}
+          >
+            Удалить
+          </Button>
+        </IconButton>
+        <IconButton sx={{ display: 'block' }}>
+          <Button variant={'outlined'} color={'info'}>
+            Копировать
+          </Button>
+        </IconButton>
+      </Box>
     </Box>
   );
 }

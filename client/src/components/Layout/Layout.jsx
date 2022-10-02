@@ -1,23 +1,20 @@
-import {Box, Container, CssBaseline, Grid, Toolbar} from "@mui/material";
-import Header from "../Header/Header";
-import Sidebar from "../Sidebar/Sidebar";
-import React, {useState} from 'react';
+import { Box, Container, CssBaseline, Grid, Toolbar } from '@mui/material';
+import Header from '../Header/Header';
+import Sidebar from '../Sidebar/Sidebar';
+import React, { useState } from 'react';
 
-const Layout = (props) => {
-
-
+const Layout = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Header open={open} setOpen={setOpen} toggleDrawer={toggleDrawer}/>
-      <Sidebar open={open} toggleDrawer={toggleDrawer}/>
+      <Header open={open} setOpen={setOpen} toggleDrawer={toggleDrawer} />
+      <Sidebar open={open} toggleDrawer={toggleDrawer} />
       <Box
         component="main"
         sx={{
@@ -32,9 +29,7 @@ const Layout = (props) => {
       >
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
-          <Grid container>
-            {props.children}
-          </Grid>
+          <Grid container>{children}</Grid>
         </Container>
       </Box>
     </Box>
