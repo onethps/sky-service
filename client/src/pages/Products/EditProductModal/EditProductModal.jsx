@@ -222,7 +222,11 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
             <CompositionTable key={ingredient.id} initIngredients={ingredient} />
           ))}
 
-          <Controls.Button onClick={handleNewIngredient} text={'Добавить состав'} />
+          <Controls.Button
+            color={'success'}
+            onClick={handleNewIngredient}
+            text={'Добавить состав'}
+          />
         </Box>
 
         <Box sx={modalStyles.buttons}>
