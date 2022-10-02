@@ -182,7 +182,6 @@ export default function EnhancedTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [categoryEl, setCategoryEl] = useState('--');
-  const [inSaleStatus, setInSaleStatus] = useState(false);
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
@@ -194,10 +193,6 @@ export default function EnhancedTable() {
 
   const handleCategory = (event) => {
     setCategoryEl(event.target.value);
-  };
-
-  const handleSaleStatus = (event) => {
-    setInSaleStatus(event.target.value);
   };
 
   const handleSelectAllClick = (event) => {
@@ -247,6 +242,7 @@ export default function EnhancedTable() {
     const fetchData = async () => {
       const data = await instance.get('dashboard/products/');
       setData(data.data);
+      console.log(data.data);
     };
     fetchData().catch((err) => console.log(err));
   }, []);
@@ -260,6 +256,12 @@ export default function EnhancedTable() {
   const handleModal = (id) => {
     setOpenModal(true);
     findProduct(id);
+  };
+
+  console.log(data);
+
+  const handleData = (id) => {
+    setData([...data]);
   };
 
   return (
@@ -352,7 +354,7 @@ export default function EnhancedTable() {
                               autoWidth
                               id="select-inSale-status"
                               value={row.inSale}
-                              onChange={handleSaleStatus}
+                              // onChange={}
                             >
                               <MenuItem value={true}>Да</MenuItem>
                               <MenuItem value={false}>Нет</MenuItem>

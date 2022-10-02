@@ -1,28 +1,32 @@
 import { Box, Divider, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { instance } from '../../../api/config';
 import Controls from '../../../components/Controls';
 import CompositionTable from '../CompostionTable/CompositionTable';
-
-const CATEGORIES_ARRAY = [{ id: 1, title: '--' }];
-const NAME_LABEL = 'Наименование';
-const CATEGORIES_LABEL = 'Категория';
-const IN_SALE_CHECKBOX_LABEL = 'Выставить на продажу';
-const QUANTITY_LABEL = 'Колличество';
-const MIN_QUANTITY_LABEL = 'Минимальный остаток';
-const MARGIN_PERCENT = 'Наценка';
-const UNIT_VALUE_LABEL = 'Еденица Измерения';
-const NET_COST = 'Еденица Измерения';
-const PRICE = 'Цена';
-const COMPOSITION_NAME = 'Наименовние состава';
+import {
+  CATEGORIES_ARRAY,
+  CATEGORIES_LABEL,
+  IN_SALE_CHECKBOX_LABEL,
+  NAME_LABEL,
+  UNIT_VALUE_LABEL,
+  unitValues,
+  QUANTITY_LABEL,
+  MIN_QUANTITY_LABEL,
+  NET_COST,
+  PRICE,
+  MARGIN_PERCENT,
+  COMPOSITION_NAME,
+} from './costants';
+import { modalStyles } from './styles';
 
 const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },
   { id: 2, title: 'Тех.карта/Приготовление' },
 ];
 
-const initValues = {
+const initDefaultValues = {
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
@@ -33,71 +37,41 @@ const initValues = {
   netCost: null,
   marginPrice: null,
   price: null,
-  compositions: {
-    compositionName: null,
-  },
 };
 
-const unitValues = [
-  { id: 1, title: 'шт.' },
-  { id: 2, title: 'кг.' },
-  { id: 3, title: 'гр.' },
-  { id: 4, title: 'л.' },
-];
-
-export const modalStyles = {
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    minWidth: 1000,
-    '.MuiTextField-root': {
-      maxWidth: '30ch',
-      margin: '10px 0',
-    },
-    '.MuiFormControl-root': {
-      width: '30ch',
-    },
-  },
-  divider: {
-    m: '5px 0',
-  },
-  calculatePrice: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    minWidth: '100%',
-    backgroundColor: '#e3f2fd',
-    padding: '10px',
-    alignItems: 'flex-end',
-    gap: '20px',
-  },
-  buttons: {
-    display: 'flex',
-    gap: 2,
-  },
-};
-
-const initComposition = {
-  compostionName: '',
-  ingridients: [
+const initNewIngredient = {
+  id: uuidv4(),
+  name: '',
+  ingredients: [
     {
+      id: uuidv4(),
       name: '',
-      count: null,
+      count: '',
       brutto: 0,
       netto: 0,
-      price: null,
+      price: 0,
       summ: 0.0,
     },
   ],
 };
 
 const EditProductModal = ({ open, setOpen, currentProduct }) => {
-  const [initState, setInitState] = useState({ ...initValues });
-  const [initComposition, setInitComposition] = useState({ ...initValues });
+  const [initState, setInitState] = useState({ ...initDefaultValues });
+  const [initIngredientsState, setInitIngredientsState] = useState([
+    {
+      ...initNewIngredient,
+    },
+  ]);
+  const toggleModal = () => setOpen(false);
+
+  // const availableIngredients = currentProduct[0].category === PRODUCT_TYPES[1].title;
 
   useEffect(() => {
     if (currentProduct) {
       setInitState(currentProduct[0]);
+      // if (availableIngredients) {
+      //   // fetching ingredients
+      // }
     }
   }, [currentProduct]);
 
@@ -108,14 +82,14 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
     });
   };
 
-  const handleComposition = (e) => {
-    setInitComposition({
-      ...initComposition,
-      [e.target.name]: e.target.value,
-    });
+  const handleNewIngredient = () => {
+    setInitIngredientsState([
+      ...initIngredientsState,
+      {
+        ...initNewIngredient,
+      },
+    ]);
   };
-
-  const toggleModal = () => setOpen(false);
 
   const handleChangePrice = (e) => {
     setInitState({
@@ -159,6 +133,7 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
       })
       .catch((err) => console.log(err));
   };
+
   return (
     <Controls.BasicModal modalTitle={'Карточка'} open={open} setOpen={toggleModal}>
       <Box sx={modalStyles.wrapper}>
@@ -241,10 +216,13 @@ const EditProductModal = ({ open, setOpen, currentProduct }) => {
 
         <Box name={'compositions'} sx={modalStyles.wrapper}>
           <Divider sx={modalStyles.divider} />
-          <Typography variant={'h5'}>Составы</Typography>
-          <Controls.Button text={'Добавить состав'} />
 
-          <CompositionTable />
+          <Typography variant={'h5'}>Составы</Typography>
+          {initIngredientsState.map((ingredient) => (
+            <CompositionTable key={ingredient.id} initIngredients={ingredient} />
+          ))}
+
+          <Controls.Button onClick={handleNewIngredient} text={'Добавить состав'} />
         </Box>
 
         <Box sx={modalStyles.buttons}>
