@@ -1,7 +1,7 @@
 import AutoCompleteInput from './AutoComplete';
 import Button from './Button';
 import Checkbox from './CheckBox';
-import DatePicker from './DataPicker';
+import DesktopDatePicker from './DataPicker';
 import Input from './Input';
 import BasicModal from './Modal';
 import RadioGroup from './RadioGroup';
@@ -15,7 +15,7 @@ const Controls = {
   Checkbox,
   Button,
   BasicModal,
-  DatePicker,
+  DesktopDatePicker,
   TimePicker,
   AutoCompleteInput,
 };

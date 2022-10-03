@@ -3,7 +3,6 @@ export const modalStyles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    minWidth: 1000,
     '.MuiTextField-root': {
       maxWidth: '30ch',
       margin: '10px 0',
@@ -17,11 +16,10 @@ export const modalStyles = {
   },
   calculatePrice: {
     display: 'flex',
-    justifyContent: 'space-between',
-    minWidth: '100%',
+    justifyContent: 'space-around',
     backgroundColor: '#e3f2fd',
     padding: '10px',
-    alignItems: 'flex-end',
+    overflowY: 'hidden',
     gap: '20px',
   },
   buttons: {
