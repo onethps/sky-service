@@ -25,28 +25,19 @@ import {
 } from './costants';
 import { modalStyles } from './styles';
 import { instance } from 'api/config';
-import { productCardTypeRow } from 'pages/Products/Products';
+import { ProductType } from 'pages/Products/types';
 
 const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },
   { id: 2, title: 'Тех.карта/Приготовление' },
 ];
 
-export interface ProductCardType extends productCardTypeRow {
-  quantity: string;
-  unit: string;
-  minQuantity: string;
-  netCost: number;
-  marginPrice: string;
-  price: number;
-}
-
-const initDefaultValues: ProductCardType = {
+const initDefaultValues: ProductType = {
   _id: '',
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
-  inSale: true,
+  inSale: 0,
   quantity: '',
   unit: 'шт.',
   minQuantity: '',
@@ -98,7 +89,7 @@ export type TechCardTable = {
 type EditProductModalType = {
   open: boolean;
   setOpen: (el: boolean) => void;
-  currentProduct: TechCardType;
+  currentProduct: ProductType;
 };
 
 const EditProductModal: FC<EditProductModalType> = ({
@@ -106,7 +97,7 @@ const EditProductModal: FC<EditProductModalType> = ({
   setOpen,
   currentProduct,
 }) => {
-  const [initProductCardState, setInitProductCardState] = useState<ProductCardType>({
+  const [initProductCardState, setInitProductCardState] = useState<ProductType>({
     ...initDefaultValues,
   });
 
@@ -148,40 +139,48 @@ const EditProductModal: FC<EditProductModalType> = ({
   const handleChangeNetPrice = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    const price: number = Number(initProductCardState.price);
+    const netPrice: number = Number(e.target.value);
+    const calculateNetPrice: string = (((price - netPrice) / netPrice) * 100).toFixed(2);
+
     setInitProductCardState({
       ...initProductCardState,
       [e.target.name]: e.target.value,
-      marginPrice: (
-        (+((initProductCardState.price as any) - e.target.value) / e.target.value) *
-        100
-      ).toFixed(2),
+      marginPrice: calculateNetPrice,
     });
   };
 
   const handleChangePercentPrice = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    const percent: number = Number(event.target.value);
+    const netCost: number = initProductCardState.netCost;
+
+    const calculatePercent: number = Number(
+      ((netCost / 100) * percent + netCost).toFixed(2),
+    );
+
     setInitProductCardState({
       ...initProductCardState,
       [event.target.name]: event.target.value,
-      price: +(
-        ((initProductCardState.netCost as any) / 100) * (event.target.value as any) +
-        +initProductCardState.netCost
-      ).toFixed(2),
+      price: calculatePercent,
     });
   };
 
   const handleChangeMarginPrice = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    const marginPrice: number = Number(event.target.value);
+    const netCost: number = initProductCardState.netCost;
+    const calculateMarginPrice: string = (
+      ((marginPrice - netCost) / netCost) *
+      100
+    ).toFixed(2);
+
     setInitProductCardState({
       ...initProductCardState,
       [event.target.name]: event.target.value,
-      marginPrice: (
-        (+((event.target.value as any) - initProductCardState.netCost) /
-          initProductCardState.netCost) *
-        100
-      ).toFixed(2),
+      marginPrice: calculateMarginPrice,
     });
   };
 

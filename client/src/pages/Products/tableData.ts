@@ -1,8 +1,8 @@
-import { productCardTypeRow } from 'pages/Products/Products';
+import { ProductType } from 'pages/Products/types';
 
 export interface HeadCell {
   disablePadding: boolean;
-  id: keyof productCardTypeRow;
+  id: keyof ProductType;
   label: string;
   numeric: boolean;
 }

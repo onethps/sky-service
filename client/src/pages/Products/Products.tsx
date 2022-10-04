@@ -22,27 +22,17 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import Controls from '../../components/Controls';
-import EditProductModal, { ProductCardType } from './EditProductModal/EditProductModal';
+import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
 import { HeadCell, headCells } from './tableData';
 import { instance } from 'api/config';
+import { ProductType } from 'pages/Products/types';
 
 const arrayOfCategories = [
   { id: 1, title: '--' },
   { id: 2, title: 'Напитки' },
   { id: 3, title: 'Лапша' },
 ];
-
-export interface productCardTypeRow {
-  _id: string;
-  name: string;
-  productType: string;
-  category: string;
-  netCost: number;
-  price: number;
-  inSale: boolean;
-  marginPrice: string;
-}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -114,7 +104,7 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
         </TableCell>
         {headCells.map((headCell: HeadCell) => (
           <TableCell
-            key={headCell.id}
+            key={headCell.id as string}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -122,7 +112,7 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.id as string)}
             >
               {headCell.label}
 
@@ -207,7 +197,9 @@ export default function EnhancedTable() {
   const [categoryEl, setCategoryEl] = useState('--');
   const [openModal, setOpenModal] = useState(false);
 
-  const [productCardsList, setProductCardsList] = useState<productCardTypeRow[]>([]);
+  const [productCardsList, setProductCardsList] = useState<ProductType[]>(
+    [] as ProductType[],
+  );
 
   // @ts-ignore
   const handleRequestSort = (event: MouseEvent<unknown, MouseEvent>, property: any) => {
@@ -266,13 +258,13 @@ export default function EnhancedTable() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await instance.get('dashboard/products/');
+      const { data } = await instance.get<ProductType[]>('dashboard/products/');
       setProductCardsList(data);
     };
     fetchData().catch((err) => console.log(err));
   }, []);
 
-  const [currentProduct, setCurrentProduct] = useState<ProductCardType | null>(null);
+  const [currentProduct, setCurrentProduct] = useState<ProductType>({} as ProductType);
 
   const findProduct = (id: string) => {
     const filter = productCardsList.filter((el) => el._id === id)[0];
@@ -288,6 +280,10 @@ export default function EnhancedTable() {
   const handleData = (id: string) => {
     setProductCardsList([...productCardsList]);
   };
+
+  if (productCardsList.length <= 0) {
+    return <div>2123</div>;
+  }
 
   return (
     <Layout>
@@ -310,7 +306,7 @@ export default function EnhancedTable() {
                 rowCount={productCardsList.length}
               />
               <TableBody>
-                {stableSort(productCardsList, getComparator(order, orderBy))
+                {stableSort([], getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name as string);
