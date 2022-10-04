@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { FormControl, MenuItem, Select } from '@mui/material';
+import { FormControl, MenuItem, Select, SortDirection, TableProps } from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
@@ -20,12 +20,12 @@ import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { instance } from '../../api/config';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import Controls from '../../components/Controls';
-import EditProductModal from './EditProductModal/EditProductModal';
+import EditProductModal, { ProductCardType } from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
-import { headCells, headCellsTypes } from './tableData';
+import { HeadCell, headCells } from './tableData';
+import { instance } from 'api/config';
 
 const arrayOfCategories = [
   { id: 1, title: '--' },
@@ -33,7 +33,18 @@ const arrayOfCategories = [
   { id: 3, title: 'Лапша' },
 ];
 
-function descendingComparator(a, b, orderBy) {
+export interface productCardTypeRow {
+  _id: string;
+  name: string;
+  productType: string;
+  category: string;
+  netCost: number;
+  price: number;
+  inSale: boolean;
+  marginPrice: string;
+}
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -43,7 +54,15 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-function getComparator(order, orderBy) {
+type Order = 'asc' | 'desc';
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key,
+): (
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string },
+) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -51,8 +70,8 @@ function getComparator(order, orderBy) {
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) {
@@ -63,10 +82,19 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead(props) {
+interface EnhancedTableProps {
+  numSelected: number;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: any) => void;
+  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  order: Order;
+  orderBy: string;
+  rowCount: number;
+}
+
+const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
-  const createSortHandler = (property) => (event) => {
+  const createSortHandler = (property: string) => (event: any) => {
     onRequestSort(event, property);
   };
 
@@ -84,7 +112,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell: headCellsTypes) => (
+        {headCells.map((headCell: HeadCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -109,18 +137,13 @@ function EnhancedTableHead(props) {
       </TableRow>
     </TableHead>
   );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
+interface EnhancedTableToolbarProps {
+  numSelected: number;
+}
+
+const EnhancedTableToolbar: FC<EnhancedTableToolbarProps> = (props) => {
   const { numSelected } = props;
 
   return (
@@ -176,27 +199,28 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable() {
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('inSale');
-  const [selected, setSelected] = useState([]);
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<string>('inSale');
+  const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [categoryEl, setCategoryEl] = useState('--');
   const [openModal, setOpenModal] = useState(false);
 
-  const [productCardsList, setProductCardsList] = useState([]);
+  const [productCardsList, setProductCardsList] = useState<productCardTypeRow[]>([]);
 
-  const handleRequestSort = (event, property) => {
+  // @ts-ignore
+  const handleRequestSort = (event: MouseEvent<unknown, MouseEvent>, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleCategory = (event) => {
+  const handleCategory = (event: any) => {
     setCategoryEl(event.target.value);
   };
 
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = productCardsList.map((n) => n.name);
       setSelected(newSelected);
@@ -205,9 +229,9 @@ export default function EnhancedTable() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
+  const handleClick = (event: any, name: string) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+    let newSelected: readonly string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -225,16 +249,16 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -248,21 +272,20 @@ export default function EnhancedTable() {
     fetchData().catch((err) => console.log(err));
   }, []);
 
-  const [currentProduct, setCurrentProduct] = useState(null);
+  const [currentProduct, setCurrentProduct] = useState<ProductCardType | null>(null);
 
-  const findProduct = (id) => {
+  const findProduct = (id: string) => {
     const filter = productCardsList.filter((el) => el._id === id)[0];
-    console.log(filter);
     setCurrentProduct(filter);
   };
 
-  const handleModal = (id) => {
+  const handleModal = (id: string) => {
     findProduct(id);
 
     setOpenModal(true);
   };
 
-  const handleData = (id) => {
+  const handleData = (id: string) => {
     setProductCardsList([...productCardsList]);
   };
 
@@ -290,7 +313,7 @@ export default function EnhancedTable() {
                 {stableSort(productCardsList, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row.name as string);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -306,7 +329,7 @@ export default function EnhancedTable() {
                         <TableCell padding="checkbox">
                           <Checkbox
                             color="primary"
-                            onClick={(event) => handleClick(event, row.name)}
+                            onClick={(event) => handleClick(event, row.name as string)}
                             checked={isItemSelected}
                             inputProps={{
                               'aria-labelledby': labelId,
@@ -318,11 +341,14 @@ export default function EnhancedTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
-                          onClick={() => handleModal(row._id)}
+                          onClick={() => handleModal(row._id as string)}
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="left" onClick={() => handleModal(row._id)}>
+                        <TableCell
+                          align="left"
+                          onClick={() => handleModal(row._id as string)}
+                        >
                           {row.productType}
                         </TableCell>
                         <TableCell align={'left'}>
@@ -341,13 +367,22 @@ export default function EnhancedTable() {
                             </Select>
                           </FormControl>
                         </TableCell>
-                        <TableCell align="right" onClick={() => handleModal(row._id)}>
+                        <TableCell
+                          align="right"
+                          onClick={() => handleModal(row._id as string)}
+                        >
                           {row.netCost} ₴
                         </TableCell>
-                        <TableCell align="right" onClick={() => handleModal(row._id)}>
+                        <TableCell
+                          align="right"
+                          onClick={() => handleModal(row._id as string)}
+                        >
                           {row.price} ₴
                         </TableCell>
-                        <TableCell align="right" onClick={() => handleModal(row._id)}>
+                        <TableCell
+                          align="right"
+                          onClick={() => handleModal(row._id as string)}
+                        >
                           {row.marginPrice} %
                         </TableCell>
                         <TableCell align="left">
@@ -358,8 +393,8 @@ export default function EnhancedTable() {
                               value={row.inSale}
                               // onChange={}
                             >
-                              <MenuItem value={true}>Да</MenuItem>
-                              <MenuItem value={false}>Нет</MenuItem>
+                              <MenuItem value={1}>Да</MenuItem>
+                              <MenuItem value={0}>Нет</MenuItem>
                             </Select>
                           </FormControl>
                         </TableCell>

@@ -1,49 +1,51 @@
-export type headCellsTypes = {
-  id: number;
-  numeric: boolean;
-  disablePadding: boolean;
-  label: string;
-};
+import { productCardTypeRow } from 'pages/Products/Products';
 
-export const headCells: headCellsTypes[] = [
+export interface HeadCell {
+  disablePadding: boolean;
+  id: keyof productCardTypeRow;
+  label: string;
+  numeric: boolean;
+}
+
+export const headCells: readonly HeadCell[] = [
   {
-    id: 1,
+    id: 'name',
     numeric: false,
     disablePadding: true,
     label: 'Наименование',
   },
   {
-    id: 2,
+    id: 'productType',
     numeric: false,
     disablePadding: false,
     label: 'Тип',
   },
   {
-    id: 3,
+    id: 'category',
     numeric: false,
     disablePadding: false,
     label: 'Категория',
   },
   {
-    id: 4,
+    id: 'netCost',
     numeric: true,
     disablePadding: false,
     label: 'Себест.',
   },
   {
-    id: 5,
+    id: 'price',
     numeric: true,
     disablePadding: false,
     label: 'Цена',
   },
   {
-    id: 6,
+    id: 'marginPrice',
     numeric: true,
     disablePadding: false,
     label: 'Наценка',
   },
   {
-    id: 7,
+    id: 'inSale',
     numeric: false,
     disablePadding: false,
     label: 'В продаже',

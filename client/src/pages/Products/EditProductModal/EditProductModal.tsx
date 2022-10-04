@@ -1,5 +1,12 @@
-import { Box, Divider, Typography } from '@mui/material';
-import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
+import { Box, Divider, SelectChangeEvent, Typography } from '@mui/material';
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  FC,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Controls from '../../../components/Controls';
 import TechCard from '../TechCard/TechCard';
@@ -18,26 +25,24 @@ import {
 } from './costants';
 import { modalStyles } from './styles';
 import { instance } from 'api/config';
+import { productCardTypeRow } from 'pages/Products/Products';
 
 const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },
   { id: 2, title: 'Тех.карта/Приготовление' },
 ];
 
-type productCardType = {
-  name: string;
-  productType: string;
-  category: string;
-  inSale: boolean;
+export interface ProductCardType extends productCardTypeRow {
   quantity: string;
   unit: string;
   minQuantity: string;
   netCost: number;
   marginPrice: string;
   price: number;
-};
+}
 
-const initDefaultValues: productCardType = {
+const initDefaultValues: ProductCardType = {
+  _id: '',
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
@@ -93,7 +98,7 @@ export type TechCardTable = {
 type EditProductModalType = {
   open: boolean;
   setOpen: (el: boolean) => void;
-  currentProduct: any;
+  currentProduct: TechCardType;
 };
 
 const EditProductModal: FC<EditProductModalType> = ({
@@ -101,7 +106,7 @@ const EditProductModal: FC<EditProductModalType> = ({
   setOpen,
   currentProduct,
 }) => {
-  const [initProductCardState, setInitProductCardState] = useState({
+  const [initProductCardState, setInitProductCardState] = useState<ProductCardType>({
     ...initDefaultValues,
   });
 
@@ -117,10 +122,14 @@ const EditProductModal: FC<EditProductModalType> = ({
 
   const toggleModal = () => setOpen(false);
 
-  const handleInputs = (e) => {
+  const handleInputs = (
+    event:
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<unknown>,
+  ) => {
     setInitProductCardState({
       ...initProductCardState,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -136,7 +145,9 @@ const EditProductModal: FC<EditProductModalType> = ({
     ]);
   };
 
-  const handleChangeNetPrice = (e) => {
+  const handleChangeNetPrice = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setInitProductCardState({
       ...initProductCardState,
       [e.target.name]: e.target.value,
@@ -147,7 +158,9 @@ const EditProductModal: FC<EditProductModalType> = ({
     });
   };
 
-  const handleChangePercentPrice = ( event: Event & { target: HTMLInputElement | HTMLTextAreaElement }) => {
+  const handleChangePercentPrice = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setInitProductCardState({
       ...initProductCardState,
       [event.target.name]: event.target.value,
@@ -158,12 +171,14 @@ const EditProductModal: FC<EditProductModalType> = ({
     });
   };
 
-  const handleChangeMarginPrice = (event: Event & { target: HTMLInputElement }) => {
+  const handleChangeMarginPrice = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setInitProductCardState({
       ...initProductCardState,
       [event.target.name]: event.target.value,
       marginPrice: (
-        (+(event.target.value as any - initProductCardState.netCost) /
+        (+((event.target.value as any) - initProductCardState.netCost) /
           initProductCardState.netCost) *
         100
       ).toFixed(2),
