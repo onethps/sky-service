@@ -197,7 +197,7 @@ export default function EnhancedTable() {
   const [categoryEl, setCategoryEl] = useState('--');
   const [openModal, setOpenModal] = useState(false);
 
-  const [productCardsList, setProductCardsList] = useState<ProductType[]>(
+  const [productCardsList, setProductCardsList]: any[] = useState<ProductType[]>(
     [] as ProductType[],
   );
 
@@ -214,7 +214,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = productCardsList.map((n) => n.name);
+      const newSelected = productCardsList.map((n: any) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -267,7 +267,7 @@ export default function EnhancedTable() {
   const [currentProduct, setCurrentProduct] = useState<ProductType>({} as ProductType);
 
   const findProduct = (id: string) => {
-    const filter = productCardsList.filter((el) => el._id === id)[0];
+    const filter = productCardsList.filter((el: ProductType) => el._id === id)[0];
     setCurrentProduct(filter);
   };
 
@@ -306,7 +306,7 @@ export default function EnhancedTable() {
                 rowCount={productCardsList.length}
               />
               <TableBody>
-                {stableSort([], getComparator(order, orderBy))
+                {stableSort(productCardsList, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name as string);
