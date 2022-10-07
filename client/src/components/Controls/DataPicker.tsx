@@ -1,10 +1,7 @@
-import { TextField } from '@mui/material';
-import {
-  DesktopDatePicker as MuiDesktopDatePicker,
-  DesktopDatePickerProps,
-} from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker as MuiDesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import React, { FC } from 'react';
 import { Dayjs } from 'dayjs';
+import { TextField } from '@mui/material';
 
 type DesktopDateType = {
   value: Dayjs | null;

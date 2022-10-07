@@ -1,12 +1,5 @@
 import { Box, Divider, SelectChangeEvent, Typography } from '@mui/material';
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  FC,
-  ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Controls from '../../../components/Controls';
 import TechCard from '../TechCard/TechCard';
@@ -26,6 +19,8 @@ import {
 import { modalStyles } from './styles';
 import { instance } from 'api/config';
 import { ProductType } from 'pages/Products/types';
+import { useDispatch } from 'react-redux';
+import { addProduct } from 'store/reducers/products';
 
 const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },
@@ -33,7 +28,6 @@ const PRODUCT_TYPES = [
 ];
 
 const initDefaultValues: ProductType = {
-  _id: '',
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
@@ -43,7 +37,7 @@ const initDefaultValues: ProductType = {
   minQuantity: '',
   netCost: 0,
   marginPrice: '',
-  price: 0,
+  price: '',
 };
 
 const initTechCardState: TechCardType = {
@@ -89,7 +83,7 @@ export type TechCardTable = {
 type EditProductModalType = {
   open: boolean;
   setOpen: (el: boolean) => void;
-  currentProduct: ProductType;
+  currentProduct: ProductType | null;
 };
 
 const EditProductModal: FC<EditProductModalType> = ({
@@ -108,7 +102,12 @@ const EditProductModal: FC<EditProductModalType> = ({
   useEffect(() => {
     if (currentProduct) {
       setInitProductCardState(currentProduct);
+      return;
     }
+
+    setInitProductCardState({
+      ...initDefaultValues,
+    });
   }, [currentProduct]);
 
   const toggleModal = () => setOpen(false);
@@ -126,14 +125,14 @@ const EditProductModal: FC<EditProductModalType> = ({
 
   const handleNewTechCard = () => {
     if (!isTechCardCategory) return;
-    setTechCardsList([
-      ...techCardsList,
-      {
-        ...initTechCardState,
-        productCardId: currentProduct?._id,
-        id: uuidv4(),
-      },
-    ]);
+    // setTechCardsList([
+    //   ...techCardsList,
+    //   {
+    //     ...initTechCardState,
+    //     productCardId: currentProduct?._id,
+    //     id: uuidv4(),
+    //   },
+    // ]);
   };
 
   const handleChangeNetPrice = (
@@ -154,11 +153,9 @@ const EditProductModal: FC<EditProductModalType> = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const percent: number = Number(event.target.value);
-    const netCost: number = initProductCardState.netCost;
+    const netCost: number = Number(initProductCardState.netCost);
 
-    const calculatePercent: number = Number(
-      ((netCost / 100) * percent + netCost).toFixed(2),
-    );
+    const calculatePercent: string = ((netCost / 100) * percent + netCost).toFixed(2);
 
     setInitProductCardState({
       ...initProductCardState,
@@ -171,7 +168,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const marginPrice: number = Number(event.target.value);
-    const netCost: number = initProductCardState.netCost;
+    const netCost: number = Number(initProductCardState.netCost);
     const calculateMarginPrice: string = (
       ((marginPrice - netCost) / netCost) *
       100
@@ -184,22 +181,28 @@ const EditProductModal: FC<EditProductModalType> = ({
     });
   };
 
+  const dispatch = useDispatch();
+
   const handleAddNewProduct = () => {
     if (!initProductCardState.name) {
       return;
     }
 
-    instance
-      .post('dashboard/products', {
-        ...initProductCardState,
-      })
-      .catch((err) => console.log(err));
+    dispatch(addProduct({ product: initProductCardState }) as any);
   };
 
   const removeTechCard = (id: string) => {
     setTechCardsList(techCardsList.filter((el) => el.id !== id));
   };
 
+  const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
+    const check = event.target.checked;
+    setInitProductCardState({
+      ...initProductCardState,
+      [event.target.name]: check ? 1 : 0,
+    });
+    console.log(initProductCardState);
+  };
   return (
     <Controls.BasicModal modalTitle={'Карточка'} open={open} setOpen={toggleModal}>
       <Box sx={modalStyles.wrapper}>
@@ -228,8 +231,9 @@ const EditProductModal: FC<EditProductModalType> = ({
         <Controls.Checkbox
           name={'inSale'}
           label={IN_SALE_CHECKBOX_LABEL}
+          onChange={handleCheckBox}
           value={initProductCardState.inSale}
-          onChange={handleInputs}
+          checked={initProductCardState.inSale === 1}
         />
         <Divider sx={modalStyles.divider} />
         <Controls.Input

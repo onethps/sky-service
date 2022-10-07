@@ -10,20 +10,12 @@ interface CheckBox extends CheckboxProps {
   label: string;
 }
 
-const Checkbox: FC<CheckBox> = ({ name, label, value, onChange }) => {
-  const [checked, setChecked] = useState(true);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
-
+const Checkbox: FC<CheckBox> = ({ name, label, value, onChange, checked }) => {
   return (
-    <MuiCheckbox
-      checked={checked}
+    <FormControlLabel
       name={name}
-      value={value}
-      onChange={onChange}
-      inputProps={{ 'aria-label': 'controlled' }}
+      control={<MuiCheckbox value={value} checked={checked} onChange={onChange} />}
+      label={label}
     />
   );
 };

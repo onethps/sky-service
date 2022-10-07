@@ -1,5 +1,5 @@
 export interface ProductType {
-  _id: string;
+  _id?: string;
   createdAt?: string;
   name: string;
   productType: string;
@@ -7,7 +7,7 @@ export interface ProductType {
   inSale: number;
   netCost: number;
   marginPrice: string;
-  price: number;
+  price: string;
   quantity: string;
   unit: string;
   minQuantity: string;

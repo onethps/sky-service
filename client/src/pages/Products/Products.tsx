@@ -1,6 +1,15 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { FormControl, MenuItem, Select, SortDirection, TableProps } from '@mui/material';
+import {
+  Collapse,
+  FormControl,
+  MenuItem,
+  Select,
+  SortDirection,
+  TableProps,
+} from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
@@ -27,6 +36,9 @@ import Layout from '../../components/Layout/Layout';
 import { HeadCell, headCells } from './tableData';
 import { instance } from 'api/config';
 import { ProductType } from 'pages/Products/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectProducts } from 'pages/Products/selectors';
+import { fetchProducts } from 'store/reducers/products';
 
 const arrayOfCategories = [
   { id: 1, title: '--' },
@@ -129,65 +141,6 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
   );
 };
 
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-}
-
-const EnhancedTableToolbar: FC<EnhancedTableToolbarProps> = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Nutrition
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function EnhancedTable() {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<string>('inSale');
@@ -197,9 +150,12 @@ export default function EnhancedTable() {
   const [categoryEl, setCategoryEl] = useState('--');
   const [openModal, setOpenModal] = useState(false);
 
-  const [productCardsList, setProductCardsList]: any[] = useState<ProductType[]>(
-    [] as ProductType[],
-  );
+  const productCardsList1 = useSelector(selectProducts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProducts() as any);
+  }, []);
 
   // @ts-ignore
   const handleRequestSort = (event: MouseEvent<unknown, MouseEvent>, property: any) => {
@@ -214,7 +170,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = productCardsList.map((n: any) => n.name);
+      const newSelected = productCardsList1.products.map((n: any) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -254,47 +210,39 @@ export default function EnhancedTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productCardsList.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - productCardsList1.products.length)
+      : 0;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await instance.get<ProductType[]>('dashboard/products/');
-      setProductCardsList(data);
-    };
-    fetchData().catch((err) => console.log(err));
-  }, []);
-
-  const [currentProduct, setCurrentProduct] = useState<ProductType>({} as ProductType);
+  const [currentProductCard, setCurrentProductCard] = useState<ProductType | null>(null);
 
   const findProduct = (id: string) => {
-    const filter = productCardsList.filter((el: ProductType) => el._id === id)[0];
-    setCurrentProduct(filter);
+    const filter = productCardsList1.products.filter(
+      (el: ProductType) => el._id === id,
+    )[0];
+    setCurrentProductCard(filter);
   };
 
   const handleModal = (id: string) => {
     findProduct(id);
-
     setOpenModal(true);
   };
 
-  const handleData = (id: string) => {
-    setProductCardsList([...productCardsList]);
+  const handleAddNewProducut = () => {
+    setCurrentProductCard(null);
+    setOpenModal(true);
   };
-
-  if (productCardsList.length <= 0) {
-    return <div>2123</div>;
-  }
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Layout>
       <EditProductModal
         open={openModal}
         setOpen={setOpenModal}
-        currentProduct={currentProduct}
+        currentProduct={currentProductCard}
       />
       <Box sx={{ width: '100%' }}>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
               <EnhancedTableHead
@@ -303,10 +251,11 @@ export default function EnhancedTable() {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={productCardsList.length}
+                rowCount={productCardsList1.products.length}
               />
+
               <TableBody>
-                {stableSort(productCardsList, getComparator(order, orderBy))
+                {stableSort(productCardsList1.products, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name as string);
@@ -341,6 +290,7 @@ export default function EnhancedTable() {
                         >
                           {row.name}
                         </TableCell>
+
                         <TableCell
                           align="left"
                           onClick={() => handleModal(row._id as string)}
@@ -406,20 +356,71 @@ export default function EnhancedTable() {
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
+
+                {/**/}
+                <TableRow>
+                  <TableCell>
+                    <IconButton
+                      aria-label="expand row"
+                      size="small"
+                      onClick={() => setOpen(!open)}
+                    >
+                      {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    vasya
+                  </TableCell>
+                  <TableCell align="right">h</TableCell>
+                  <TableCell align="right">h2</TableCell>
+                  <TableCell align="right">h3</TableCell>
+                  <TableCell align="right">h4</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                      <Box margin={1}>
+                        <Table size="small" aria-label="purchases">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Function name</TableCell>
+                              <TableCell align="center">User1</TableCell>
+                              <TableCell align="center">User 2</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {/*{row.history.map((historyRow) => (*/}
+                            {/*  <TableRow key={historyRow.date}>*/}
+                            {/*    <TableCell component="th" scope="row">*/}
+                            {/*      {historyRow.date}*/}
+                            {/*    </TableCell>*/}
+                            {/*    <TableCell align="center">*/}
+                            {/*      {historyRow.customerId}*/}
+                            {/*    </TableCell>*/}
+                            {/*    <TableCell align="center">{historyRow.amount}</TableCell>*/}
+                            {/*  </TableRow>*/}
+                            {/*))}*/}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                    </Collapse>
+                  </TableCell>
+                </TableRow>
+                {/*/////////////////////*/}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={productCardsList.length}
+            count={productCardsList1.products.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <Controls.Button text={'ADD'} onClick={() => setOpenModal(true)} />
+        <Controls.Button text={'ADD'} onClick={handleAddNewProducut} />
       </Box>
     </Layout>
   );
