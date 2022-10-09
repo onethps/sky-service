@@ -1,7 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { ProductType } from 'pages/Products/types';
-import { productsApi } from 'api/products-api';
 
 const initialState = {
   userData: {

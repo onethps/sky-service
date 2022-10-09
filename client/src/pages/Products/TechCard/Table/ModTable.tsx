@@ -10,8 +10,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import { useState } from '@types/react';
+import React, { FC } from 'react';
 import Controls from '../../../../components/Controls';
+import { modTable, modTableType } from '../../../../store/reducers/techcards';
 
 const categories = [
   {
@@ -44,7 +46,11 @@ const categories = [
   },
 ];
 
-const Table = ({ state }) => {
+type ModTableType = {};
+
+export const ModTable: FC<ModTableType> = ({ state }) => {
+  const [tableState, setTableState] = useState([{ ...initTableState }]);
+
   const handleInputs = (event, index) => {
     const value = state;
     value[index][event.target.name] = event.target.value;
@@ -142,5 +148,3 @@ const Table = ({ state }) => {
     </MuiTable>
   );
 };
-
-export default Table;

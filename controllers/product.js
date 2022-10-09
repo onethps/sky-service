@@ -1,4 +1,5 @@
 import Product from "../models/products.js";
+import { Techcard } from "../models/techcard.js";
 
 export const createProduct = async (req, res, next) => {
   const newProduct = new Product({
@@ -37,5 +38,27 @@ export const getAllProducts = async (req, res, next) => {
     res.status(200).json(products);
   } catch (err) {
     next(err);
+  }
+};
+
+export const createTechCard = async (req, res, next) => {
+  const newTechCard = new Techcard({
+    ...req.body,
+  });
+
+  try {
+    const saveTechCard = await newTechCard.save();
+    res.status(200).json(saveTechCard);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getTechCards = async (req, res, next) => {
+  try {
+    await Techcard.findById(req.body.id);
+    res.status(200).json("Succeffully find techcards");
+  } catch (e) {
+    next(e);
   }
 };

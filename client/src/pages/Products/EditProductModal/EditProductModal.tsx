@@ -2,7 +2,7 @@ import { Box, Divider, SelectChangeEvent, Typography } from '@mui/material';
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Controls from '../../../components/Controls';
-import TechCard from '../TechCard/TechCard';
+
 import {
   CATEGORIES_ARRAY,
   CATEGORIES_LABEL,
@@ -17,17 +17,14 @@ import {
   unitValues,
 } from './costants';
 import { modalStyles } from './styles';
-import { instance } from 'api/config';
-import { ProductType } from 'pages/Products/types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addProduct } from 'store/reducers/products';
+import { initTechCard, TechCardType } from 'store/reducers/techcards';
+import { PRODUCT_TYPES, ProductType } from 'pages/Products/types';
+import { TechCard } from 'pages/Products/TechCard/TechCard';
+import { selectTechCards } from 'pages/Products/selectors';
 
-const PRODUCT_TYPES = [
-  { id: 1, title: 'Поштучно/Ингридиент' },
-  { id: 2, title: 'Тех.карта/Приготовление' },
-];
-
-const initDefaultValues: ProductType = {
+const initProduct: ProductType = {
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
@@ -38,46 +35,6 @@ const initDefaultValues: ProductType = {
   netCost: 0,
   marginPrice: '',
   price: '',
-};
-
-const initTechCardState: TechCardType = {
-  productCardId: '',
-  id: '',
-  name: '',
-  priceForPortion: 0,
-  price: 0,
-  marginPricePercent: 0,
-  techCardTable: [
-    {
-      id: uuidv4(),
-      name: '',
-      count: '',
-      brutto: 0,
-      netto: 0,
-      price: 0,
-      summ: 0.0,
-    },
-  ],
-};
-
-export type TechCardType = {
-  productCardId: string;
-  id: string;
-  name: string;
-  priceForPortion: number;
-  price: number;
-  marginPricePercent: number;
-  techCardTable: TechCardTable[];
-};
-
-export type TechCardTable = {
-  id: string;
-  name: string;
-  count: string;
-  brutto: number;
-  netto: number;
-  price: number;
-  summ: number;
 };
 
 type EditProductModalType = {
@@ -91,23 +48,47 @@ const EditProductModal: FC<EditProductModalType> = ({
   setOpen,
   currentProduct,
 }) => {
+  const techCards: TechCardType[] = useSelector(selectTechCards);
+
   const [initProductCardState, setInitProductCardState] = useState<ProductType>({
-    ...initDefaultValues,
+    ...initProduct,
   });
 
-  const [techCardsList, setTechCardsList] = useState([{ ...initTechCardState }]);
+  const [techCardList, setTechCardList] = useState<TechCardType[]>(techCards);
+
+  const removeTechCard = (id: string) => {
+    setTechCardList(techCardList.filter((el) => el._id !== id));
+  };
+
+  const handleNewTechCard = () => {
+    const newTechCard = {
+      _id: '',
+      productId: '',
+      modName: '',
+      modTables: [{ name: '', count: '', brutto: '', netto: '', price: '', summ: '' }],
+      priceForPortion: '',
+      netPrice: '',
+      price: '',
+      marginPricePercent: '',
+    };
+    setTechCardList([...techCardList, newTechCard]);
+  };
 
   const isTechCardCategory = initProductCardState.productType === PRODUCT_TYPES[1].title;
 
   useEffect(() => {
-    if (currentProduct) {
-      setInitProductCardState(currentProduct);
+    if (!currentProduct) {
+      setInitProductCardState({
+        ...initProduct,
+      });
       return;
     }
 
-    setInitProductCardState({
-      ...initDefaultValues,
-    });
+    setInitProductCardState(currentProduct);
+
+    // if (isTechCardCategory) {
+    //
+    // }
   }, [currentProduct]);
 
   const toggleModal = () => setOpen(false);
@@ -121,18 +102,6 @@ const EditProductModal: FC<EditProductModalType> = ({
       ...initProductCardState,
       [event.target.name]: event.target.value,
     });
-  };
-
-  const handleNewTechCard = () => {
-    if (!isTechCardCategory) return;
-    // setTechCardsList([
-    //   ...techCardsList,
-    //   {
-    //     ...initTechCardState,
-    //     productCardId: currentProduct?._id,
-    //     id: uuidv4(),
-    //   },
-    // ]);
   };
 
   const handleChangeNetPrice = (
@@ -191,10 +160,6 @@ const EditProductModal: FC<EditProductModalType> = ({
     dispatch(addProduct({ product: initProductCardState }) as any);
   };
 
-  const removeTechCard = (id: string) => {
-    setTechCardsList(techCardsList.filter((el) => el.id !== id));
-  };
-
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
     const check = event.target.checked;
     setInitProductCardState({
@@ -203,6 +168,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     });
     console.log(initProductCardState);
   };
+
   return (
     <Controls.BasicModal modalTitle={'Карточка'} open={open} setOpen={toggleModal}>
       <Box sx={modalStyles.wrapper}>
@@ -292,14 +258,14 @@ const EditProductModal: FC<EditProductModalType> = ({
           <Box sx={modalStyles.wrapper}>
             <Divider sx={modalStyles.divider} />
             <Typography variant={'h5'}>Составы</Typography>
-            {techCardsList.map((el, index) => (
+            {techCardList.map((el: TechCardType, index) => (
               <TechCard
-                key={el.id}
+                key={el._id}
                 techCard={el}
                 techIndex={index}
-                setTechCardsList={setTechCardsList}
-                techCardsList={techCardsList}
-                removeTechCard={() => removeTechCard(el.id)}
+                setTechCardsList={setTechCardList}
+                techCardsList={techCardList}
+                removeTechCard={() => removeTechCard(el._id)}
               />
             ))}
             <Controls.Button

@@ -12,3 +12,7 @@ export interface ProductType {
   unit: string;
   minQuantity: string;
 }
+export const PRODUCT_TYPES = [
+  { id: 1, title: 'Поштучно' },
+  { id: 2, title: 'Тех.карта' },
+];

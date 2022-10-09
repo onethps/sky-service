@@ -1,20 +1,6 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import {
-  Collapse,
-  FormControl,
-  MenuItem,
-  Select,
-  SortDirection,
-  TableProps,
-} from '@mui/material';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
-import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -23,27 +9,29 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import Controls from '../../components/Controls';
 import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
 import { HeadCell, headCells } from './tableData';
-import { instance } from 'api/config';
 import { ProductType } from 'pages/Products/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
 import { fetchProducts } from 'store/reducers/products';
+import { TableRowGroup } from 'components/TableRow/TableRowGroup';
+import { TableRowNormal } from 'components/TableRow/TableRowNormal';
 
 const arrayOfCategories = [
   { id: 1, title: '--' },
   { id: 2, title: 'Напитки' },
   { id: 3, title: 'Лапша' },
+];
+
+const arrayOfProductTypes = [
+  { id: 1, title: 'one' },
+  { id: 2, title: 'mod' },
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -141,13 +129,14 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
   );
 };
 
-export default function EnhancedTable() {
+export const ProductTableList = () => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<string>('inSale');
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [categoryEl, setCategoryEl] = useState('--');
+
   const [openModal, setOpenModal] = useState(false);
 
   const productCardsList1 = useSelector(selectProducts);
@@ -228,11 +217,10 @@ export default function EnhancedTable() {
     setOpenModal(true);
   };
 
-  const handleAddNewProducut = () => {
+  const handleAddNewProduct = () => {
     setCurrentProductCard(null);
     setOpenModal(true);
   };
-  const [open, setOpen] = React.useState(false);
 
   return (
     <Layout>
@@ -255,96 +243,43 @@ export default function EnhancedTable() {
               />
 
               <TableBody>
-                {stableSort(productCardsList1.products, getComparator(order, orderBy))
+                {stableSort(
+                  productCardsList1.products as any[],
+                  getComparator(order, orderBy),
+                )
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name as string);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row._id}
-                        selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            onClick={(event) => handleClick(event, row.name as string)}
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
+                      <>
+                        {row.mod ? (
+                          <TableRowNormal
+                            key={row._id}
+                            isItemSelected={isItemSelected}
+                            row={row}
+                            handleClick={handleClick}
+                            labelId={labelId}
+                            handleModal={handleModal}
+                            categoryEl={categoryEl}
+                            handleCategory={handleCategory}
+                            arrayOfCategories={arrayOfCategories}
                           />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                          onClick={() => handleModal(row._id as string)}
-                        >
-                          {row.name}
-                        </TableCell>
-
-                        <TableCell
-                          align="left"
-                          onClick={() => handleModal(row._id as string)}
-                        >
-                          {row.productType}
-                        </TableCell>
-                        <TableCell align={'left'}>
-                          <FormControl>
-                            <Select
-                              autoWidth
-                              id="category-select"
-                              value={row.category || categoryEl}
-                              onChange={handleCategory}
-                            >
-                              {arrayOfCategories.map((el) => (
-                                <MenuItem value={el.title} key={el.id}>
-                                  {el.title}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell
-                          align="right"
-                          onClick={() => handleModal(row._id as string)}
-                        >
-                          {row.netCost} ₴
-                        </TableCell>
-                        <TableCell
-                          align="right"
-                          onClick={() => handleModal(row._id as string)}
-                        >
-                          {row.price} ₴
-                        </TableCell>
-                        <TableCell
-                          align="right"
-                          onClick={() => handleModal(row._id as string)}
-                        >
-                          {row.marginPrice} %
-                        </TableCell>
-                        <TableCell align="left">
-                          <FormControl size="small">
-                            <Select
-                              autoWidth
-                              id="select-inSale-status"
-                              value={row.inSale}
-                              // onChange={}
-                            >
-                              <MenuItem value={1}>Да</MenuItem>
-                              <MenuItem value={0}>Нет</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </TableCell>
-                      </TableRow>
+                        ) : (
+                          <TableRowGroup
+                            key={row._id}
+                            isItemSelected={isItemSelected}
+                            row={row}
+                            handleClick={handleClick}
+                            labelId={labelId}
+                            handleModal={handleModal}
+                            categoryEl={categoryEl}
+                            handleCategory={handleCategory}
+                            arrayOfCategories={arrayOfCategories}
+                          />
+                        )}
+                      </>
                     );
                   })}
                 {emptyRows > 0 && (
@@ -356,57 +291,6 @@ export default function EnhancedTable() {
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
-
-                {/**/}
-                <TableRow>
-                  <TableCell>
-                    <IconButton
-                      aria-label="expand row"
-                      size="small"
-                      onClick={() => setOpen(!open)}
-                    >
-                      {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    vasya
-                  </TableCell>
-                  <TableCell align="right">h</TableCell>
-                  <TableCell align="right">h2</TableCell>
-                  <TableCell align="right">h3</TableCell>
-                  <TableCell align="right">h4</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                      <Box margin={1}>
-                        <Table size="small" aria-label="purchases">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Function name</TableCell>
-                              <TableCell align="center">User1</TableCell>
-                              <TableCell align="center">User 2</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {/*{row.history.map((historyRow) => (*/}
-                            {/*  <TableRow key={historyRow.date}>*/}
-                            {/*    <TableCell component="th" scope="row">*/}
-                            {/*      {historyRow.date}*/}
-                            {/*    </TableCell>*/}
-                            {/*    <TableCell align="center">*/}
-                            {/*      {historyRow.customerId}*/}
-                            {/*    </TableCell>*/}
-                            {/*    <TableCell align="center">{historyRow.amount}</TableCell>*/}
-                            {/*  </TableRow>*/}
-                            {/*))}*/}
-                          </TableBody>
-                        </Table>
-                      </Box>
-                    </Collapse>
-                  </TableCell>
-                </TableRow>
-                {/*/////////////////////*/}
               </TableBody>
             </Table>
           </TableContainer>
@@ -420,8 +304,8 @@ export default function EnhancedTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <Controls.Button text={'ADD'} onClick={handleAddNewProducut} />
+        <Controls.Button text={'ADD'} onClick={handleAddNewProduct} />
       </Box>
     </Layout>
   );
-}
+};

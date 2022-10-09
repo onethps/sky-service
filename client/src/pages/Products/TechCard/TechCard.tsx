@@ -1,21 +1,9 @@
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Table as MuiTable,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import React, { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { ChangeEvent, ChangeEventHandler, FC, useState } from 'react';
 import Controls from '../../../components/Controls';
-import Table from './Table/Table';
+import { ModTable } from './Table/ModTable';
+import { modTable, TechCardType } from 'store/reducers/techcards';
 
 const greyBg = grey[200];
 
@@ -25,16 +13,26 @@ const optionsPriceFor = [
   { id: 3, title: 'за 100мл.' },
 ];
 
-export default function TechCard({
+type TechCardTypes = {
+  techCard: TechCardType;
+  setTechCardsList: (tech: TechCardType[]) => void;
+  techCardsList: TechCardType[];
+  removeTechCard: () => void;
+  techIndex: number;
+};
+
+export const TechCard: FC<TechCardTypes> = ({
   techCard,
   setTechCardsList,
   techCardsList,
   removeTechCard,
   techIndex,
-}) {
+}) => {
   const [priceForOptionSelect, setPriceForOptionSelect] = useState(
     optionsPriceFor[0].title,
   );
+
+  const [tableState, setTableState] = useState([{ ...initTableState }]);
 
   const handleChangePriceForOption = (e) => {
     setPriceForOptionSelect(e.currentTarget.value);
@@ -44,26 +42,30 @@ export default function TechCard({
   //   setState([...state, { ...initState, id: uuidv4() }]);
   // };
 
-  const handleChangeInputs = (e) => {
+  const handleChangeInputs = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const values = [...techCardsList];
-    values[techIndex][e.target.name] = e.target.value;
+    let currentValue: string | null = values[techIndex][event.target.name];
+    currentValue = event.target.value;
     setTechCardsList(values);
   };
 
-  console.log(techCard);
-
   return (
     <Box sx={{ bgcolor: greyBg, padding: 4 }}>
-      <Controls.Input name={'name'} value={techCard.name} onChange={handleChangeInputs} />
+      <Controls.Input
+        name={'name'}
+        value={techCard.modName}
+        onChange={handleChangeInputs}
+      />
       <Typography variant={'h5'} sx={{ fontWeight: '700', padding: '15px 0' }}>
         Состав
       </Typography>
       <Divider sx={{ m: '20px 0' }} />
 
-      <Table state={techCard.techCardTable} />
+      <ModTable state={techCard.modTables} />
 
       <Box
-        name={'calculate netValue'}
         sx={{
           margin: '30px 0',
           alignItems: 'center',
@@ -131,4 +133,4 @@ export default function TechCard({
       </Box>
     </Box>
   );
-}
+};

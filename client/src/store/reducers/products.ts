@@ -5,7 +5,7 @@ import { productsApi } from 'api/products-api';
 import { ThunkError } from 'store/store';
 
 const initialState = {
-  products: [] as any[],
+  products: [] as ProductType[],
   loading: false,
 };
 

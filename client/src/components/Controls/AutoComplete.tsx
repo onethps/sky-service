@@ -13,12 +13,6 @@ const AutoCompleteInput: FC<AutoCompleteTypes> = ({ name, value }) => {
   return (
     <Stack spacing={2} sx={{ width: 300 }}>
       <MuiAutoComplete
-        id="free-solo-demo"
-        freeSolo
-        options={top100Films.map((option) => option.title)}
-        renderInput={(params) => <TextField {...params} label="freeSolo" />}
-      />
-      <MuiAutoComplete
         freeSolo
         id="free-solo-2-demo"
         disableClearable
