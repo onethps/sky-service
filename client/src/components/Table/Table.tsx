@@ -1,4 +1,10 @@
-import { Table as MuiTable, TableCell, TableHead, TableRow } from '@mui/material';
+import {
+  Table as MuiTable,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+} from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { IconButton, TableBody } from '@mui/material';
 import React, { FC, useState } from 'react';
@@ -35,6 +41,8 @@ const Table: FC<TableType> = (props) => {
     // });
   };
 
+  const opt = [{ title: 'hora' }, { title: 'hora' }];
+
   return (
     <MuiTable>
       <TableHead>
@@ -51,9 +59,7 @@ const Table: FC<TableType> = (props) => {
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell>
-                <Controls.AutoCompleteInput name={'name'} value={row.name} />
-              </TableCell>
+              <TableCell>{/*<Controls.AutoCompleteInput />*/}</TableCell>
               <TableCell>
                 <Controls.Input
                   name={'count'}

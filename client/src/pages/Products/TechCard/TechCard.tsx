@@ -1,9 +1,16 @@
-import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 import { grey } from '@mui/material/colors';
-import React, { ChangeEvent, ChangeEventHandler, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 import Controls from '../../../components/Controls';
 import { ModTable } from './Table/ModTable';
-import { modTable, TechCardType } from 'store/reducers/techcards';
+import { TechCardType } from 'pages/Products/TechCard/types';
 
 const greyBg = grey[200];
 
@@ -14,48 +21,41 @@ const optionsPriceFor = [
 ];
 
 type TechCardTypes = {
-  techCard: TechCardType;
-  setTechCardsList: (tech: TechCardType[]) => void;
-  techCardsList: TechCardType[];
-  removeTechCard: () => void;
+  currentTechCard: TechCardType;
   techIndex: number;
+  removeTechCard: (id: string) => void;
+  techCardsList: TechCardType[];
+  setTechCardsList: (techCards: TechCardType[]) => void;
 };
 
 export const TechCard: FC<TechCardTypes> = ({
-  techCard,
-  setTechCardsList,
-  techCardsList,
-  removeTechCard,
+  currentTechCard,
   techIndex,
+  removeTechCard,
+  techCardsList,
+  setTechCardsList,
 }) => {
   const [priceForOptionSelect, setPriceForOptionSelect] = useState(
     optionsPriceFor[0].title,
   );
 
-  const [tableState, setTableState] = useState([{ ...initTableState }]);
-
-  const handleChangePriceForOption = (e) => {
-    setPriceForOptionSelect(e.currentTarget.value);
+  const handleChangePriceForOption = (event: SelectChangeEvent<any>) => {
+    setPriceForOptionSelect(event.target.value);
   };
-
-  // const addNewRowHandleButton = () => {
-  //   setState([...state, { ...initState, id: uuidv4() }]);
-  // };
 
   const handleChangeInputs = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const values = [...techCardsList];
-    let currentValue: string | null = values[techIndex][event.target.name];
-    currentValue = event.target.value;
+    const values: any = [...techCardsList];
+    values[techIndex][event.target.name] = event.target.value;
     setTechCardsList(values);
   };
 
   return (
     <Box sx={{ bgcolor: greyBg, padding: 4 }}>
       <Controls.Input
-        name={'name'}
-        value={techCard.modName}
+        name={'modName'}
+        value={currentTechCard.modName}
         onChange={handleChangeInputs}
       />
       <Typography variant={'h5'} sx={{ fontWeight: '700', padding: '15px 0' }}>
@@ -63,7 +63,12 @@ export const TechCard: FC<TechCardTypes> = ({
       </Typography>
       <Divider sx={{ m: '20px 0' }} />
 
-      <ModTable state={techCard.modTables} />
+      <ModTable
+        currentTechCard={currentTechCard}
+        techCardIndex={techIndex}
+        techCardsList={techCardsList}
+        setTechCardsList={setTechCardsList}
+      />
 
       <Box
         sx={{
@@ -86,7 +91,7 @@ export const TechCard: FC<TechCardTypes> = ({
           minWidth={'45%'}
           disabled
           label={'Себестоимость'}
-          value={`${techCard.priceForPortion} / порцию`}
+          value={`${currentTechCard.priceForPortion} / порцию`}
         />
       </Box>
       <Box
@@ -106,7 +111,7 @@ export const TechCard: FC<TechCardTypes> = ({
           label={'Цена'}
           minWidth={'45%'}
           endAdornment={'₴'}
-          value={techCard.price}
+          value={currentTechCard.price}
           name={'price'}
           onChange={handleChangeInputs}
         />
@@ -114,14 +119,18 @@ export const TechCard: FC<TechCardTypes> = ({
           label={'Наценка'}
           minWidth={'45%'}
           endAdornment={'%'}
-          value={techCard.marginPricePercent}
+          value={currentTechCard.marginPricePercent}
           name={'marginPricePercent'}
           onChange={handleChangeInputs}
         />
       </Box>
       <Box sx={{ display: 'flex' }}>
         <IconButton>
-          <Button onClick={removeTechCard} variant={'contained'} color={'error'}>
+          <Button
+            onClick={() => removeTechCard(currentTechCard._id)}
+            variant={'contained'}
+            color={'error'}
+          >
             Удалить
           </Button>
         </IconButton>

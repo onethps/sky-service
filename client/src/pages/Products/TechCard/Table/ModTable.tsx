@@ -10,63 +10,58 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useState } from '@types/react';
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import Controls from '../../../../components/Controls';
-import { modTable, modTableType } from '../../../../store/reducers/techcards';
+import { TechCardType } from 'pages/Products/TechCard/types';
+import { categories } from 'pages/Products/TechCard/Table/categories';
+import { v4 as uuidv4 } from 'uuid';
 
-const categories = [
-  {
-    id: 1,
-    title: 'Наименование',
-  },
-  {
-    id: 2,
-    title: 'Кол-во',
-  },
-  {
-    id: 4,
-    title: 'Брутто',
-  },
-  {
-    id: 5,
-    title: 'Нетто',
-  },
-  {
-    id: 6,
-    title: 'Цена',
-  },
-  {
-    id: 7,
-    title: 'Сумма',
-  },
-  {
-    id: 8,
-    title: ' ',
-  },
-];
+type ModTableType = {
+  currentTechCard: TechCardType;
+  techCardIndex: number;
+  techCardsList: TechCardType[];
+  setTechCardsList: (techCards: TechCardType[]) => void;
+};
 
-type ModTableType = {};
-
-export const ModTable: FC<ModTableType> = ({ state }) => {
-  const [tableState, setTableState] = useState([{ ...initTableState }]);
-
-  const handleInputs = (event, index) => {
-    const value = state;
-    value[index][event.target.name] = event.target.value;
-    // setTechCard({
-    //   ...state,
-    //   value,
-    // });
+export const ModTable: FC<ModTableType> = ({
+  currentTechCard,
+  techCardIndex,
+  techCardsList,
+  setTechCardsList,
+}) => {
+  const handleInputs = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    tabIndex: number,
+  ) => {
+    const value: any = [...techCardsList];
+    value[techCardIndex].modTables[tabIndex][event.target.name] = event.target.value;
+    setTechCardsList(value);
   };
 
-  // const handleRemoveTableRow = (index) => {
-  //   const values = state;
-  //   values.splice(index, 1);
-  //   console.log(values);
-  //   setState([...values]);
-  // };
-  //
+  const addNewRow = () => {
+    const newTableRow = {
+      id: uuidv4(),
+      name: '',
+      count: '',
+      brutto: '',
+      netto: '',
+      price: '',
+      summ: '',
+    };
+    const value: any = [...techCardsList];
+    value[techCardIndex].modTables.push(newTableRow);
+    setTechCardsList(value);
+  };
+
+  const removeRow = (index: number) => {
+    const value: any = [...techCardsList];
+    value[techCardIndex].modTables.splice(index, 1);
+    setTechCardsList(value);
+  };
+  const handleName = (name: string, tabIndex: number, value: string) => {
+    const values: any = [...techCardsList];
+    values[techCardIndex].modTables[tabIndex][name] = value;
+  };
 
   return (
     <MuiTable sx={{ maxWidth: '400px' }}>
@@ -80,7 +75,7 @@ export const ModTable: FC<ModTableType> = ({ state }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {state.map((row, index) => {
+        {currentTechCard.modTables.map((row, index) => {
           return (
             <TableRow
               key={row.id}
@@ -92,10 +87,10 @@ export const ModTable: FC<ModTableType> = ({ state }) => {
               }}
             >
               <TableCell>
-                <Controls.AutoCompleteInput
+                <Controls.AutocompleteInput
+                  tabIndex={index}
                   name={'name'}
-                  value={row.name}
-                  onChange={(e) => handleInputs(e, index)}
+                  handleName={handleName}
                 />
               </TableCell>
               <TableCell>
@@ -105,6 +100,7 @@ export const ModTable: FC<ModTableType> = ({ state }) => {
                   type={'Number'}
                   name={'count'}
                   value={row.count}
+                  onChange={(event: any) => handleInputs(event, index)}
                 />
               </TableCell>
               <TableCell>
@@ -116,6 +112,7 @@ export const ModTable: FC<ModTableType> = ({ state }) => {
                   maxWidth={'80px'}
                   name={'netto'}
                   value={row.netto}
+                  onChange={(event: any) => handleInputs(event, index)}
                 />
               </TableCell>
               <TableCell>
@@ -125,7 +122,12 @@ export const ModTable: FC<ModTableType> = ({ state }) => {
                 <Typography>{row.summ}</Typography>
               </TableCell>
               <TableCell>
-                <IconButton color="primary" aria-label="upload picture" component="label">
+                <IconButton
+                  onClick={() => removeRow(index)}
+                  color="primary"
+                  aria-label="upload picture"
+                  component="label"
+                >
                   <DeleteSweepIcon />
                 </IconButton>
               </TableCell>
@@ -133,9 +135,9 @@ export const ModTable: FC<ModTableType> = ({ state }) => {
           );
         })}
       </TableBody>
-      <Box name={'buttonsAddRow'}>
+      <Box>
         <IconButton>
-          <Button variant={'contained'} color={'success'}>
+          <Button onClick={addNewRow} variant={'contained'} color={'success'}>
             +
           </Button>
         </IconButton>

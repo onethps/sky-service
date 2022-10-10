@@ -5,7 +5,7 @@ export interface ProductType {
   productType: string;
   category: string;
   inSale: number;
-  netCost: number;
+  netCost: string;
   marginPrice: string;
   price: string;
   quantity: string;
@@ -13,6 +13,6 @@ export interface ProductType {
   minQuantity: string;
 }
 export const PRODUCT_TYPES = [
-  { id: 1, title: 'Поштучно' },
-  { id: 2, title: 'Тех.карта' },
+  { id: 1, title: 'Поштучно/Ингридиент' },
+  { id: 2, title: 'Тех.карта/Приготовление' },
 ];

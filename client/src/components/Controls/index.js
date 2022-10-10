@@ -1,4 +1,4 @@
-import AutoCompleteInput from './AutoComplete';
+import AutocompleteInput from './AutoComplete';
 import Button from './Button';
 import Checkbox from './CheckBox';
 import DesktopDatePicker from './DataPicker';
@@ -17,7 +17,7 @@ const Controls = {
   BasicModal,
   DesktopDatePicker,
   TimePicker,
-  AutoCompleteInput,
+  AutocompleteInput,
 };
 
 export default Controls;
