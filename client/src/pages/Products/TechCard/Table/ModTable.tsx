@@ -37,20 +37,10 @@ export const ModTable: FC<ModTableType> = ({
     tabIndex: number,
   ) => {
     const value: any = [...techCardsList];
-
-    if (event.target.name === 'count') {
-      console.log(value[techCardIndex].modTables[tabIndex].summ);
-      console.log(+event.target.value);
-      console.log(value[techCardIndex].modTables[tabIndex].price);
-      // value[techCardIndex].modTables[tabIndex].summ =
-      //   +event.target.value * value[techCardIndex].modTables[tabIndex].price;
-    }
-
     value[techCardIndex].modTables[tabIndex][event.target.name] = event.target.value;
     setTechCardsList(value);
+    console.log(value[techCardIndex]);
   };
-
-  const handlePrice = () => {};
 
   const addNewRow = () => {
     const newTableRow = {
@@ -77,29 +67,16 @@ export const ModTable: FC<ModTableType> = ({
     values[techCardIndex].modTables[tabIndex][name] = value;
   };
 
-  const [autoInput, setAutoInput] = useState<FilmOptionType | null>(null);
-
-  const products = useSelector(selectProducts);
-
-  // const findPrice = (nameProduct: string, tabIndex: number) => {
-  //   const res = products.products.find((el) => el.name === nameProduct);
-  //   if (res) {
-  //     const values: any = [...techCardsList];
-  //     values[techCardIndex].modTables[tabIndex] = res.price;
-  //     setTechCardsList(values);
-  //   } else {
-  //     return '';
-  //   }
-  // };
-
-  useEffect(() => {
-    if (autoInput) {
-      const findIndex = products.products.findIndex((el) => el.name === autoInput.title);
-      value[techCardIndex].modTables.splice(index, 1);
-      setTechCardsList(value);
-    }
-  }, [autoInput]);
-
+  const handleCountInput = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    tabIndex: number,
+  ) => {
+    const value: any = [...techCardsList];
+    let currentRow = value[techCardIndex].modTables[tabIndex];
+    currentRow.count = +event.target.value;
+    currentRow.summ = +(currentRow.count * currentRow.price).toFixed(2);
+    setTechCardsList(value);
+  };
   return (
     <MuiTable sx={{ maxWidth: '400px' }}>
       <TableHead>
@@ -126,10 +103,11 @@ export const ModTable: FC<ModTableType> = ({
               <TableCell>
                 <Controls.AutocompleteInput
                   tabIndex={index}
+                  techCardIndex={techCardIndex}
                   name={'name'}
                   handleName={handleName}
-                  value={autoInput}
-                  setValue={setAutoInput}
+                  techCardsList={techCardsList}
+                  setTechCardsList={setTechCardsList}
                 />
               </TableCell>
               <TableCell>
@@ -139,7 +117,7 @@ export const ModTable: FC<ModTableType> = ({
                   type={'Number'}
                   name={'count'}
                   value={row.count}
-                  onChange={(event: any) => handleInputs(event, index)}
+                  onChange={(event: any) => handleCountInput(event, index)}
                 />
               </TableCell>
               <TableCell>
@@ -158,7 +136,6 @@ export const ModTable: FC<ModTableType> = ({
                 <Typography>{row.price}</Typography>
               </TableCell>
               <TableCell>
-                wwww
                 <Typography>{row.summ}</Typography>
               </TableCell>
               <TableCell>
