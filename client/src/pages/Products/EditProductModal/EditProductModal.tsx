@@ -179,6 +179,9 @@ const EditProductModal: FC<EditProductModalType> = ({
         netCost: '',
         marginPrice: '',
         price: '',
+        quantity: '',
+        unit: '',
+        minQuantity: '',
       };
     }
 
