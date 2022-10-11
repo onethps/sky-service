@@ -23,9 +23,16 @@ type AutoType = {
   name: string;
   handleName: (name: string, tabIndex: number, value: string) => void;
   tabIndex: number;
+  value: FilmOptionType | null;
+  setValue: (val: FilmOptionType | null) => void;
 };
-const AutocompleteInput: FC<AutoType> = ({ handleName, name, tabIndex }) => {
-  const [value, setValue] = React.useState<FilmOptionType | null>(null);
+const AutocompleteInput: FC<AutoType> = ({
+  value,
+  setValue,
+  handleName,
+  name,
+  tabIndex,
+}) => {
   const [open, toggleOpen] = React.useState(false);
 
   const handleClose = () => {
@@ -171,7 +178,7 @@ const AutocompleteInput: FC<AutoType> = ({ handleName, name, tabIndex }) => {
 
 export default AutocompleteInput;
 
-interface FilmOptionType {
+export interface FilmOptionType {
   inputValue?: string;
   title: string;
   year?: number;

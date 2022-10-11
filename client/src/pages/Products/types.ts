@@ -5,12 +5,12 @@ export interface ProductType {
   productType: string;
   category: string;
   inSale: number;
-  netCost: string;
-  marginPrice: string;
-  price: string;
-  quantity: string;
+  netCost: number;
+  marginPrice: number;
+  price: number;
+  quantity: number;
   unit: string;
-  minQuantity: string;
+  minQuantity: number;
 }
 export const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },

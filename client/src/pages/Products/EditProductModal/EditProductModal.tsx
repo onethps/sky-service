@@ -28,12 +28,12 @@ const initProduct: ProductType = {
   productType: PRODUCT_TYPES[0].title,
   category: '--',
   inSale: 0,
-  quantity: '',
+  quantity: 0,
   unit: 'шт.',
-  minQuantity: '',
-  netCost: '',
-  marginPrice: '',
-  price: '',
+  minQuantity: 0,
+  netCost: 0,
+  marginPrice: 0,
+  price: 0,
 };
 
 const initTechCard = {
@@ -41,12 +41,12 @@ const initTechCard = {
   productId: '',
   modName: '',
   modTables: [
-    { id: uuidv4(), name: '', count: '', brutto: '', netto: '', price: '', summ: '' },
+    { id: uuidv4(), name: '', count: 0, brutto: 0, netto: 0, price: 0, summ: 0 },
   ],
-  priceForPortion: '',
-  netPrice: '',
-  price: '',
-  marginPricePercent: '',
+  priceForPortion: 0,
+  netPrice: 0,
+  price: 0,
+  marginPricePercent: 0,
 };
 
 interface EditProductModalType {
@@ -67,9 +67,6 @@ const EditProductModal: FC<EditProductModalType> = ({
   const [techCardsList, setTechCardsList] = useState([
     { ...initTechCard, modName: currentProduct?.name || '' },
   ]);
-
-  console.log(techCardsList);
-
   const removeTechCard = (id: string) => {
     setTechCardsList(techCardsList.filter((el) => el._id !== id));
   };
@@ -80,12 +77,12 @@ const EditProductModal: FC<EditProductModalType> = ({
       productId: productId,
       modName: '',
       modTables: [
-        { id: uuidv4(), name: '', count: '', brutto: '', netto: '', price: '', summ: '' },
+        { id: uuidv4(), name: '', count: 0, brutto: 0, netto: 0, price: 0, summ: 0 },
       ],
-      priceForPortion: '',
-      netPrice: '',
-      price: '',
-      marginPricePercent: '',
+      priceForPortion: 0,
+      netPrice: 0,
+      price: 0,
+      marginPricePercent: 0,
     };
     setTechCardsList([...techCardsList, newTechCard]);
   };
@@ -125,7 +122,7 @@ const EditProductModal: FC<EditProductModalType> = ({
   ) => {
     const price: number = Number(initProductCardState.price);
     const netPrice: number = Number(e.target.value);
-    const calculateNetPrice: string = (((price - netPrice) / netPrice) * 100).toFixed(2);
+    const calculateNetPrice: number = +(((price - netPrice) / netPrice) * 100).toFixed(2);
 
     setInitProductCardState({
       ...initProductCardState,
@@ -140,7 +137,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     const percent: number = Number(event.target.value);
     const netCost: number = Number(initProductCardState.netCost);
 
-    const calculatePercent: string = ((netCost / 100) * percent + netCost).toFixed(2);
+    const calculatePercent: number = +((netCost / 100) * percent + netCost).toFixed(2);
 
     setInitProductCardState({
       ...initProductCardState,
@@ -154,7 +151,7 @@ const EditProductModal: FC<EditProductModalType> = ({
   ) => {
     const marginPrice: number = Number(event.target.value);
     const netCost: number = Number(initProductCardState.netCost);
-    const calculateMarginPrice: string = (
+    const calculateMarginPrice: number = +(
       ((marginPrice - netCost) / netCost) *
       100
     ).toFixed(2);
@@ -176,12 +173,12 @@ const EditProductModal: FC<EditProductModalType> = ({
     if (isTechCardCategory) {
       let resultObj = {
         ...initProductCardState,
-        netCost: '',
-        marginPrice: '',
-        price: '',
-        quantity: '',
+        netCost: 0,
+        marginPrice: 0,
+        price: 0,
+        quantity: 0,
         unit: '',
-        minQuantity: '',
+        minQuantity: 0,
       };
     }
 
@@ -195,8 +192,6 @@ const EditProductModal: FC<EditProductModalType> = ({
       [event.target.name]: check ? 1 : 0,
     });
   };
-
-  console.log(initProductCardState);
 
   return (
     <Controls.BasicModal modalTitle={'Карточка'} open={open} setOpen={toggleModal}>

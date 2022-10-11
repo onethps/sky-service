@@ -3,18 +3,18 @@ export type TechCardType = {
   productId: string;
   modName: string;
   modTables: modTableType[];
-  priceForPortion: string;
-  netPrice: string;
-  price: string;
-  marginPricePercent: string;
+  priceForPortion: number;
+  netPrice: number;
+  price: number;
+  marginPricePercent: number;
 };
 
 export type modTableType = {
   id: string;
   name: string;
-  count: string;
-  brutto: string;
-  netto: string;
-  price: string;
-  summ: string;
+  count: number;
+  brutto: number;
+  netto: number;
+  price: number;
+  summ: number;
 };

@@ -10,11 +10,14 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React, { ChangeEvent, FC } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import Controls from '../../../../components/Controls';
 import { TechCardType } from 'pages/Products/TechCard/types';
 import { categories } from 'pages/Products/TechCard/Table/categories';
 import { v4 as uuidv4 } from 'uuid';
+import { FilmOptionType } from '../../../../components/Controls/AutoComplete';
+import { useSelector } from 'react-redux';
+import { selectProducts } from '../../selectors';
 
 type ModTableType = {
   currentTechCard: TechCardType;
@@ -34,19 +37,30 @@ export const ModTable: FC<ModTableType> = ({
     tabIndex: number,
   ) => {
     const value: any = [...techCardsList];
+
+    if (event.target.name === 'count') {
+      console.log(value[techCardIndex].modTables[tabIndex].summ);
+      console.log(+event.target.value);
+      console.log(value[techCardIndex].modTables[tabIndex].price);
+      // value[techCardIndex].modTables[tabIndex].summ =
+      //   +event.target.value * value[techCardIndex].modTables[tabIndex].price;
+    }
+
     value[techCardIndex].modTables[tabIndex][event.target.name] = event.target.value;
     setTechCardsList(value);
   };
+
+  const handlePrice = () => {};
 
   const addNewRow = () => {
     const newTableRow = {
       id: uuidv4(),
       name: '',
-      count: '',
-      brutto: '',
-      netto: '',
-      price: '',
-      summ: '',
+      count: 0,
+      brutto: 0,
+      netto: 0,
+      price: 0,
+      summ: 0,
     };
     const value: any = [...techCardsList];
     value[techCardIndex].modTables.push(newTableRow);
@@ -62,6 +76,29 @@ export const ModTable: FC<ModTableType> = ({
     const values: any = [...techCardsList];
     values[techCardIndex].modTables[tabIndex][name] = value;
   };
+
+  const [autoInput, setAutoInput] = useState<FilmOptionType | null>(null);
+
+  const products = useSelector(selectProducts);
+
+  // const findPrice = (nameProduct: string, tabIndex: number) => {
+  //   const res = products.products.find((el) => el.name === nameProduct);
+  //   if (res) {
+  //     const values: any = [...techCardsList];
+  //     values[techCardIndex].modTables[tabIndex] = res.price;
+  //     setTechCardsList(values);
+  //   } else {
+  //     return '';
+  //   }
+  // };
+
+  useEffect(() => {
+    if (autoInput) {
+      const findIndex = products.products.findIndex((el) => el.name === autoInput.title);
+      value[techCardIndex].modTables.splice(index, 1);
+      setTechCardsList(value);
+    }
+  }, [autoInput]);
 
   return (
     <MuiTable sx={{ maxWidth: '400px' }}>
@@ -91,6 +128,8 @@ export const ModTable: FC<ModTableType> = ({
                   tabIndex={index}
                   name={'name'}
                   handleName={handleName}
+                  value={autoInput}
+                  setValue={setAutoInput}
                 />
               </TableCell>
               <TableCell>
@@ -119,6 +158,7 @@ export const ModTable: FC<ModTableType> = ({
                 <Typography>{row.price}</Typography>
               </TableCell>
               <TableCell>
+                wwww
                 <Typography>{row.summ}</Typography>
               </TableCell>
               <TableCell>
