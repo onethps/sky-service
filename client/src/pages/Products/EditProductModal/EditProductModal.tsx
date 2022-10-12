@@ -182,7 +182,13 @@ const EditProductModal: FC<EditProductModalType> = ({
       };
     }
 
+    console.log(initProductCardState);
+
     dispatch(addProduct({ product: initProductCardState }) as any);
+  };
+
+  const updateProduct = (id:string, product:ProductType) => {
+    dispatch(updateProduct(id, product) as any);
   };
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {

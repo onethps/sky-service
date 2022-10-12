@@ -99,6 +99,13 @@ const Table = () => {
     }, 0);
   };
 
+  const getMarginSumOfProducts = () => {
+    return state.reduce((acc, el: tableType) => {
+      if (el.netPrice) acc += el.netPrice;
+      return acc;
+    }, 0);
+  };
+
   return (
     <>
       <IconButton onClick={addNewRow}>
@@ -190,7 +197,7 @@ const Table = () => {
               <Typography>{getSumOfProducts()}</Typography>
             </TableCell>
             <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-              <Typography>222sss2</Typography>
+              <Typography>{getMarginSumOfProducts()}</Typography>
             </TableCell>
           </TableRow>
         </TableBody>

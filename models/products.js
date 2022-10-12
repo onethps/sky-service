@@ -20,15 +20,17 @@ const productSchema = mongoose.Schema({
     default: true,
   },
 
-  netCost: {
+  netPrice: {
     type: Number,
     default: 0,
   },
-  marginPrice: {
-    type: Number,
-    default: 0,
-  },
+
   price: {
+    type: Number,
+    default: 0,
+  },
+
+  marginPrice: {
     type: Number,
     default: 0,
   },
@@ -39,13 +41,12 @@ const productSchema = mongoose.Schema({
   },
   unit: {
     type: String,
-    default: "шт",
+    required: true,
   },
   minQuantity: {
     type: Number,
     default: 0,
   },
-  mod: Array,
 });
 
 const Product = mongoose.model("Products", productSchema);

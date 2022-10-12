@@ -14,10 +14,28 @@ export const createProduct = async (req, res, next) => {
   }
 };
 
+export const updateProduct = async (req, res, next) => {
+  try {
+    const video = await Product.findById(req.params.id);
+    if (!video) return next(404, "Not found Product");
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const deleteProduct = async (req, res, next) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.status(200).json("Succeffully deleted");
+    res.status(200).json("Successfully deleted");
   } catch (e) {
     next(e);
   }
@@ -26,7 +44,7 @@ export const deleteProduct = async (req, res, next) => {
 export const findProduct = async (req, res, next) => {
   try {
     await Product.findById(req.body.id);
-    res.status(200).json("Succeffully find");
+    res.status(200).json("Successfully find");
   } catch (e) {
     next(e);
   }

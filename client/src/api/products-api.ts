@@ -5,6 +5,9 @@ export const productsApi = {
   getProducts() {
     return instance.get<ProductType[]>('dashboard/products/');
   },
+  updateProduct(id: string, product: ProductType) {
+    return instance.post<ProductType>(`dashboard/products/${id}`, product);
+  },
   addProduct(data: ProductType) {
     return instance.post<ProductType[]>('dashboard/products/', {
       ...data,

@@ -33,6 +33,18 @@ export const addProduct = createAsyncThunk(
   },
 );
 
+export const updateProduct = createAsyncThunk(
+  'products/addProduct',
+  async (param: { id: string; product: ProductType }, thunkAPI) => {
+    try {
+      const res = await productsApi.updateProduct(param.id, param.product);
+      return res.data;
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+);
+
 export const productsSlice = createSlice({
   name: 'products',
   initialState,
@@ -44,6 +56,13 @@ export const productsSlice = createSlice({
 
     builder.addCase(addProduct.fulfilled, (state, action: PayloadAction<any>) => {
       state.products.unshift(action.payload);
+    });
+
+    builder.addCase(updateProduct.fulfilled, (state, action: PayloadAction<any>) => {
+      const findIndex = state.products.findIndex((el) => el._id === action.payload.id);
+      if (findIndex) {
+        state.products[findIndex] = action.payload.product;
+      }
     });
   },
 });
