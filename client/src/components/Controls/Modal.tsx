@@ -11,9 +11,9 @@ const style = {
     bgcolor: '#fafafa',
     border: '2px solid #000',
     boxShadow: 24,
-    width: '100%',
-    maxWidth: '1000px',
     p: 4,
+    width: '80%',
+    maxWidth: '2000px',
   },
   window: {
     padding: 2,

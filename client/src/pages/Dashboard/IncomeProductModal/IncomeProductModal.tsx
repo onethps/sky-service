@@ -15,14 +15,16 @@ import React, { ChangeEvent, FC, ReactNode, useState } from 'react';
 import Controls from '../../../components/Controls';
 import Form from '../../../components/Form/Form';
 import { v4 as uuidv4 } from 'uuid';
+import Table from 'components/Table/Table';
 
 const optionsForSpendCategory = [{ id: 1, title: 'Приход товара' }];
 const optionsForSaleStatus = [
-  { id: uuidv4(), title: 'Да' },
-  { id: uuidv4(), title: 'Нет' },
+  { id: 1, title: 'Да' },
+  { id: 2, title: 'Нет' },
 ];
 
 type initIncomeType = {
+  id: string;
   date: Dayjs | null;
   spendCategory: string | unknown;
   debitMoney: string;
@@ -40,6 +42,7 @@ type TableType = {
 };
 
 const initFValues: initIncomeType = {
+  id: uuidv4(),
   date: dayjs(),
   spendCategory: 'Приход товара',
   debitMoney: '',
@@ -66,19 +69,14 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
 
   const [state, setState] = useState<initIncomeType>({ ...initFValues });
 
-  const [error, setError] = useState(false);
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(e.target.value);
   };
 
   const handleClose = () => {
     if (!state.debitMoney) {
-      setError(true);
       return;
     }
-
     setOpen(false);
   };
 
@@ -101,20 +99,21 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
     });
   };
 
+  const [error, setError] = useState(false);
+
   const handleSpendCategory = (
     e: SelectChangeEvent<string | unknown>,
     child: ReactNode,
   ) => setState({ ...state, spendCategory: e.target.value });
 
   const handleDebitValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setError(false);
     setState({ ...state, debitMoney: e.currentTarget.value });
   };
 
   return (
     <Controls.BasicModal open={open} setOpen={setOpen} modalTitle={'Новый приход'}>
       <Grid container>
-        <Grid item xs={6} md={12}>
+        <Grid item xs={6} md={12} xl={16}>
           <Form onSubmit={handleSubmit}>
             <DialogTitle>Дата</DialogTitle>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -154,7 +153,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
               </IconButton>
             </Box>
 
-            {/*<Table state={state} setState={setState} />*/}
+            <Table />
 
             <DialogActions sx={{ display: 'flex', width: '100%' }}>
               <Button

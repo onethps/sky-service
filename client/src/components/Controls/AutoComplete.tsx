@@ -53,6 +53,8 @@ const AutocompleteInput: FC<AutoType> = ({
       const currentRow = values[techCardIndex].modTables[tabIndex];
       currentRow.name = value.title;
       currentRow.price = value.price;
+      currentRow.count = 0;
+      currentRow.summ = 0;
       setTechCardsList(values);
     }
   }, [value]);

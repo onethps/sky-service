@@ -10,14 +10,11 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import Controls from '../../../../components/Controls';
 import { TechCardType } from 'pages/Products/TechCard/types';
 import { categories } from 'pages/Products/TechCard/Table/categories';
 import { v4 as uuidv4 } from 'uuid';
-import { FilmOptionType } from '../../../../components/Controls/AutoComplete';
-import { useSelector } from 'react-redux';
-import { selectProducts } from '../../selectors';
 
 type ModTableType = {
   currentTechCard: TechCardType;
@@ -75,6 +72,16 @@ export const ModTable: FC<ModTableType> = ({
     let currentRow = value[techCardIndex].modTables[tabIndex];
     currentRow.count = +event.target.value;
     currentRow.summ = +(currentRow.count * currentRow.price).toFixed(2);
+
+    const calcNetValue: number = value[techCardIndex].modTables.reduce(
+      (acc: number, el: any) => {
+        acc += el.summ;
+        return acc;
+      },
+      0,
+    );
+
+    value[techCardIndex].priceForPortion = calcNetValue;
     setTechCardsList(value);
   };
   return (
@@ -112,8 +119,6 @@ export const ModTable: FC<ModTableType> = ({
               </TableCell>
               <TableCell>
                 <Controls.Input
-                  minWidth={'50px'}
-                  maxWidth={'80px'}
                   type={'Number'}
                   name={'count'}
                   value={row.count}
@@ -125,8 +130,6 @@ export const ModTable: FC<ModTableType> = ({
               </TableCell>
               <TableCell>
                 <Controls.Input
-                  minWidth={'50px'}
-                  maxWidth={'80px'}
                   name={'netto'}
                   value={row.netto}
                   onChange={(event: any) => handleInputs(event, index)}

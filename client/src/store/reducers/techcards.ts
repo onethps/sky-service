@@ -1,9 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { addProduct, fetchProducts } from 'store/reducers/products';
 import { productsApi } from 'api/products-api';
-import { modTableType, TechCardType } from 'pages/Products/TechCard/types';
-import { v4 as uuidv4 } from 'uuid';
-import { ProductType } from '../../pages/Products/types';
+import { TechCardType } from 'pages/Products/TechCard/types';
 import { techCardsApi } from '../../api/techcard-api';
 
 export type initTechCard = {

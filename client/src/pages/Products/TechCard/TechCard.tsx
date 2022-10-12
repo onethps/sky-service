@@ -80,7 +80,6 @@ export const TechCard: FC<TechCardTypes> = ({
         }}
       >
         <Controls.Select
-          minWidth={'45%'}
           type={'Number'}
           label={'Цена за'}
           value={priceForOptionSelect}
@@ -88,7 +87,6 @@ export const TechCard: FC<TechCardTypes> = ({
           options={optionsPriceFor}
         />
         <Controls.Input
-          minWidth={'45%'}
           disabled
           label={'Себестоимость'}
           value={`${currentTechCard.priceForPortion} / порцию`}
@@ -109,7 +107,6 @@ export const TechCard: FC<TechCardTypes> = ({
       >
         <Controls.Input
           label={'Цена'}
-          minWidth={'45%'}
           endAdornment={'₴'}
           value={currentTechCard.price}
           name={'price'}
@@ -117,7 +114,6 @@ export const TechCard: FC<TechCardTypes> = ({
         />
         <Controls.Input
           label={'Наценка'}
-          minWidth={'45%'}
           endAdornment={'%'}
           value={currentTechCard.marginPricePercent}
           name={'marginPricePercent'}

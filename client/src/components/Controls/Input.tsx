@@ -4,8 +4,6 @@ import { TextField } from '@mui/material';
 
 interface InputPropsTypes extends InputProps {
   label?: string;
-  minWidth?: string;
-  maxWidth?: string;
 }
 
 const Input: FC<InputPropsTypes> = (props) => {
@@ -18,14 +16,11 @@ const Input: FC<InputPropsTypes> = (props) => {
     onChange,
     endAdornment,
     type,
-    minWidth,
-    maxWidth,
   } = props;
   return (
     <TextField
       variant="outlined"
       label={label}
-      style={{ minWidth: minWidth || '25ch', maxWidth: maxWidth }}
       name={name}
       value={value}
       disabled={disabled}

@@ -274,7 +274,6 @@ const EditProductModal: FC<EditProductModalType> = ({
               <Controls.Input
                 name={'netCost'}
                 type={'Number'}
-                maxWidth={'50px'}
                 label={NET_COST}
                 value={initProductCardState.netCost}
                 onChange={handleChangeNetPrice}
@@ -283,7 +282,6 @@ const EditProductModal: FC<EditProductModalType> = ({
               <Controls.Input
                 name={'marginPrice'}
                 type={'Number'}
-                maxWidth={'50px'}
                 label={MARGIN_PERCENT}
                 value={initProductCardState.marginPrice}
                 onChange={handleChangePercentPrice}
@@ -292,7 +290,6 @@ const EditProductModal: FC<EditProductModalType> = ({
               <Controls.Input
                 name={'price'}
                 type={'Number'}
-                maxWidth={'50px'}
                 label={PRICE}
                 value={initProductCardState.price}
                 onChange={handleChangeMarginPrice}
