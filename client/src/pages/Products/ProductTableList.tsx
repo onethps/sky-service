@@ -20,18 +20,19 @@ import { ProductType } from 'pages/Products/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
 import { fetchProducts } from 'store/reducers/products';
-import { TableRowGroup } from 'components/TableRow/TableRowGroup';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
+import { v4 as uuidv4 } from 'uuid';
+import { Typography } from '@mui/material';
 
-const arrayOfCategories = [
-  { id: 1, title: '--' },
-  { id: 2, title: 'Напитки' },
-  { id: 3, title: 'Лапша' },
-];
+export type cat = {
+  id: string;
+  title: string;
+};
 
-const arrayOfProductTypes = [
-  { id: 1, title: 'one' },
-  { id: 2, title: 'mod' },
+const arrayOfCategories: cat[] = [
+  { id: uuidv4(), title: '--' },
+  { id: uuidv4(), title: 'Напитки' },
+  { id: uuidv4(), title: 'Лапша' },
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -60,7 +61,7 @@ function getComparator<Key extends keyof any>(
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -104,19 +105,19 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
         </TableCell>
         {headCells.map((headCell: HeadCell) => (
           <TableCell
-            key={headCell.id as string}
+            key={headCell._id as string}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id as string)}
+              active={orderBy === headCell._id}
+              direction={orderBy === headCell._id ? order : 'asc'}
+              onClick={createSortHandler(headCell._id as string)}
             >
               {headCell.label}
 
-              {orderBy === headCell.id ? (
+              {orderBy === headCell._id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
@@ -137,9 +138,9 @@ export const ProductTableList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [categoryEl, setCategoryEl] = useState('--');
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const productCardsList1 = useSelector(selectProducts);
+  const { products } = useSelector(selectProducts);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -159,7 +160,7 @@ export const ProductTableList = () => {
 
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = productCardsList1.products.map((n: any) => n.name);
+      const newSelected = products.map((n: any) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -199,16 +200,12 @@ export const ProductTableList = () => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - productCardsList1.products.length)
-      : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
 
   const [currentProductCard, setCurrentProductCard] = useState<ProductType | null>(null);
 
   const findProduct = (id: string) => {
-    const filter = productCardsList1.products.filter(
-      (el: ProductType) => el._id === id,
-    )[0];
+    const filter = products.filter((el: ProductType) => el._id === id)[0];
     setCurrentProductCard(filter);
   };
 
@@ -239,24 +236,25 @@ export const ProductTableList = () => {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={productCardsList1.products.length}
+                rowCount={products.length}
               />
 
               <TableBody>
-                {stableSort(
-                  productCardsList1.products as any[],
-                  getComparator(order, orderBy),
-                )
+                {stableSort(products, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
+                  .map((row: ProductType, index) => {
                     const isItemSelected = isSelected(row.name as string);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
+                    console.log(row._id);
+
+
+
+
+                   if (row.inSale) {
                     return (
-                      <>
-                        {row.mod ? (
                           <TableRowNormal
-                            key={row._id}
+                              key={row._id}
                             isItemSelected={isItemSelected}
                             row={row}
                             handleClick={handleClick}
@@ -266,21 +264,24 @@ export const ProductTableList = () => {
                             handleCategory={handleCategory}
                             arrayOfCategories={arrayOfCategories}
                           />
-                        ) : (
-                          <TableRowGroup
-                            key={row._id}
-                            isItemSelected={isItemSelected}
-                            row={row}
-                            handleClick={handleClick}
-                            labelId={labelId}
-                            handleModal={handleModal}
-                            categoryEl={categoryEl}
-                            handleCategory={handleCategory}
-                            arrayOfCategories={arrayOfCategories}
-                          />
-                        )}
-                      </>
-                    );
+                   } else  {
+                     return  <div>heheh</div>
+
+                   }
+                          // <TableRowGroup
+                          //   key={row._id}
+                          //   isItemSelected={isItemSelected}
+                          //   row={row}
+                          //   handleClick={handleClick}
+                          //   labelId={labelId}
+                          //   handleModal={handleModal}
+                          //   categoryEl={categoryEl}
+                          //   handleCategory={handleCategory}
+                          //   arrayOfCategories={arrayOfCategories}
+                          // />
+
+
+
                   })}
                 {emptyRows > 0 && (
                   <TableRow
@@ -297,7 +298,7 @@ export const ProductTableList = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={productCardsList1.products.length}
+            count={products.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

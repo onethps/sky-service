@@ -34,7 +34,7 @@ export const addProduct = createAsyncThunk(
 );
 
 export const updateProduct = createAsyncThunk(
-  'products/addProduct',
+  'products/updateProduct',
   async (param: { id: string; product: ProductType }, thunkAPI) => {
     try {
       const res = await productsApi.updateProduct(param.id, param.product);
