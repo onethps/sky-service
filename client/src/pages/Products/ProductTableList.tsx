@@ -16,13 +16,14 @@ import Controls from '../../components/Controls';
 import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
 import { HeadCell, headCells } from './tableData';
-import { ProductType } from 'pages/Products/types';
+import { PRODUCT_TYPES, ProductType } from 'pages/Products/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
 import { fetchProducts } from 'store/reducers/products';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
 import { v4 as uuidv4 } from 'uuid';
 import { Typography } from '@mui/material';
+import { TableRowGroup } from '../../components/TableRow/TableRowGroup';
 
 export type cat = {
   id: string;
@@ -245,43 +246,31 @@ export const ProductTableList = () => {
                   .map((row: ProductType, index) => {
                     const isItemSelected = isSelected(row.name as string);
                     const labelId = `enhanced-table-checkbox-${index}`;
-
-                    console.log(row._id);
-
-
-
-
-                   if (row.inSale) {
-                    return (
-                          <TableRowNormal
-                              key={row._id}
-                            isItemSelected={isItemSelected}
-                            row={row}
-                            handleClick={handleClick}
-                            labelId={labelId}
-                            handleModal={handleModal}
-                            categoryEl={categoryEl}
-                            handleCategory={handleCategory}
-                            arrayOfCategories={arrayOfCategories}
-                          />
-                   } else  {
-                     return  <div>heheh</div>
-
-                   }
-                          // <TableRowGroup
-                          //   key={row._id}
-                          //   isItemSelected={isItemSelected}
-                          //   row={row}
-                          //   handleClick={handleClick}
-                          //   labelId={labelId}
-                          //   handleModal={handleModal}
-                          //   categoryEl={categoryEl}
-                          //   handleCategory={handleCategory}
-                          //   arrayOfCategories={arrayOfCategories}
-                          // />
-
-
-
+                    return !(row.productType === PRODUCT_TYPES[1].title) ? (
+                      <TableRowNormal
+                        key={row._id}
+                        isItemSelected={isItemSelected}
+                        row={row}
+                        handleClick={handleClick}
+                        labelId={labelId}
+                        handleModal={handleModal}
+                        categoryEl={categoryEl}
+                        handleCategory={handleCategory}
+                        arrayOfCategories={arrayOfCategories}
+                      />
+                    ) : (
+                      <TableRowGroup
+                        key={row._id}
+                        isItemSelected={isItemSelected}
+                        row={row}
+                        handleClick={handleClick}
+                        labelId={labelId}
+                        handleModal={handleModal}
+                        categoryEl={categoryEl}
+                        handleCategory={handleCategory}
+                        arrayOfCategories={arrayOfCategories}
+                      />
+                    );
                   })}
                 {emptyRows > 0 && (
                   <TableRow

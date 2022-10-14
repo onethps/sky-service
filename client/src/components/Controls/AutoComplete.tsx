@@ -141,7 +141,7 @@ const AutocompleteInput: FC<AutoType> = ({
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
         sx={{ width: 300 }}
         freeSolo
-        renderInput={(params) => <TextField {...params} label="Free solo dialog" />}
+        renderInput={(params) => <TextField {...params} label="Name" />}
       />
       <Dialog open={open} onClose={handleClose}>
         <form onSubmit={handleSubmit}>

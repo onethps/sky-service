@@ -84,6 +84,7 @@ export const ModTable: FC<ModTableType> = ({
     value[techCardIndex].priceForPortion = calcNetValue;
     setTechCardsList(value);
   };
+
   return (
     <MuiTable sx={{ maxWidth: '400px' }}>
       <TableHead>

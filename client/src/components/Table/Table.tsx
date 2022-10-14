@@ -1,6 +1,4 @@
 import {
-  Autocomplete,
-  Box,
   Table as MuiTable,
   TableCell,
   TableHead,
@@ -10,15 +8,15 @@ import {
 } from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { IconButton, TableBody } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import Controls from '../Controls/index';
 import { categories, categoriesType } from './tableDB';
-import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
-import { selectProducts } from 'pages/Products/selectors';
-import { PlusOne } from '@mui/icons-material';
-import { Text } from 'recharts';
+import { selectProducts } from '../../pages/Products/selectors';
+import { v4 as uuidv4 } from 'uuid';
+import Autocomplete from '@mui/material/Autocomplete';
 import { ProductType } from '../../pages/Products/types';
+import { PlusOne } from '@mui/icons-material';
 
 type tableType = {
   id?: string;
