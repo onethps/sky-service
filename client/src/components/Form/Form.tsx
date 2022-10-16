@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormProps } from 'react-router-dom';
 
-const Form: FC<FormProps> = (props) => {
+export const Form: FC<FormProps> = (props) => {
   const { children, ...other } = props;
   return (
     <form autoComplete="off" {...other}>
@@ -9,5 +9,3 @@ const Form: FC<FormProps> = (props) => {
     </form>
   );
 };
-
-export default Form;

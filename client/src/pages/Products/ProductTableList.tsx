@@ -12,7 +12,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import Controls from '../../components/Controls';
+import { Controls, TableRowGroup } from '../../components';
 import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
 import { HeadCell, headCells } from './tableData';
@@ -23,7 +23,6 @@ import { fetchProducts } from 'store/reducers/products';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
 import { v4 as uuidv4 } from 'uuid';
 import { SelectChangeEvent, Typography } from '@mui/material';
-import { TableRowGroup } from '../../components/TableRow/TableRowGroup';
 
 export type cat = {
   id: string;

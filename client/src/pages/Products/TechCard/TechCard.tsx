@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import React, { ChangeEvent, FC, useState } from 'react';
-import Controls from '../../../components/Controls';
+import { Controls } from '../../../components';
 import { ModTable } from './Table/ModTable';
 import { TechCardType } from 'pages/Products/TechCard/types';
 

@@ -2,36 +2,44 @@ import React, { FC, useEffect, useState } from 'react';
 import { Button, DialogActions, Grid } from '@mui/material';
 import { DataGrid, GridRowParams } from '@mui/x-data-grid';
 import { columns, rows } from './dataGrid';
-import Controls from '../../../../components/Controls';
-import { arrayOfWallet } from '../IncomeProductModal';
+import { Controls } from '../../../../components';
+import { selectOptionsType } from '../../../../components/types';
 
 type ChooseWalletType = {
-  selectWalletValue: null | string;
-  openModalValue: string;
-  setSelectWalletValue: (val: string | null) => void;
+  selectWalletValue: string;
+  chooseWalletValue: string;
+  setSelectWalletValue: (val: string) => void;
+  setSelectWalletOptions: (arr: selectOptionsType[]) => void;
+  selectWalletOptions: selectOptionsType[];
 };
 
 export const ChooseWalletModal: FC<ChooseWalletType> = ({
   selectWalletValue,
-  openModalValue,
+  selectWalletOptions,
+  setSelectWalletOptions,
+  chooseWalletValue,
   setSelectWalletValue,
 }) => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    if (selectWalletValue === openModalValue) {
+    if (selectWalletValue === chooseWalletValue) {
       setOpenModal(true);
     }
   }, [selectWalletValue]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setSelectWalletValue(arrayOfWallet[0].title);
+    setSelectWalletValue(selectWalletOptions[0].title);
   };
 
   const handleClickOnRow = (event: GridRowParams) => {
+    const lastId = selectWalletOptions[selectWalletOptions.length - 1].id;
+    setSelectWalletOptions([
+      ...selectWalletOptions,
+      { id: lastId + 1, title: event.row.name },
+    ]);
     setSelectWalletValue(event.row.name);
-    console.log(event.row.name);
     setOpenModal(false);
   };
   return (

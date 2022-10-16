@@ -8,7 +8,7 @@ import RadioGroup from './RadioGroup';
 import Select from './Select';
 import TimePicker from './TimePicker';
 
-const Controls = {
+export const Controls = {
   Input,
   RadioGroup,
   Select,
@@ -19,5 +19,3 @@ const Controls = {
   TimePicker,
   AutocompleteInput,
 };
-
-export default Controls;

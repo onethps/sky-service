@@ -1,7 +1,7 @@
 import { Box, Divider, SelectChangeEvent, Typography } from '@mui/material';
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Controls from '../../../components/Controls';
+import { Controls } from '../../../components/';
 
 import {
   CATEGORIES_ARRAY,

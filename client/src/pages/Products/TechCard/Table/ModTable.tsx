@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { ChangeEvent, FC } from 'react';
-import Controls from '../../../../components/Controls';
+import { Controls } from '../../../../components';
 import { TechCardType } from 'pages/Products/TechCard/types';
 import { categories } from 'pages/Products/TechCard/Table/categories';
 import { v4 as uuidv4 } from 'uuid';

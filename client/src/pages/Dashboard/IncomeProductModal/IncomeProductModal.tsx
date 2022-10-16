@@ -1,34 +1,27 @@
-import AddBoxIcon from '@mui/icons-material/AddBox';
 import {
-  Box,
   Button,
   DialogActions,
   DialogTitle,
   Grid,
-  IconButton,
-  Select,
   SelectChangeEvent,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import React, { ChangeEvent, FC, ReactNode, useEffect, useState } from 'react';
-import Controls from '../../../components/Controls';
-import Form from '../../../components/Form/Form';
+import React, { ChangeEvent, FC, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Table from 'components/Table/Table';
-import Dialog from '@mui/material/Dialog';
-import { DataGrid } from '@mui/x-data-grid';
-import { columns, rows } from './ChooseWalletModal/dataGrid';
 import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
+import { selectOptionsType } from '../../../components/types';
+import { Form, Table, Controls } from '../../../components';
 
 const optionsForSpendCategory = [{ id: 1, title: 'Приход товара' }];
+
 const optionsForSaleStatus = [
   { id: 1, title: 'Да' },
   { id: 2, title: 'Нет' },
 ];
 
-export const arrayOfWallet = [
+export const arrayOfWallet: selectOptionsType[] = [
   { id: 1, title: 'Ні' },
   { id: 2, title: 'Вибрати рахунок' },
 ];
@@ -61,7 +54,7 @@ const initFValues: initIncomeType = {
       id: uuidv4(),
       name: '',
       count: '',
-      scale: 'kg',
+      scale: '',
       price: '',
       fullPrice: '',
       retailPrice: '',
@@ -117,18 +110,26 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
     setState({ ...state, debitMoney: e.currentTarget.value });
   };
 
-  const [selectWalletValue, setSelectWalletValue] = useState<null | string>(
-    arrayOfWallet[0].title,
+  const [selectWalletOptions, setSelectWalletOptions] = useState<selectOptionsType[]>([
+    ...arrayOfWallet,
+  ]);
+
+  const [selectWalletValue, setSelectWalletValue] = useState<string>(
+    selectWalletOptions[0].title,
   );
 
-  console.log(selectWalletValue);
+  const handleSelectWalletValue = (event: SelectChangeEvent<string>) => {
+    setSelectWalletValue(event.target.value);
+  };
 
   return (
     <>
       <ChooseWalletModal
         selectWalletValue={selectWalletValue}
-        openModalValue={arrayOfWallet[1].title}
+        chooseWalletValue={selectWalletOptions[1].title}
         setSelectWalletValue={setSelectWalletValue}
+        selectWalletOptions={selectWalletOptions}
+        setSelectWalletOptions={setSelectWalletOptions}
       />
       <Controls.BasicModal
         open={open}
@@ -167,11 +168,8 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
               {state.debitMoney === 'Да' ? (
                 <Controls.Select
                   value={selectWalletValue}
-                  onChange={
-                    (event: SelectChangeEvent<string>) => {}
-                    // setSelectWalletValue(event.target.value)
-                  }
-                  options={arrayOfWallet}
+                  options={selectWalletOptions}
+                  onChange={handleSelectWalletValue}
                 />
               ) : null}
 
