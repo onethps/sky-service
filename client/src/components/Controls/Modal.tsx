@@ -28,10 +28,11 @@ const style = {
 interface BasicModalTypes extends ModalProps {
   modalTitle: string;
   setOpen: (isOpenModal: boolean) => void;
+  maxWidth?: string;
 }
 
 const BasicModal: FC<BasicModalTypes> = (props) => {
-  const { modalTitle, children, open, setOpen, ...restProps } = props;
+  const { modalTitle, children, open, setOpen, maxWidth, ...restProps } = props;
 
   const handleClose = () => setOpen(false);
 
@@ -43,7 +44,7 @@ const BasicModal: FC<BasicModalTypes> = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style.modal}>
+      <Box sx={{ ...style.modal, width: maxWidth ? maxWidth : '80%' }}>
         <Typography variant={'h5'}>{modalTitle}</Typography>
         <Divider sx={{ m: '10px 0' }} />
         <Box sx={style.window}>{children}</Box>

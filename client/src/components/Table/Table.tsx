@@ -19,6 +19,7 @@ import { ProductType } from '../../pages/Products/types';
 import Button from '@mui/material/Button';
 import { Controls } from '../Controls';
 import { darken, lighten, styled } from '@mui/material/styles';
+import { NewProductModal } from '../../pages/Dashboard/IncomeProductModal/NewProductModal/NewProductModal';
 
 type tableType = {
   id?: string;
@@ -144,16 +145,12 @@ export const Table = () => {
     handleInput(newValue, index);
   };
 
-  const handleAddNewProduct = () => {};
+  const handleAddNewProduct = () => {
+    setOpenNewProductModal(true);
+  };
   return (
     <>
-      <Controls.BasicModal
-        open={openNewProductModal}
-        setOpen={setOpenNewProductModal}
-        modalTitle={'новый товар'}
-      >
-        <Typography>NEW ITEM</Typography>
-      </Controls.BasicModal>
+      <NewProductModal open={openNewProductModal} setOpen={setOpenNewProductModal} />
       <MuiTable>
         <TableHead>
           <TableRow>
@@ -183,7 +180,7 @@ export const Table = () => {
                     options={products.products.map((el: ProductType) => el.name)}
                     renderGroup={(params) => (
                       <>
-                        <GroupHeader onClick={() => console.log('hui')}>
+                        <GroupHeader onClick={handleAddNewProduct}>
                           Додати товар
                         </GroupHeader>
                         <GroupItems>{params.children}</GroupItems>
