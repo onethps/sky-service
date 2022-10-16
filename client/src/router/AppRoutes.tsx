@@ -5,6 +5,11 @@ import { ProductTableList } from 'pages/Products/ProductTableList';
 import { useDispatch } from 'react-redux';
 import { fetchProducts } from '../store/reducers/products';
 
+export const ROUTERS = {
+  HOME: '/',
+  PRODUCTS_ALL: 'products/all',
+};
+
 const AppRoutes = () => {
   const dispatch = useDispatch();
 
@@ -15,8 +20,8 @@ const AppRoutes = () => {
   return (
     <div>
       <Routes>
-        <Route path={'/'} element={<Dashboard />} />
-        <Route path={'products/all'} element={<ProductTableList />} />
+        <Route path={ROUTERS.HOME} element={<Dashboard />} />
+        <Route path={ROUTERS.PRODUCTS_ALL} element={<ProductTableList />} />
       </Routes>
     </div>
   );

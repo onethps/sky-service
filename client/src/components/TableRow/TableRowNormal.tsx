@@ -1,8 +1,14 @@
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import TableRow from '@mui/material/TableRow';
-import { FormControl, MenuItem, Select, Typography } from '@mui/material';
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 import { ProductType } from '../../pages/Products/types';
 import { cat } from '../../pages/Products/ProductTableList';
 
@@ -13,7 +19,7 @@ type TableRowNormalType = {
   labelId: string;
   handleModal: (id: string) => void;
   categoryEl: string;
-  handleCategory: (event: any) => void;
+  handleCategory: (event: SelectChangeEvent<string>) => void;
   arrayOfCategories: cat[];
 };
 
@@ -27,7 +33,6 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
   handleCategory,
   arrayOfCategories,
 }) => {
-  console.log(row);
   return (
     <TableRow
       hover
@@ -41,7 +46,7 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
       <TableCell padding="checkbox">
         <Checkbox
           color="primary"
-          onClick={(event) => handleClick(event, row.name as string)}
+          onClick={(event) => handleClick(event, row.name)}
           checked={isItemSelected}
           inputProps={{
             'aria-labelledby': labelId,
@@ -53,13 +58,13 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
         id={labelId}
         scope="row"
         padding="none"
-        onClick={() => handleModal(row._id as string)}
+        onClick={() => handleModal(row._id)}
         sx={{ textAlign: 'center', paddingRight: '40px' }}
       >
         {row.name}
       </TableCell>
 
-      <TableCell align="left" onClick={() => handleModal(row._id as string)}>
+      <TableCell align="left" onClick={() => handleModal(row._id)}>
         {row.productType}
       </TableCell>
       <TableCell align={'left'}>
@@ -78,13 +83,13 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
           </Select>
         </FormControl>
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-        <Typography>{row.netCost}</Typography>
+      <TableCell align="right" onClick={() => handleModal(row._id)}>
+        <Typography>{row.netCost} ₴</Typography>
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
+      <TableCell align="right" onClick={() => handleModal(row._id)}>
         {row.price} ₴
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
+      <TableCell align="right" onClick={() => handleModal(row._id)}>
         {row.marginPrice} %
       </TableCell>
       <TableCell align="left">

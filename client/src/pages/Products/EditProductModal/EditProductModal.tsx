@@ -24,6 +24,7 @@ import { TechCard } from 'pages/Products/TechCard/TechCard';
 import { TechCardType } from 'pages/Products/TechCard/types';
 
 const initProduct: ProductType = {
+  _id: uuidv4(),
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
@@ -182,12 +183,10 @@ const EditProductModal: FC<EditProductModalType> = ({
       };
     }
 
-    console.log(initProductCardState);
-
     dispatch(addProduct({ product: initProductCardState }) as any);
   };
 
-  const updateProduct = (id:string, product:ProductType) => {
+  const updateProduct = (id: string, product: ProductType) => {
     dispatch(updateProduct(id, product) as any);
   };
 
@@ -198,6 +197,8 @@ const EditProductModal: FC<EditProductModalType> = ({
       [event.target.name]: check ? 1 : 0,
     });
   };
+
+  useEffect(() => {}, [initProductCardState.minQuantity]);
 
   return (
     <Controls.BasicModal modalTitle={'Карточка'} open={open} setOpen={toggleModal}>
@@ -215,6 +216,7 @@ const EditProductModal: FC<EditProductModalType> = ({
           label={NAME_LABEL}
           value={initProductCardState.name}
           onChange={handleInputs}
+          error={initProductCardState.name === ''}
         />
         <Divider sx={modalStyles.divider} />
         <Controls.Select

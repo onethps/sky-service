@@ -22,7 +22,7 @@ import { selectProducts } from 'pages/Products/selectors';
 import { fetchProducts } from 'store/reducers/products';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
 import { v4 as uuidv4 } from 'uuid';
-import { Typography } from '@mui/material';
+import { SelectChangeEvent, Typography } from '@mui/material';
 import { TableRowGroup } from '../../components/TableRow/TableRowGroup';
 
 export type cat = {
@@ -76,7 +76,7 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: any) => void;
+  onRequestSort: (event: MouseEvent, property: any) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -148,20 +148,19 @@ export const ProductTableList = () => {
     dispatch(fetchProducts() as any);
   }, []);
 
-  // @ts-ignore
-  const handleRequestSort = (event: MouseEvent<unknown, MouseEvent>, property: any) => {
+  const handleRequestSort = (event: MouseEvent, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleCategory = (event: any) => {
+  const handleCategory = (event: SelectChangeEvent<string>) => {
     setCategoryEl(event.target.value);
   };
 
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = products.map((n: any) => n.name);
+      const newSelected = products.map((n: ProductType) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -244,7 +243,7 @@ export const ProductTableList = () => {
                 {stableSort(products, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row: ProductType, index) => {
-                    const isItemSelected = isSelected(row.name as string);
+                    const isItemSelected = isSelected(row.name);
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return !(row.productType === PRODUCT_TYPES[1].title) ? (
                       <TableRowNormal

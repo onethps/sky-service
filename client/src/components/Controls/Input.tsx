@@ -7,16 +7,7 @@ interface InputPropsTypes extends InputProps {
 }
 
 const Input: FC<InputPropsTypes> = (props) => {
-  const {
-    disabled,
-    name,
-    label,
-    value,
-    error = null,
-    onChange,
-    endAdornment,
-    type,
-  } = props;
+  const { disabled, name, label, value, onChange, endAdornment, type, error } = props;
   return (
     <TextField
       variant="outlined"
@@ -25,14 +16,11 @@ const Input: FC<InputPropsTypes> = (props) => {
       value={value}
       disabled={disabled}
       onChange={onChange}
+      error={error}
       type={type}
       InputProps={{
         endAdornment: <InputAdornment position="start">{endAdornment}</InputAdornment>,
       }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      {...(error && { error: true, helperText: error })}
     />
   );
 };
