@@ -58,13 +58,13 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
         id={labelId}
         scope="row"
         padding="none"
-        onClick={() => handleModal(row._id)}
+        onClick={() => handleModal(row._id as string)}
         sx={{ textAlign: 'center', paddingRight: '40px' }}
       >
         {row.name}
       </TableCell>
 
-      <TableCell align="left" onClick={() => handleModal(row._id)}>
+      <TableCell align="left" onClick={() => handleModal(row._id as string)}>
         {row.productType}
       </TableCell>
       <TableCell align={'left'}>
@@ -83,13 +83,13 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
           </Select>
         </FormControl>
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id)}>
-        <Typography>{row.netCost} ₴</Typography>
+      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
+        <Typography>{row.netPrice} ₴</Typography>
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id)}>
+      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
         {row.price} ₴
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id)}>
+      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
         {row.marginPrice} %
       </TableCell>
       <TableCell align="left">

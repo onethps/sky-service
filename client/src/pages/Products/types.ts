@@ -1,16 +1,17 @@
 export type ProductType = {
-  _id: string;
+  _id?: string;
   createdAt?: string;
   name: string;
   productType: string;
   category: string;
-  inSale: number;
-  netCost: number;
+  inSale: boolean;
+  netPrice: number;
   marginPrice: number;
   price: number;
   quantity: number;
   unit: string;
   minQuantity: number;
+  weight?: string;
 };
 export const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },

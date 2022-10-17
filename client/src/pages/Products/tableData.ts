@@ -27,7 +27,7 @@ export const headCells: readonly HeadCell[] = [
     label: 'Категория',
   },
   {
-    _id: 'netCost',
+    _id: 'netPrice',
     numeric: true,
     disablePadding: false,
     label: 'Себест.',

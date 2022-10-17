@@ -134,7 +134,7 @@ export const Table = () => {
       sum: 0,
       unit: currentProduct.unit,
       price: currentProduct.price,
-      netPrice: currentProduct.netCost,
+      netPrice: currentProduct.netPrice,
     };
     setState(values);
   };
@@ -148,22 +148,42 @@ export const Table = () => {
   const handleAddNewProduct = () => {
     setOpenNewProductModal(true);
   };
+
+  const handleSetProductDataAfterFetching = (index: number, newProduct: ProductType) => {
+    const values = [...state];
+
+    values[index] = {
+      name: newProduct.name,
+      count: 0,
+      sum: 0,
+      unit: newProduct.unit,
+      price: newProduct.price,
+      netPrice: newProduct.netPrice,
+    };
+    setState(values);
+  };
+
   return (
-    <>
-      <NewProductModal open={openNewProductModal} setOpen={setOpenNewProductModal} />
-      <MuiTable>
-        <TableHead>
-          <TableRow>
-            {categories.map((headText: categoriesType) => (
-              <TableCell align="left" key={headText.id}>
-                {headText.title}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {state.map((row: tableType, index: number) => {
-            return (
+    <MuiTable>
+      <TableHead>
+        <TableRow>
+          {categories.map((headText: categoriesType) => (
+            <TableCell align="left" key={headText.id}>
+              {headText.title}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {state.map((row: tableType, index: number) => {
+          return (
+            <>
+              <NewProductModal
+                open={openNewProductModal}
+                setOpen={setOpenNewProductModal}
+                index={index}
+                handleSetProductDataAfterFetching={handleSetProductDataAfterFetching}
+              />
               <TableRow
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -236,28 +256,28 @@ export const Table = () => {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            );
-          })}
-          <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-              <Button variant={'contained'} color={'success'} onClick={addNewRow}>
-                +
-              </Button>
-            </TableCell>
-            {/*spacing between columns*/}
-            {[...new Array(columnSpacing)].map((el, index) => (
-              <TableCell key={index.toString()} />
-            ))}
-            {/*spacing between columns*/}
-            <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-              <Typography>{sumOfProducts} ₴</Typography>
-            </TableCell>
-            <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-              <Typography>{sumOfNetPrice} ₴</Typography>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </MuiTable>
-    </>
+            </>
+          );
+        })}
+        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
+            <Button variant={'contained'} color={'success'} onClick={addNewRow}>
+              +
+            </Button>
+          </TableCell>
+          {/*spacing between columns*/}
+          {[...new Array(columnSpacing)].map((el, index) => (
+            <TableCell key={index.toString()} />
+          ))}
+          {/*spacing between columns*/}
+          <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
+            <Typography>{sumOfProducts} ₴</Typography>
+          </TableCell>
+          <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
+            <Typography>{sumOfNetPrice} ₴</Typography>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </MuiTable>
   );
 };

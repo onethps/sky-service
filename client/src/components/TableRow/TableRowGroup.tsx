@@ -85,7 +85,7 @@ export const TableRowGroup: FC<StandartTableRowType> = ({
           </FormControl>
         </TableCell>
         <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-          {row.netCost} ₴
+          {row.netPrice} ₴
         </TableCell>
         <TableCell align="right" onClick={() => handleModal(row._id as string)}>
           {row.price} ₴

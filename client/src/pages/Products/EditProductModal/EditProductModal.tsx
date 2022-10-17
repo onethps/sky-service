@@ -28,11 +28,11 @@ const initProduct: ProductType = {
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',
-  inSale: 0,
+  inSale: true,
   quantity: 0,
   unit: 'шт.',
   minQuantity: 0,
-  netCost: 0,
+  netPrice: 0,
   marginPrice: 0,
   price: 0,
 };
@@ -136,9 +136,9 @@ const EditProductModal: FC<EditProductModalType> = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const percent: number = Number(event.target.value);
-    const netCost: number = Number(initProductCardState.netCost);
+    const netPrice: number = Number(initProductCardState.netPrice);
 
-    const calculatePercent: number = +((netCost / 100) * percent + netCost).toFixed(2);
+    const calculatePercent: number = +((netPrice / 100) * percent + netPrice).toFixed(2);
 
     setInitProductCardState({
       ...initProductCardState,
@@ -151,7 +151,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const marginPrice: number = Number(event.target.value);
-    const netCost: number = Number(initProductCardState.netCost);
+    const netCost: number = Number(initProductCardState.netPrice);
     const calculateMarginPrice: number = +(
       ((marginPrice - netCost) / netCost) *
       100
@@ -231,7 +231,7 @@ const EditProductModal: FC<EditProductModalType> = ({
           label={IN_SALE_CHECKBOX_LABEL}
           onChange={handleCheckBox}
           value={initProductCardState.inSale}
-          checked={initProductCardState.inSale === 1}
+          checked={initProductCardState.inSale}
         />
 
         {isTechCardCategory ? (
@@ -280,10 +280,10 @@ const EditProductModal: FC<EditProductModalType> = ({
             />
             <Box sx={modalStyles.calculatePrice}>
               <Controls.Input
-                name={'netCost'}
+                name={'netPrice'}
                 type={'Number'}
                 label={NET_COST}
-                value={initProductCardState.netCost}
+                value={initProductCardState.netPrice}
                 onChange={handleChangeNetPrice}
                 endAdornment={'₴'}
               />

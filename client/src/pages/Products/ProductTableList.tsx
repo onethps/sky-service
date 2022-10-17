@@ -22,7 +22,7 @@ import { selectProducts } from 'pages/Products/selectors';
 import { fetchProducts } from 'store/reducers/products';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
 import { v4 as uuidv4 } from 'uuid';
-import { SelectChangeEvent, Typography } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material';
 
 export type cat = {
   id: string;
@@ -51,8 +51,8 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key,
 ): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
+  a: { [key in Key]: number | string | boolean },
+  b: { [key in Key]: number | string | boolean },
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
