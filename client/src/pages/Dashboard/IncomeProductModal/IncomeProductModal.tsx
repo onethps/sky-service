@@ -13,53 +13,27 @@ import { v4 as uuidv4 } from 'uuid';
 import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
 import { selectOptionsType } from '../../../components/types';
 import { Form, Table, Controls } from '../../../components';
-
-const optionsForSpendCategory = [{ id: 1, title: 'Приход товара' }];
-
-const optionsForSaleStatus = [
-  { id: 1, title: 'Да' },
-  { id: 2, title: 'Нет' },
-];
-
-export const arrayOfWallet: selectOptionsType[] = [
-  { id: 1, title: 'Ні' },
-  { id: 2, title: 'Вибрати рахунок' },
-];
+import { useDispatch } from 'react-redux';
+import { updateProducts } from '../../../store/reducers/products';
+import { ProductType } from '../../Products/types';
+import {
+  arrayOfWallet,
+  optionsForSaleStatus,
+  optionsForSpendCategory,
+} from '../../../constants/constants';
 
 type initIncomeType = {
   id: string;
   date: Dayjs | null;
   spendCategory: string | unknown;
-  debitMoney: string;
-  table: TableType[];
-};
-
-type TableType = {
-  id: string;
-  name: string;
-  count: string;
-  scale: string;
-  price: string;
-  fullPrice: string;
-  retailPrice: string;
+  debitMoney: boolean;
 };
 
 const initFValues: initIncomeType = {
   id: uuidv4(),
   date: dayjs(),
   spendCategory: 'Приход товара',
-  debitMoney: '',
-  table: [
-    {
-      id: uuidv4(),
-      name: '',
-      count: '',
-      scale: '',
-      price: '',
-      fullPrice: '',
-      retailPrice: '',
-    },
-  ],
+  debitMoney: true,
 };
 
 type IncomeModalTypes = {
@@ -67,11 +41,31 @@ type IncomeModalTypes = {
   setOpen: (b: boolean) => void;
 };
 
+export const initTableState: ProductType = {
+  productId: uuidv4(),
+  name: '',
+  quantity: 0,
+  unit: 'шт',
+  price: 0,
+  sum: 0,
+  netPrice: 0,
+  productType: 'one',
+  category: '--',
+  inSale: true,
+  marginPrice: 0,
+  minQuantity: 0,
+  weight: '',
+};
+
 const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   const { open, setOpen } = props;
-
   const [state, setState] = useState<initIncomeType>({ ...initFValues });
-  const [error, setError] = useState(false);
+  const [tableState, setTableState] = useState<ProductType[]>([{ ...initTableState }]);
+  const [error, ,] = useState(false);
+
+  console.log(tableState);
+
+  const dispatch = useDispatch();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -87,27 +81,11 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   const handleChangeData = (newValue: Dayjs | null) =>
     setState({ ...state, date: newValue });
 
-  const handleAddTableInputs = () => {
-    const newTableRow = {
-      id: uuidv4(),
-      name: '',
-      count: '',
-      scale: '',
-      price: '',
-      fullPrice: '',
-      retailPrice: '',
-    };
-    setState({
-      ...state,
-      table: [...state.table, newTableRow],
-    });
-  };
-
   const handleSpendCategory = (event: SelectChangeEvent<string>) =>
     setState({ ...state, spendCategory: event.target.value });
 
   const handleDebitValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, debitMoney: e.currentTarget.value });
+    setState({ ...state, debitMoney: e.currentTarget.checked });
   };
 
   const [selectWalletOptions, setSelectWalletOptions] = useState<selectOptionsType[]>([
@@ -120,6 +98,11 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
 
   const handleSelectWalletValue = (event: SelectChangeEvent<string>) => {
     setSelectWalletValue(event.target.value);
+  };
+
+  const handleUpdateProducts = () => {
+    // console.log(tableState);
+    dispatch(updateProducts({ products: tableState }) as any);
   };
 
   return (
@@ -165,7 +148,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
                 errorMessage={error}
               />
 
-              {state.debitMoney === 'Да' ? (
+              {state.debitMoney ? (
                 <Controls.Select
                   value={selectWalletValue}
                   options={selectWalletOptions}
@@ -173,7 +156,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
                 />
               ) : null}
 
-              <Table />
+              <Table state={tableState} setState={setTableState} />
 
               <DialogActions sx={{ display: 'flex', width: '100%' }}>
                 <Button
@@ -185,7 +168,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
                   Очистить
                 </Button>
                 <Button
-                  onClick={handleClose}
+                  onClick={handleUpdateProducts}
                   sx={{ display: 'flex', flexGrow: 1 }}
                   variant="contained"
                   color="success"

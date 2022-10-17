@@ -5,25 +5,27 @@ import { addProduct } from '../../../../store/reducers/products';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProductType } from '../../../Products/types';
 import { selectProducts } from '../../../Products/selectors';
+import { v4 as uuidv4 } from 'uuid';
 
 type NewProductModalType = {
   open: boolean;
   setOpen: (value: boolean) => void;
   index: number;
-  handleSetProductDataAfterFetching: (index: number, newProduct: ProductType) => void;
+  setNewProductInTableRow: (index: number, newProduct: ProductType) => void;
 };
 
 export const NewProductModal: FC<NewProductModalType> = ({
   open,
   setOpen,
   index,
-  handleSetProductDataAfterFetching,
+  setNewProductInTableRow,
 }) => {
   const dispatch = useDispatch();
 
   const { products } = useSelector(selectProducts);
 
   const [state, setState] = useState<ProductType>({
+    productId: uuidv4(),
     name: '',
     productType: 'one',
     category: '--',
@@ -36,8 +38,6 @@ export const NewProductModal: FC<NewProductModalType> = ({
     minQuantity: 0,
     weight: '',
   });
-
-  console.log('state', state);
 
   const handleInputs = (event: any) => {
     setState({
@@ -61,7 +61,7 @@ export const NewProductModal: FC<NewProductModalType> = ({
   };
 
   useEffect(() => {
-    handleSetProductDataAfterFetching(index, state);
+    setNewProductInTableRow(index, state);
   }, [products]);
 
   return (

@@ -24,7 +24,7 @@ import { TechCard } from 'pages/Products/TechCard/TechCard';
 import { TechCardType } from 'pages/Products/TechCard/types';
 
 const initProduct: ProductType = {
-  _id: uuidv4(),
+  productId: uuidv4(),
   name: '',
   productType: PRODUCT_TYPES[0].title,
   category: '--',

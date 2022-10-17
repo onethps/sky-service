@@ -2,8 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { ProductType } from 'pages/Products/types';
 import { productsApi } from 'api/products-api';
-import { ThunkError } from 'store/store';
-
 const initialState = {
   products: [] as ProductType[],
   loading: false,
@@ -39,6 +37,17 @@ export const updateProduct = createAsyncThunk(
     try {
       const res = await productsApi.updateProduct(param.id, param.product);
       return res.data;
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+);
+
+export const updateProducts = createAsyncThunk(
+  'products/updateProducts',
+  async (param: { products: ProductType[] }, thunkAPI) => {
+    try {
+      await productsApi.updateProducts(param.products);
     } catch (error) {
       return console.log(error);
     }

@@ -11,8 +11,7 @@ import Autocomplete, {
   createFilterOptions,
 } from '@mui/material/Autocomplete';
 import { TechCardType } from 'pages/Products/TechCard/types';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
-import Input from 'components/Controls/Input';
+import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
 import { ProductType } from 'pages/Products/types';

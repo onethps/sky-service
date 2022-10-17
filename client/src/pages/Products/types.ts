@@ -1,4 +1,5 @@
 export type ProductType = {
+  productId: string;
   _id?: string;
   createdAt?: string;
   name: string;
@@ -12,6 +13,7 @@ export type ProductType = {
   unit: string;
   minQuantity: number;
   weight?: string;
+  sum?: number;
 };
 export const PRODUCT_TYPES = [
   { id: 1, title: 'Поштучно/Ингридиент' },

@@ -20,25 +20,7 @@ import Button from '@mui/material/Button';
 import { Controls } from '../Controls';
 import { darken, lighten, styled } from '@mui/material/styles';
 import { NewProductModal } from '../../pages/Dashboard/IncomeProductModal/NewProductModal/NewProductModal';
-
-type tableType = {
-  id?: string;
-  name: string;
-  count: number;
-  unit: string;
-  price: number;
-  sum: number;
-  netPrice: number;
-};
-const initState: tableType = {
-  id: uuidv4(),
-  name: '',
-  count: 0,
-  unit: '',
-  price: 0,
-  sum: 0,
-  netPrice: 0,
-};
+import { initTableState } from '../../pages/Dashboard/IncomeProductModal/IncomeProductModal';
 
 const columnSpacing = 3;
 
@@ -55,14 +37,13 @@ const GroupItems = styled('ul')({
   padding: 0,
 });
 
-export const Table = () => {
-  const [state, setState] = useState([
-    {
-      ...initState,
-    },
-  ]);
+type TableType = {
+  state: ProductType[];
+  setState: (table: ProductType[]) => void;
+};
 
-  const products = useSelector(selectProducts);
+export const Table: FC<TableType> = ({ state, setState }) => {
+  const { products } = useSelector(selectProducts);
 
   const [sumOfProducts, setSumOfProducts] = useState<number>(0);
   const [sumOfNetPrice, setSumOfNetPrice] = useState<number>(0);
@@ -74,7 +55,7 @@ export const Table = () => {
     const value: any[] = [...state];
     const eventVal: number = Number(event.target.value);
 
-    if (event.target.name === 'count') {
+    if (event.target.name === 'quantity') {
       value[index].sum = eventVal * value[index].price;
       calcOfProducts(state, setSumOfProducts, 'sum');
     }
@@ -85,7 +66,9 @@ export const Table = () => {
       calcOfProducts(state, setSumOfNetPrice, 'netPrice');
     }
 
-    value[index][event.target.name] = event.target.value;
+    value[index][event.target.name] = Number(event.target.value)
+      ? +event.target.value
+      : event.target.value;
     setState(value);
   };
 
@@ -105,10 +88,9 @@ export const Table = () => {
   };
 
   const addNewRow = () => {
-    const value: tableType[] = [...state];
-    const newRow = {
-      ...initState,
-      id: uuidv4(),
+    const value: ProductType[] = [...state];
+    const newRow: ProductType = {
+      ...initTableState,
     };
     value.push(newRow);
     setState(value);
@@ -124,18 +106,11 @@ export const Table = () => {
       return;
     }
 
-    const productIndex = products.products.findIndex((el) => el.name === value);
-    const currentProduct = products.products[productIndex];
+    const productIndex = products.findIndex((el) => el.name === value);
+    const currentProduct = products[productIndex];
     const values = [...state];
 
-    values[index] = {
-      name: currentProduct.name,
-      count: 0,
-      sum: 0,
-      unit: currentProduct.unit,
-      price: currentProduct.price,
-      netPrice: currentProduct.netPrice,
-    };
+    values[index] = { ...currentProduct };
     setState(values);
   };
 
@@ -145,22 +120,15 @@ export const Table = () => {
     handleInput(newValue, index);
   };
 
-  const handleAddNewProduct = () => {
+  const addNewProductModalToggle = () => {
     setOpenNewProductModal(true);
   };
 
-  const handleSetProductDataAfterFetching = (index: number, newProduct: ProductType) => {
-    const values = [...state];
+  const setNewProductInTableRow = (index: number, newProduct: ProductType) => {
+    const tableData = [...state];
 
-    values[index] = {
-      name: newProduct.name,
-      count: 0,
-      sum: 0,
-      unit: newProduct.unit,
-      price: newProduct.price,
-      netPrice: newProduct.netPrice,
-    };
-    setState(values);
+    tableData[index] = { ...newProduct };
+    setState(tableData);
   };
 
   return (
@@ -175,17 +143,17 @@ export const Table = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {state.map((row: tableType, index: number) => {
+        {state.map((row: ProductType, index: number) => {
           return (
             <>
               <NewProductModal
                 open={openNewProductModal}
                 setOpen={setOpenNewProductModal}
                 index={index}
-                handleSetProductDataAfterFetching={handleSetProductDataAfterFetching}
+                setNewProductInTableRow={setNewProductInTableRow}
               />
               <TableRow
-                key={row.id}
+                key={row.productId}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell style={{ width: '40%', whiteSpace: 'nowrap' }}>
@@ -196,11 +164,13 @@ export const Table = () => {
                     renderInput={(params) => (
                       <TextField {...params} label={'Name'} error={row.name === ''} />
                     )}
-                    groupBy={(o) => 'Додати товар'}
-                    options={products.products.map((el: ProductType) => el.name)}
+                    groupBy={(o) => ' '}
+                    options={
+                      products.length ? products.map((el: ProductType) => el.name) : [' ']
+                    }
                     renderGroup={(params) => (
                       <>
-                        <GroupHeader onClick={handleAddNewProduct}>
+                        <GroupHeader onClick={addNewProductModalToggle}>
                           Додати товар
                         </GroupHeader>
                         <GroupItems>{params.children}</GroupItems>
@@ -210,8 +180,8 @@ export const Table = () => {
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
                   <Controls.Input
-                    name={'count'}
-                    value={row.count}
+                    name={'quantity'}
+                    value={row.quantity}
                     onChange={(e) => handleInputs(index, e)}
                   />
                 </TableCell>
@@ -221,7 +191,7 @@ export const Table = () => {
                     disabled={row.unit === ''}
                     value={row.unit}
                     onChange={(e) => handleSelects(index, e)}
-                    options={[{ id: 1, title: 'kg' }]}
+                    options={[{ id: 1, title: 'шт' }]}
                   />
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>

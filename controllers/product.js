@@ -32,6 +32,28 @@ export const updateProduct = async (req, res, next) => {
   }
 };
 
+export const updateProducts = async (req, res, next) => {
+  try {
+    const bulk = [];
+    req.body.products.forEach((item) => {
+      let updateDoc = {
+        updateOne: {
+          filter: { productId: item.productId },
+          update: item,
+          upsert: false,
+        },
+      };
+      bulk.push(updateDoc);
+    });
+
+    await Product.bulkWrite(bulk);
+
+    res.status(200).json(req.body.products);
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const deleteProduct = async (req, res, next) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
@@ -75,7 +97,7 @@ export const createTechCard = async (req, res, next) => {
 export const getTechCards = async (req, res, next) => {
   try {
     await Techcard.findById(req.body.id);
-    res.status(200).json("Succeffully find techcards");
+    res.status(200).json("Successfully find tech-cards");
   } catch (e) {
     next(e);
   }
