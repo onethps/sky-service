@@ -24,14 +24,26 @@ type SelectTypes = {
   error?: boolean;
   type?: string;
   disabled?: boolean;
+  style?: any;
 };
 
 const Select: FC<SelectTypes> = (props) => {
-  const { name, label, value, error = null, onChange, options, type, disabled } = props;
+  const {
+    name,
+    label,
+    style,
+    value,
+    error = null,
+    onChange,
+    options,
+    type,
+    disabled,
+  } = props;
   return (
     <FormControl variant="outlined" sx={{ width: '100%' }}>
       <InputLabel>{label}</InputLabel>
       <MuiSelect
+        sx={{ ...style }}
         disabled={disabled}
         label={label}
         name={name}

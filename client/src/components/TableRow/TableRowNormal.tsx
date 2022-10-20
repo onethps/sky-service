@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC } from 'react';
+import React, { ChangeEvent, FC, useEffect } from 'react';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import TableRow from '@mui/material/TableRow';
@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { ProductType } from '../../pages/Products/types';
 import { cat } from '../../pages/Products/ProductTableList';
+import { Controls } from '../Controls';
 
 type TableRowNormalType = {
   isItemSelected: boolean;
@@ -18,9 +19,8 @@ type TableRowNormalType = {
   handleClick: (event: any, name: string) => void;
   labelId: string;
   handleModal: (id: string) => void;
-  categoryEl: string;
-  handleCategory: (event: SelectChangeEvent<string>) => void;
   arrayOfCategories: cat[];
+  updateProductCategories: (id: string, product: ProductType) => void;
 };
 
 export const TableRowNormal: FC<TableRowNormalType> = ({
@@ -29,10 +29,9 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
   handleClick,
   labelId,
   handleModal,
-  categoryEl,
-  handleCategory,
-  arrayOfCategories,
+  updateProductCategories,
 }) => {
+
   return (
     <TableRow
       hover
@@ -68,20 +67,12 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
         {row.productType === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
       </TableCell>
       <TableCell align={'left'}>
-        <FormControl>
-          <Select
-            autoWidth
-            id="category-select"
-            value={row.category || categoryEl}
-            onChange={handleCategory}
-          >
-            {arrayOfCategories.map((el) => (
-              <MenuItem value={el.title} key={el.id}>
-                {el.title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Controls.Select
+          name={'category'}
+          value={row.category}
+          onChange={() => console.log('')}
+          options={[{ id: 1, title: '--' }]}
+        />
       </TableCell>
       <TableCell align="right" onClick={() => handleModal(row._id as string)}>
         <Typography>{row.netPrice} ₴</Typography>
@@ -93,17 +84,18 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
         {row.marginPrice} %
       </TableCell>
       <TableCell align="left">
-        <FormControl size="small">
-          <Select
-            autoWidth
-            id="select-inSale-status"
-            value={row.inSale}
-            // onChange={}
-          >
-            <MenuItem value={1}>Да</MenuItem>
-            <MenuItem value={0}>Нет</MenuItem>
-          </Select>
-        </FormControl>
+        <Controls.Select
+          style={{ background: row.inSale ? 'green' : 'red', color: 'white' }}
+          name={'inSale'}
+          value={row.inSale ? 'Так' : 'Ні'}
+          onChange={() =>
+            updateProductCategories(row._id as string, { ...row, inSale: !row.inSale })
+          }
+          options={[
+            { id: 1, title: 'Так' },
+            { id: 2, title: 'Ні' },
+          ]}
+        />
       </TableCell>
     </TableRow>
   );

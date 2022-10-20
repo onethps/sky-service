@@ -19,10 +19,9 @@ import { HeadCell, headCells } from './tableData';
 import { ProductType } from 'pages/Products/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
-import { fetchProducts } from 'store/reducers/products';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
-import { SelectChangeEvent } from '@mui/material';
 import { TechCardType } from './TechCard/types';
+import { updateProduct } from '../../store/reducers/products';
 
 export type cat = {
   id: number;
@@ -136,25 +135,16 @@ export const ProductTableList = () => {
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [categoryEl, setCategoryEl] = useState('--');
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const { products } = useSelector(selectProducts);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchProducts() as any);
-  }, []);
-
   const handleRequestSort = (event: MouseEvent, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleCategory = (event: SelectChangeEvent<string>) => {
-    setCategoryEl(event.target.value);
   };
 
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
@@ -218,6 +208,12 @@ export const ProductTableList = () => {
     setOpenModal(true);
   };
 
+  const updateProductCategories = (productId: string, product: ProductType) => {
+    dispatch(updateProduct({ id: productId, product }) as any);
+  };
+
+  useEffect(() => {}, [products]);
+
   return (
     <Layout>
       <EditProductModal
@@ -252,9 +248,8 @@ export const ProductTableList = () => {
                         handleClick={handleClick}
                         labelId={labelId}
                         handleModal={handleModal}
-                        categoryEl={categoryEl}
-                        handleCategory={handleCategory}
                         arrayOfCategories={arrayOfCategories}
+                        updateProductCategories={updateProductCategories}
                       />
                     ) : (
                       <TableRowGroup
@@ -264,8 +259,6 @@ export const ProductTableList = () => {
                         handleClick={handleClick}
                         labelId={labelId}
                         handleModal={handleModal}
-                        categoryEl={categoryEl}
-                        handleCategory={handleCategory}
                         arrayOfCategories={arrayOfCategories}
                       />
                     );

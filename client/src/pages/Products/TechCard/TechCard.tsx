@@ -51,7 +51,10 @@ export const TechCard: FC<TechCardTypes> = ({
     if (event.target.value === optionsPriceFor[0].title) {
       values[techIndex].netPriceMod = calcNetValuePerPortion(values[techIndex].tablesMod);
     }
-    if (event.target.value === optionsPriceFor[1].title) {
+    if (
+      event.target.value === optionsPriceFor[1].title ||
+      event.target.value === optionsPriceFor[2].title
+    ) {
       values[techIndex].netPriceMod = calcNetValuePerHungeredGram(
         values[techIndex].tablesMod,
       );

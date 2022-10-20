@@ -10,6 +10,7 @@ import Table from '@mui/material/Table';
 import TableContainer from '@mui/material/TableContainer';
 import { Text } from 'recharts';
 import { TechCardType } from '../../pages/Products/TechCard/types';
+import { Controls } from '../Controls';
 
 type defaultTableRowType = {
   isItemSelected: boolean;
@@ -17,8 +18,6 @@ type defaultTableRowType = {
   handleClick: (event: any, name: string) => void;
   labelId: string;
   handleModal: (id: string) => void;
-  categoryEl: string;
-  handleCategory: (event: any) => void;
   arrayOfCategories: any[];
 };
 
@@ -28,8 +27,6 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
   handleClick,
   labelId,
   handleModal,
-  categoryEl,
-  handleCategory,
   arrayOfCategories,
 }) => {
   const [open, setOpen] = useState(true);
@@ -66,20 +63,12 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
           {row.productType === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
         </TableCell>
         <TableCell align={'left'}>
-          <FormControl>
-            <Select
-              autoWidth
-              id="category-select"
-              value={row.category || categoryEl}
-              onChange={handleCategory}
-            >
-              {arrayOfCategories.map((el) => (
-                <MenuItem value={el.title} key={el.id}>
-                  {el.title}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Controls.Select
+            name={'category'}
+            value={row.category}
+            onChange={() => console.log('')}
+            options={[{ id: 1, title: '--' }]}
+          />
         </TableCell>
 
         <TableCell
@@ -95,17 +84,16 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
           onClick={() => handleModal(row._id as string)}
         ></TableCell>
         <TableCell align="left">
-          <FormControl size="small">
-            <Select
-              autoWidth
-              id="select-inSale-status"
-              value={row.inSale}
-              // onChange={}
-            >
-              <MenuItem value={1}>Да</MenuItem>
-              <MenuItem value={0}>Нет</MenuItem>
-            </Select>
-          </FormControl>
+          <Controls.Select
+            style={{ background: row.inSale ? 'green' : 'red', color: 'white' }}
+            name={'inSale'}
+            value={row.inSale ? 'Так' : 'Ні'}
+            onChange={() => console.log('')}
+            options={[
+              { id: 1, title: 'Так' },
+              { id: 2, title: 'Ні' },
+            ]}
+          />
         </TableCell>
       </TableRow>
       <TableRow>

@@ -69,6 +69,7 @@ export const productsSlice = createSlice({
 
     builder.addCase(updateProduct.fulfilled, (state, action: PayloadAction<any>) => {
       const findIndex = state.products.findIndex((el) => el._id === action.payload.id);
+      console.log(findIndex);
       if (findIndex) {
         state.products[findIndex] = action.payload.product;
       }
