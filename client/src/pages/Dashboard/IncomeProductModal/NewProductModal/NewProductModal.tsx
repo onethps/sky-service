@@ -37,6 +37,7 @@ export const NewProductModal: FC<NewProductModalType> = ({
     unit: 'шт',
     minQuantity: 0,
     weight: '',
+    mod: [],
   });
 
   const handleInputs = (event: any) => {

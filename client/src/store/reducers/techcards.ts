@@ -2,9 +2,10 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { productsApi } from 'api/products-api';
 import { TechCardType } from 'pages/Products/TechCard/types';
 import { techCardsApi } from '../../api/techcard-api';
+import { updateProduct } from './products';
 
-export type initTechCard = {
-  techCardsList: TechCardType[];
+const initialState = {
+  techCardsList: [] as TechCardType[],
 };
 
 export const addTechCard = createAsyncThunk<
@@ -25,19 +26,15 @@ export const addTechCard = createAsyncThunk<
 
 export const fetchTechCards = createAsyncThunk(
   'tech/fetchTechCards',
-  async (param, thunkAPI) => {
+  async (param: { productId: string }, thunkAPI) => {
     try {
-      const res = await productsApi.getProducts();
+      const res = await techCardsApi.getTechCards(param.productId);
       return res.data;
     } catch (error) {
       return console.log(error);
     }
   },
 );
-
-const initialState = {
-  techCardsList: [] as TechCardType[],
-};
 
 export const TechCardSlice = createSlice({
   name: 'techCardsList',
@@ -50,6 +47,9 @@ export const TechCardSlice = createSlice({
         state.techCardsList.unshift(action.payload);
       },
     );
+    builder.addCase(fetchTechCards.fulfilled, (state, action: PayloadAction<any>) => {
+      state.techCardsList = action.payload;
+    });
   },
 });
 

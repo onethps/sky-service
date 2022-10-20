@@ -8,81 +8,108 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
 import React, { ChangeEvent, FC } from 'react';
 import { Controls } from '../../../../components';
-import { TechCardType } from 'pages/Products/TechCard/types';
+import { modProductType, TechCardType } from 'pages/Products/TechCard/types';
 import { categories } from 'pages/Products/TechCard/Table/categories';
 import { v4 as uuidv4 } from 'uuid';
+import Autocomplete from '@mui/material/Autocomplete';
+import { ProductType } from '../../types';
+import { useSelector } from 'react-redux';
+import { selectProducts } from '../../selectors';
+import { styled } from '@mui/material/styles';
+import { optionsPriceFor } from '../TechCard';
+import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from '../../../../helpers';
+
+const GroupHeader = styled('div')(({ theme }) => ({
+  position: 'sticky',
+  top: '-8px',
+  padding: '4px 15px',
+  color: theme.palette.primary.main,
+  fontWeight: '700',
+  cursor: 'pointer',
+}));
+
+const GroupItems = styled('ul')({
+  padding: 0,
+});
 
 type ModTableType = {
   currentTechCard: TechCardType;
   techCardIndex: number;
-  techCardsList: TechCardType[];
-  setTechCardsList: (techCards: TechCardType[]) => void;
+  initTechCardList: TechCardType[];
+  setInitTechCardList: (techCards: TechCardType[]) => void;
 };
 
 export const ModTable: FC<ModTableType> = ({
   currentTechCard,
   techCardIndex,
-  techCardsList,
-  setTechCardsList,
+  initTechCardList,
+  setInitTechCardList,
 }) => {
+  const { products } = useSelector(selectProducts);
+
   const handleInputs = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     tabIndex: number,
   ) => {
-    const value: any = [...techCardsList];
-    value[techCardIndex].modTables[tabIndex][event.target.name] = event.target.value;
-    setTechCardsList(value);
-    console.log(value[techCardIndex]);
+    const value: any = [...initTechCardList];
+    value[techCardIndex][tabIndex][event.target.name] = event.target.value;
+    setInitTechCardList(value);
   };
 
   const addNewRow = () => {
     const newTableRow = {
       id: uuidv4(),
-      name: '',
-      count: 0,
-      brutto: 0,
-      netto: 0,
+      name: null,
+      quantity: 0,
+      bruto: 0,
+      neto: 0,
       price: 0,
       summ: 0,
     };
-    const value: any = [...techCardsList];
-    value[techCardIndex].modTables.push(newTableRow);
-    setTechCardsList(value);
+    const value: any = [...initTechCardList];
+    value[techCardIndex].tablesMod.push(newTableRow);
+    setInitTechCardList(value);
   };
 
   const removeRow = (index: number) => {
-    const value: any = [...techCardsList];
-    value[techCardIndex].modTables.splice(index, 1);
-    setTechCardsList(value);
+    const value: any = [...initTechCardList];
+    value[techCardIndex].tablesMod.splice(index, 1);
+    setInitTechCardList(value);
   };
-  const handleName = (name: string, tabIndex: number, value: string) => {
-    const values: any = [...techCardsList];
-    values[techCardIndex].modTables[tabIndex][name] = value;
+
+  const handleName = (event: any, newValue: any, tabIndex: number) => {
+    const product = products.filter((el) => el.name === newValue)[0];
+    const values: any = [...initTechCardList];
+    values[techCardIndex].tablesMod[tabIndex]['name'] = newValue;
+    values[techCardIndex].tablesMod[tabIndex]['price'] = product.netPrice;
+    setInitTechCardList(values);
   };
 
   const handleCountInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     tabIndex: number,
   ) => {
-    const value: any = [...techCardsList];
-    let currentRow = value[techCardIndex].modTables[tabIndex];
-    currentRow.count = +event.target.value;
-    currentRow.summ = +(currentRow.count * currentRow.price).toFixed(2);
+    const value: any = [...initTechCardList];
+    let currentRow = value[techCardIndex].tablesMod[tabIndex];
+    currentRow.quantity = +event.target.value;
+    currentRow.summ = +(currentRow.quantity * currentRow.price).toFixed(2);
 
-    const calcNetValue: number = value[techCardIndex].modTables.reduce(
-      (acc: number, el: any) => {
-        acc += el.summ;
-        return acc;
-      },
-      0,
-    );
-
-    value[techCardIndex].priceForPortion = calcNetValue;
-    setTechCardsList(value);
+    if (optionsPriceFor[0].title === currentTechCard.categoryPerPriceMod) {
+      value[techCardIndex].netPriceMod = calcNetValuePerPortion(
+        value[techCardIndex].tablesMod,
+      );
+    }
+    if (optionsPriceFor[1].title === currentTechCard.categoryPerPriceMod) {
+      value[techCardIndex].netPriceMod = calcNetValuePerHungeredGram(
+        value[techCardIndex].tablesMod,
+      );
+    }
+    setInitTechCardList(value);
   };
 
   return (
@@ -97,7 +124,7 @@ export const ModTable: FC<ModTableType> = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {currentTechCard.modTables.map((row, index) => {
+        {currentTechCard.tablesMod.map((row, index) => {
           return (
             <TableRow
               key={row.id}
@@ -109,30 +136,42 @@ export const ModTable: FC<ModTableType> = ({
               }}
             >
               <TableCell>
-                <Controls.AutocompleteInput
-                  tabIndex={index}
-                  techCardIndex={techCardIndex}
-                  name={'name'}
-                  handleName={handleName}
-                  techCardsList={techCardsList}
-                  setTechCardsList={setTechCardsList}
+                <Autocomplete
+                  value={row.name}
+                  defaultValue={null}
+                  options={
+                    products.length ? products.map((el: ProductType) => el.name) : [' ']
+                  }
+                  onChange={(event, newValue) => handleName(event, newValue, index)}
+                  renderInput={(params) => (
+                    <TextField {...params} label={'Name'} error={!row.name} />
+                  )}
+                  groupBy={(o) => ' '}
+                  renderGroup={(params) => (
+                    <>
+                      <GroupHeader onClick={() => console.log('adde new product featu')}>
+                        Додати товар
+                      </GroupHeader>
+                      <GroupItems>{params.children}</GroupItems>
+                    </>
+                  )}
                 />
               </TableCell>
               <TableCell>
                 <Controls.Input
                   type={'Number'}
-                  name={'count'}
-                  value={row.count}
+                  name={'quantity'}
+                  value={row.quantity}
                   onChange={(event: any) => handleCountInput(event, index)}
                 />
               </TableCell>
               <TableCell>
-                <Typography>{row.brutto}</Typography>
+                <Typography>{row.bruto}</Typography>
               </TableCell>
               <TableCell>
                 <Controls.Input
-                  name={'netto'}
-                  value={row.netto}
+                  name={'neto'}
+                  value={row.neto}
                   onChange={(event: any) => handleInputs(event, index)}
                 />
               </TableCell>
@@ -156,7 +195,7 @@ export const ModTable: FC<ModTableType> = ({
           );
         })}
       </TableBody>
-      <Box>
+      <Box sx={{ display: 'flex' }}>
         <IconButton>
           <Button onClick={addNewRow} variant={'contained'} color={'success'}>
             +

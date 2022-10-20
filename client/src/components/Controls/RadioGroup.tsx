@@ -10,7 +10,7 @@ import {
 import { FC } from 'react';
 
 interface RadioGroupTypes extends RadioGroupProps {
-  label?: string;
+  label: string;
   items: any[];
   errorMessage: boolean;
 }
@@ -34,7 +34,7 @@ const RadioGroup: FC<RadioGroupTypes> = (props) => {
             key={item.id}
             value={item.title}
             control={<Radio />}
-            label={item.title}
+            label={item.label}
           />
         ))}
       </MuiRadioGroup>

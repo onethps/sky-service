@@ -12,28 +12,24 @@ import React, { ChangeEvent, FC, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
 import { selectOptionsType } from '../../../components/types';
-import { Form, Table, Controls } from '../../../components';
+import { Controls, Form, Table } from '../../../components';
 import { useDispatch } from 'react-redux';
 import { updateProducts } from '../../../store/reducers/products';
 import { ProductType } from '../../Products/types';
-import {
-  arrayOfWallet,
-  optionsForSaleStatus,
-  optionsForSpendCategory,
-} from '../../../constants/constants';
+import { arrayOfWallet, optionsForSpendCategory } from '../../../constants/constants';
 
 type initIncomeType = {
   id: string;
   date: Dayjs | null;
   spendCategory: string | unknown;
-  debitMoney: boolean;
+  debitMoney: string;
 };
 
 const initFValues: initIncomeType = {
   id: uuidv4(),
   date: dayjs(),
   spendCategory: 'Приход товара',
-  debitMoney: true,
+  debitMoney: 'yes',
 };
 
 type IncomeModalTypes = {
@@ -55,6 +51,7 @@ export const initTableState: ProductType = {
   marginPrice: 0,
   minQuantity: 0,
   weight: '',
+  mod: [],
 };
 
 const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
@@ -85,7 +82,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
     setState({ ...state, spendCategory: event.target.value });
 
   const handleDebitValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, debitMoney: e.currentTarget.checked });
+    setState({ ...state, debitMoney: e.target.value });
   };
 
   const [selectWalletOptions, setSelectWalletOptions] = useState<selectOptionsType[]>([
@@ -140,15 +137,20 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
               />
 
               <DialogTitle>Списать деньги</DialogTitle>
+
               <Controls.RadioGroup
                 name={'debitMoney'}
+                label={' '}
                 value={state.debitMoney}
-                items={optionsForSaleStatus}
                 onChange={handleDebitValue}
-                errorMessage={error}
+                items={[
+                  { id: 1, title: 'yes', label: 'Так' },
+                  { id: 2, title: 'no', label: 'Ні' },
+                ]}
+                errorMessage={false}
               />
 
-              {state.debitMoney ? (
+              {state.debitMoney === 'yes' ? (
                 <Controls.Select
                   value={selectWalletValue}
                   options={selectWalletOptions}

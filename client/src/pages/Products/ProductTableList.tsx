@@ -16,23 +16,23 @@ import { Controls, TableRowGroup } from '../../components';
 import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
 import { HeadCell, headCells } from './tableData';
-import { PRODUCT_TYPES, ProductType } from 'pages/Products/types';
+import { ProductType } from 'pages/Products/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
 import { fetchProducts } from 'store/reducers/products';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
-import { v4 as uuidv4 } from 'uuid';
 import { SelectChangeEvent } from '@mui/material';
+import { TechCardType } from './TechCard/types';
 
 export type cat = {
-  id: string;
+  id: number;
   title: string;
 };
 
 const arrayOfCategories: cat[] = [
-  { id: uuidv4(), title: '--' },
-  { id: uuidv4(), title: 'Напитки' },
-  { id: uuidv4(), title: 'Лапша' },
+  { id: 1, title: '--' },
+  { id: 2, title: 'Напитки' },
+  { id: 3, title: 'Лапша' },
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -51,8 +51,8 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key,
 ): (
-  a: { [key in Key]: number | string | boolean },
-  b: { [key in Key]: number | string | boolean },
+  a: { [key in Key]: number | string | boolean | TechCardType[] },
+  b: { [key in Key]: number | string | boolean | TechCardType[] },
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -244,7 +244,7 @@ export const ProductTableList = () => {
                   .map((row: ProductType, index) => {
                     const isItemSelected = isSelected(row.name);
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    return !(row.productType === PRODUCT_TYPES[1].title) ? (
+                    return !row.mod.length ? (
                       <TableRowNormal
                         key={row._id}
                         isItemSelected={isItemSelected}

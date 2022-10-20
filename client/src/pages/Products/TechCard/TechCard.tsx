@@ -11,11 +11,12 @@ import React, { ChangeEvent, FC, useState } from 'react';
 import { Controls } from '../../../components';
 import { ModTable } from './Table/ModTable';
 import { TechCardType } from 'pages/Products/TechCard/types';
+import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from '../../../helpers';
 
 const greyBg = grey[200];
 
-const optionsPriceFor = [
-  { id: 1, title: 'Порцию' },
+export const optionsPriceFor = [
+  { id: 1, title: 'Порцію' },
   { id: 2, title: 'за 100гр.' },
   { id: 3, title: 'за 100мл.' },
 ];
@@ -24,31 +25,39 @@ type TechCardTypes = {
   currentTechCard: TechCardType;
   techIndex: number;
   removeTechCard: (id: string) => void;
-  techCardsList: TechCardType[];
-  setTechCardsList: (techCards: TechCardType[]) => void;
+  initTechCardList: TechCardType[];
+  setInitTechCardList: (techCards: TechCardType[]) => void;
 };
 
 export const TechCard: FC<TechCardTypes> = ({
   currentTechCard,
   techIndex,
   removeTechCard,
-  techCardsList,
-  setTechCardsList,
+  initTechCardList,
+  setInitTechCardList,
 }) => {
-  const [priceForOptionSelect, setPriceForOptionSelect] = useState(
-    optionsPriceFor[0].title,
-  );
-
-  const handleChangePriceForOption = (event: SelectChangeEvent<any>) => {
-    setPriceForOptionSelect(event.target.value);
-  };
-
   const handleChangeInputs = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const values: any = [...techCardsList];
+    const values: any = [...initTechCardList];
     values[techIndex][event.target.name] = event.target.value;
-    setTechCardsList(values);
+    setInitTechCardList(values);
+  };
+
+  const handleSelectPerPriceCategory = (event: SelectChangeEvent<string>) => {
+    const values: any = [...initTechCardList];
+    values[techIndex][event.target.name] = event.target.value;
+
+    if (event.target.value === optionsPriceFor[0].title) {
+      values[techIndex].netPriceMod = calcNetValuePerPortion(values[techIndex].tablesMod);
+    }
+    if (event.target.value === optionsPriceFor[1].title) {
+      values[techIndex].netPriceMod = calcNetValuePerHungeredGram(
+        values[techIndex].tablesMod,
+      );
+    }
+
+    setInitTechCardList(values);
   };
 
   return (
@@ -66,8 +75,8 @@ export const TechCard: FC<TechCardTypes> = ({
       <ModTable
         currentTechCard={currentTechCard}
         techCardIndex={techIndex}
-        techCardsList={techCardsList}
-        setTechCardsList={setTechCardsList}
+        initTechCardList={initTechCardList}
+        setInitTechCardList={setInitTechCardList}
       />
 
       <Box
@@ -82,14 +91,15 @@ export const TechCard: FC<TechCardTypes> = ({
         <Controls.Select
           type={'Number'}
           label={'Цена за'}
-          value={priceForOptionSelect}
-          onChange={handleChangePriceForOption}
+          name={'categoryPerPriceMod'}
+          value={currentTechCard.categoryPerPriceMod}
+          onChange={handleSelectPerPriceCategory}
           options={optionsPriceFor}
         />
         <Controls.Input
           disabled
           label={'Себестоимость'}
-          value={`${currentTechCard.priceForPortion} / порцию`}
+          value={`${currentTechCard.netPriceMod} ₴ / ${currentTechCard.categoryPerPriceMod}`}
         />
       </Box>
       <Box
@@ -108,14 +118,14 @@ export const TechCard: FC<TechCardTypes> = ({
         <Controls.Input
           label={'Цена'}
           endAdornment={'₴'}
-          value={currentTechCard.price}
+          value={currentTechCard.priceMod}
           name={'price'}
           onChange={handleChangeInputs}
         />
         <Controls.Input
           label={'Наценка'}
           endAdornment={'%'}
-          value={currentTechCard.marginPricePercent}
+          value={currentTechCard.marginPricePercentMod}
           name={'marginPricePercent'}
           onChange={handleChangeInputs}
         />
@@ -123,7 +133,7 @@ export const TechCard: FC<TechCardTypes> = ({
       <Box sx={{ display: 'flex' }}>
         <IconButton>
           <Button
-            onClick={() => removeTechCard(currentTechCard._id)}
+            onClick={() => removeTechCard(currentTechCard.id)}
             variant={'contained'}
             color={'error'}
           >

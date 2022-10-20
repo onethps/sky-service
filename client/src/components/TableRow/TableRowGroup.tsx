@@ -2,18 +2,16 @@ import React, { FC, useState } from 'react';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import TableRow from '@mui/material/TableRow';
-import { Box, Collapse, FormControl, MenuItem, Select } from '@mui/material';
-import { ProductType } from 'pages/Products/types';
+import { Collapse, FormControl, MenuItem, Select } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
 import Table from '@mui/material/Table';
 import TableContainer from '@mui/material/TableContainer';
 import { Text } from 'recharts';
+import { TechCardType } from '../../pages/Products/TechCard/types';
 
-type StandartTableRowType = {
+type defaultTableRowType = {
   isItemSelected: boolean;
   row: any;
   handleClick: (event: any, name: string) => void;
@@ -24,7 +22,7 @@ type StandartTableRowType = {
   arrayOfCategories: any[];
 };
 
-export const TableRowGroup: FC<StandartTableRowType> = ({
+export const TableRowGroup: FC<defaultTableRowType> = ({
   isItemSelected,
   row,
   handleClick,
@@ -35,7 +33,6 @@ export const TableRowGroup: FC<StandartTableRowType> = ({
   arrayOfCategories,
 }) => {
   const [open, setOpen] = useState(true);
-
   return (
     <>
       <TableRow
@@ -66,7 +63,7 @@ export const TableRowGroup: FC<StandartTableRowType> = ({
         </TableCell>
 
         <TableCell align="left" onClick={() => handleModal(row._id as string)}>
-          {row.productType}
+          {row.productType === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
         </TableCell>
         <TableCell align={'left'}>
           <FormControl>
@@ -84,15 +81,19 @@ export const TableRowGroup: FC<StandartTableRowType> = ({
             </Select>
           </FormControl>
         </TableCell>
-        <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-          {row.netPrice} ₴
-        </TableCell>
-        <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-          {row.price} ₴
-        </TableCell>
-        <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-          {row.marginPrice} %
-        </TableCell>
+
+        <TableCell
+          align="right"
+          onClick={() => handleModal(row._id as string)}
+        ></TableCell>
+        <TableCell
+          align="right"
+          onClick={() => handleModal(row._id as string)}
+        ></TableCell>
+        <TableCell
+          align="right"
+          onClick={() => handleModal(row._id as string)}
+        ></TableCell>
         <TableCell align="left">
           <FormControl size="small">
             <Select
@@ -113,60 +114,29 @@ export const TableRowGroup: FC<StandartTableRowType> = ({
           <Collapse in={open} timeout="auto" unmountOnExit>
             <TableContainer>
               <Table sx={{ minWidth: 750 }} size={'medium'}>
-                <TableRow>
-                  <TableCell padding="checkbox"></TableCell>
-                  <TableCell align="left" sx={{ maxWidth: '60px' }} component="th">
-                    Латте Мокачино
-                  </TableCell>
-                  <TableCell align="center" component="th">
-                    Склад
-                  </TableCell>
-                  <TableCell align="right"> </TableCell>
-                  <TableCell align="right"> </TableCell>
-                  <TableCell align="right"> </TableCell>
-                  <TableCell align="right">22</TableCell>
-                  <TableCell align="right">45</TableCell>
-                  <TableCell align="right">12</TableCell>
-                  <TableCell align="center" sx={{ maxWidth: '100px', minWidth: '85px' }}>
-                    <FormControl size="small">
-                      <Select
-                        autoWidth
-                        id="select-inSale-status"
-                        value={row.inSale}
-                        // onChange={}
-                      >
-                        <MenuItem value={1}>Да</MenuItem>
-                        <MenuItem value={0}>Нет</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell padding="checkbox"></TableCell>
-                  <TableCell align="left" component="th">
-                    кк
-                  </TableCell>
-                  <TableCell align="center">Склад</TableCell>
-                  <TableCell align="right"> </TableCell>
-                  <TableCell align="right"> </TableCell>
-                  <TableCell align="right"> </TableCell>
-                  <TableCell align="right">22</TableCell>
-                  <TableCell align="right">45</TableCell>
-                  <TableCell align="right">12</TableCell>
-                  <TableCell align="center" sx={{ maxWidth: '100px', minWidth: '85px' }}>
-                    <FormControl size="small">
-                      <Select
-                        autoWidth
-                        id="select-inSale-status"
-                        value={row.inSale}
-                        // onChange={}
-                      >
-                        <MenuItem value={1}>Да</MenuItem>
-                        <MenuItem value={0}>Нет</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                </TableRow>
+                {[...row.mod, ...row.mod].map((el: TechCardType) => {
+                  return (
+                    <TableRow>
+                      <TableCell padding="checkbox"></TableCell>
+                      <TableCell align="left" sx={{ maxWidth: '60px' }} component="th">
+                        {el.modName}
+                      </TableCell>
+                      <TableCell align="center" component="th">
+                        Склад
+                      </TableCell>
+                      {[...new Array(6)].map((el) => (
+                        <TableCell align="right"> </TableCell>
+                      ))}
+                      <TableCell align="left">{el.netPriceMod} ₴</TableCell>
+                      <TableCell align="center">{el.priceMod} ₴</TableCell>
+                      <TableCell align="right">{el.marginPricePercentMod} %</TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ maxWidth: '100px', minWidth: '85px' }}
+                      ></TableCell>
+                    </TableRow>
+                  );
+                })}
               </Table>
             </TableContainer>
           </Collapse>

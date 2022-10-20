@@ -65,7 +65,7 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
       </TableCell>
 
       <TableCell align="left" onClick={() => handleModal(row._id as string)}>
-        {row.productType}
+        {row.productType === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
       </TableCell>
       <TableCell align={'left'}>
         <FormControl>

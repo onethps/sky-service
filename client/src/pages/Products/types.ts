@@ -1,3 +1,5 @@
+import { TechCardType } from './TechCard/types';
+
 export type ProductType = {
   productId: string;
   _id?: string;
@@ -14,8 +16,14 @@ export type ProductType = {
   minQuantity: number;
   weight?: string;
   sum?: number;
+  mod: TechCardType[];
 };
 export const PRODUCT_TYPES = [
-  { id: 1, title: 'Поштучно/Ингридиент' },
-  { id: 2, title: 'Тех.карта/Приготовление' },
+  { id: 1, title: 'one', label: 'Поштучно' },
+  { id: 2, title: 'mod', label: 'Тех.карта' },
+];
+
+export const EDIT_PRODUCT_TYPES = [
+  { id: 1, title: 'one', label: 'Поштучно/Ингридиент' },
+  { id: 2, title: 'mod', label: 'Тех.карта/Состав' },
 ];
