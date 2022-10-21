@@ -60,8 +60,6 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   const [tableState, setTableState] = useState<ProductType[]>([{ ...initTableState }]);
   const [error, ,] = useState(false);
 
-  console.log(tableState);
-
   const dispatch = useDispatch();
 
   const handleSubmit = (e: any) => {
@@ -98,7 +96,6 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   };
 
   const handleUpdateProducts = () => {
-    // console.log(tableState);
     dispatch(updateProducts({ products: tableState }) as any);
   };
 

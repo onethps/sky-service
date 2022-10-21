@@ -14,7 +14,7 @@ export const productsApi = {
     });
   },
   addProduct(data: ProductType) {
-    return instance.post<ProductType[]>('dashboard/products/', {
+    return instance.post<ProductType>('dashboard/products/', {
       ...data,
     });
   },

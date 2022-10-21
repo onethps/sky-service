@@ -19,32 +19,44 @@ export const fetchProducts = createAsyncThunk(
   },
 );
 
-export const addProduct = createAsyncThunk(
-  'products/addProduct',
-  async (param: { product: ProductType }, thunkAPI) => {
+export const addProduct = createAsyncThunk<
+  ProductType,
+  { product: ProductType },
+  {
+    rejectValue: string;
+  }
+>(
+  'productsReducer/addProduct',
+  async (param: { product: ProductType }, { rejectWithValue }) => {
     try {
       const res = await productsApi.addProduct(param.product);
       return res.data;
     } catch (error) {
-      return console.log(error);
+      return rejectWithValue(error as string);
     }
   },
 );
 
-export const updateProduct = createAsyncThunk(
-  'products/updateProduct',
-  async (param: { id: string; product: ProductType }, thunkAPI) => {
+export const updateProduct = createAsyncThunk<
+  ProductType,
+  { id: string; product: ProductType },
+  {
+    rejectValue: string;
+  }
+>(
+  'productsReducer/updateProduct',
+  async (param: { id: string; product: ProductType }, { rejectWithValue }) => {
     try {
       const res = await productsApi.updateProduct(param.id, param.product);
       return res.data;
     } catch (error) {
-      return console.log(error);
+      return rejectWithValue(error as string);
     }
   },
 );
 
 export const updateProducts = createAsyncThunk(
-  'products/updateProducts',
+  'productsReducer/updateProducts',
   async (param: { products: ProductType[] }, thunkAPI) => {
     try {
       await productsApi.updateProducts(param.products);
@@ -55,7 +67,7 @@ export const updateProducts = createAsyncThunk(
 );
 
 export const productsSlice = createSlice({
-  name: 'products',
+  name: 'productsReducer',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -63,16 +75,13 @@ export const productsSlice = createSlice({
       state.products = action.payload;
     });
 
-    builder.addCase(addProduct.fulfilled, (state, action: PayloadAction<any>) => {
-      state.products.unshift(action.payload);
+    builder.addCase(addProduct.fulfilled, (state, { payload }) => {
+      state.products.unshift(payload);
     });
 
-    builder.addCase(updateProduct.fulfilled, (state, action: PayloadAction<any>) => {
-      const findIndex = state.products.findIndex((el) => el._id === action.payload.id);
-      console.log(findIndex);
-      if (findIndex) {
-        state.products[findIndex] = action.payload.product;
-      }
+    builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
+      const findIndex = state.products.findIndex((el) => el._id === payload._id);
+      state.products[findIndex] = payload;
     });
   },
 });

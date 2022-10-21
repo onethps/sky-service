@@ -149,7 +149,9 @@ export const ModTable: FC<ModTableType> = ({
                   groupBy={(o) => ' '}
                   renderGroup={(params) => (
                     <>
-                      <GroupHeader onClick={() => console.log('adde new product featu')}>
+                      <GroupHeader
+                        onClick={() => console.log('adde new product feature')}
+                      >
                         Додати товар
                       </GroupHeader>
                       <GroupItems>{params.children}</GroupItems>

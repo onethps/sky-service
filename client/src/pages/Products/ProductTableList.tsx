@@ -131,7 +131,7 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
 
 export const ProductTableList = () => {
   const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<string>('inSale');
+  const [orderBy, setOrderBy] = useState<string>('Наименование');
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -140,6 +140,8 @@ export const ProductTableList = () => {
 
   const { products } = useSelector(selectProducts);
   const dispatch = useDispatch();
+
+  console.log(products);
 
   const handleRequestSort = (event: MouseEvent, property: any) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -208,11 +210,9 @@ export const ProductTableList = () => {
     setOpenModal(true);
   };
 
-  const updateProductCategories = (productId: string, product: ProductType) => {
-    dispatch(updateProduct({ id: productId, product }) as any);
+  const updateProductCategories = (id: string, product: ProductType) => {
+    dispatch(updateProduct({ id, product }) as any);
   };
-
-  useEffect(() => {}, [products]);
 
   return (
     <Layout>
@@ -233,7 +233,6 @@ export const ProductTableList = () => {
                 onRequestSort={handleRequestSort}
                 rowCount={products.length}
               />
-
               <TableBody>
                 {stableSort(products, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -248,7 +247,6 @@ export const ProductTableList = () => {
                         handleClick={handleClick}
                         labelId={labelId}
                         handleModal={handleModal}
-                        arrayOfCategories={arrayOfCategories}
                         updateProductCategories={updateProductCategories}
                       />
                     ) : (
@@ -259,10 +257,10 @@ export const ProductTableList = () => {
                         handleClick={handleClick}
                         labelId={labelId}
                         handleModal={handleModal}
-                        arrayOfCategories={arrayOfCategories}
                       />
                     );
                   })}
+
                 {emptyRows > 0 && (
                   <TableRow
                     style={{

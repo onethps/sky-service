@@ -22,7 +22,6 @@ import { addProduct } from 'store/reducers/products';
 import { EDIT_PRODUCT_TYPES, PRODUCT_TYPES, ProductType } from 'pages/Products/types';
 import { TechCard } from 'pages/Products/TechCard/TechCard';
 import { TechCardType } from 'pages/Products/TechCard/types';
-import { fetchTechCards } from '../../../store/reducers/techcards';
 
 const initProduct: ProductType = {
   productId: uuidv4(),
@@ -71,14 +70,9 @@ const EditProductModal: FC<EditProductModalType> = ({
     { ...initTechCard },
   ]);
 
-  console.log('initProductCardState', initProductCardState);
-  console.log('initTechCardList', initTechCardList);
-
   const dispatch = useDispatch();
   const isTechCardCategory = initProductCardState.productType === PRODUCT_TYPES[1].title;
   const toggleModal = () => setOpen(false);
-
-  console.log('isTechCardCategory', isTechCardCategory);
 
   const removeTechCard = (id: string) => {
     setInitTechCardList(initTechCardList.filter((el) => el.id !== id));
@@ -158,6 +152,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     } else {
       dispatch(addProduct({ product: initProductCardState }) as any);
     }
+    setOpen(false);
   };
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {

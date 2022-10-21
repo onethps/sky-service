@@ -1,16 +1,9 @@
-import React, { ChangeEvent, FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import TableRow from '@mui/material/TableRow';
-import {
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material';
+import { TableBody, Typography } from '@mui/material';
 import { ProductType } from '../../pages/Products/types';
-import { cat } from '../../pages/Products/ProductTableList';
 import { Controls } from '../Controls';
 
 type TableRowNormalType = {
@@ -19,7 +12,6 @@ type TableRowNormalType = {
   handleClick: (event: any, name: string) => void;
   labelId: string;
   handleModal: (id: string) => void;
-  arrayOfCategories: cat[];
   updateProductCategories: (id: string, product: ProductType) => void;
 };
 
@@ -31,7 +23,6 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
   handleModal,
   updateProductCategories,
 }) => {
-
   return (
     <TableRow
       hover
@@ -89,7 +80,10 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
           name={'inSale'}
           value={row.inSale ? 'Так' : 'Ні'}
           onChange={() =>
-            updateProductCategories(row._id as string, { ...row, inSale: !row.inSale })
+            updateProductCategories(row._id as string, {
+              ...row,
+              inSale: !row.inSale,
+            })
           }
           options={[
             { id: 1, title: 'Так' },
