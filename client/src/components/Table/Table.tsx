@@ -9,18 +9,18 @@ import {
 } from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { IconButton, TableBody } from '@mui/material';
-import React, { ChangeEvent, FC, SyntheticEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, SyntheticEvent, useState } from 'react';
 import { categories, categoriesType } from './tableDB';
 import { useSelector } from 'react-redux';
 import { selectProducts } from '../../pages/Products/selectors';
-import { v4 as uuidv4 } from 'uuid';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ProductType } from '../../pages/Products/types';
 import Button from '@mui/material/Button';
 import { Controls } from '../Controls';
-import { darken, lighten, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { NewProductModal } from '../../pages/Dashboard/IncomeProductModal/NewProductModal/NewProductModal';
 import { initTableState } from '../../pages/Dashboard/IncomeProductModal/IncomeProductModal';
+import { useAppSelector } from '../../hooks/redux-hooks';
 
 const columnSpacing = 3;
 
@@ -43,7 +43,7 @@ type TableType = {
 };
 
 export const Table: FC<TableType> = ({ state, setState }) => {
-  const { products } = useSelector(selectProducts);
+  const { products } = useAppSelector(selectProducts);
 
   const [sumOfProducts, setSumOfProducts] = useState<number>(0);
   const [sumOfNetPrice, setSumOfNetPrice] = useState<number>(0);
@@ -204,7 +204,7 @@ export const Table: FC<TableType> = ({ state, setState }) => {
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
                   <Controls.Input
                     name={'sum'}
-                    value={row.sum}
+                    value={row.sum || ''}
                     onChange={(e) => handleInputs(index, e)}
                   />
                 </TableCell>

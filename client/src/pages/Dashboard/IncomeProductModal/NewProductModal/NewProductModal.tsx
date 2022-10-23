@@ -1,11 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Box, Button, DialogActions, Grid } from '@mui/material';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import { Box, Button, DialogActions, Grid, SelectChangeEvent } from '@mui/material';
 import { Controls } from '../../../../components';
-import { addProduct } from '../../../../store/reducers/products';
-import { useDispatch, useSelector } from 'react-redux';
+import { addProduct } from '../../../../store/slices/products';
 import { ProductType } from '../../../Products/types';
 import { selectProducts } from '../../../Products/selectors';
 import { v4 as uuidv4 } from 'uuid';
+import { unitValues } from '../../../Products/EditProductModal/costants';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/redux-hooks';
 
 type NewProductModalType = {
   open: boolean;
@@ -20,9 +21,9 @@ export const NewProductModal: FC<NewProductModalType> = ({
   index,
   setNewProductInTableRow,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { products } = useSelector(selectProducts);
+  const { products } = useAppSelector(selectProducts);
 
   const [state, setState] = useState<ProductType>({
     productId: uuidv4(),
@@ -40,12 +41,19 @@ export const NewProductModal: FC<NewProductModalType> = ({
     mod: [],
   });
 
-  const handleInputs = (event: any) => {
+  const handleInputs = (event: ChangeEvent<any>) => {
     setState({
       ...state,
       [event.target.name]: Number(event.target.value)
         ? +event.target.value
         : event.target.value,
+    });
+  };
+
+  const handleSelects = (event: SelectChangeEvent<string>) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -57,7 +65,7 @@ export const NewProductModal: FC<NewProductModalType> = ({
     if (state.name === '' || state.price === 0) {
       return;
     }
-    dispatch(addProduct({ product: state }) as any);
+    dispatch(addProduct({ product: state }));
     setOpen(false);
   };
 
@@ -93,24 +101,21 @@ export const NewProductModal: FC<NewProductModalType> = ({
               label={'Категорія'}
               name={'category'}
               value={state.category}
-              onChange={handleInputs}
+              onChange={handleSelects}
               options={[{ id: 1, title: '--' }]}
             />
             <Controls.Select
               label={'Одиниця виміру'}
               name={'unit'}
               value={state.unit}
-              onChange={handleInputs}
-              options={[
-                { id: 1, title: 'kg' },
-                { id: 2, title: 'шт.' },
-              ]}
+              onChange={handleSelects}
+              options={unitValues}
             />
             {state.unit === 'шт.' ? (
               <Controls.Input
                 label={'Вага штуки'}
                 name={'weight'}
-                value={state.weight}
+                value={state.weight || ''}
                 onChange={handleInputs}
                 endAdornment={'гр.'}
               />

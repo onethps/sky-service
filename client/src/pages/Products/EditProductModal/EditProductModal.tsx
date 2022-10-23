@@ -18,10 +18,11 @@ import {
 } from './costants';
 import { modalStyles } from './styles';
 import { useDispatch } from 'react-redux';
-import { addProduct } from 'store/reducers/products';
+import { addProduct } from 'store/slices/products';
 import { EDIT_PRODUCT_TYPES, PRODUCT_TYPES, ProductType } from 'pages/Products/types';
 import { TechCard } from 'pages/Products/TechCard/TechCard';
 import { TechCardType } from 'pages/Products/TechCard/types';
+import { useAppDispatch } from '../../../hooks/redux-hooks';
 
 const initProduct: ProductType = {
   productId: uuidv4(),
@@ -70,7 +71,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     { ...initTechCard },
   ]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isTechCardCategory = initProductCardState.productType === PRODUCT_TYPES[1].title;
   const toggleModal = () => setOpen(false);
 
@@ -147,10 +148,10 @@ const EditProductModal: FC<EditProductModalType> = ({
       dispatch(
         addProduct({
           product: { ...initProductCardState, mod: [...initTechCardList] },
-        }) as any,
+        }),
       );
     } else {
-      dispatch(addProduct({ product: initProductCardState }) as any);
+      dispatch(addProduct({ product: initProductCardState }));
     }
     setOpen(false);
   };

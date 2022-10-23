@@ -103,6 +103,7 @@ export const TechCard: FC<TechCardTypes> = ({
           disabled
           label={'Себестоимость'}
           value={`${currentTechCard.netPriceMod} ₴ / ${currentTechCard.categoryPerPriceMod}`}
+          onChange={handleChangeInputs}
         />
       </Box>
       <Box

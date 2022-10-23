@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { Controls, TableRowGroup } from '../../components';
 import EditProductModal from './EditProductModal/EditProductModal';
 import Layout from '../../components/Layout/Layout';
@@ -21,18 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectProducts } from 'pages/Products/selectors';
 import { TableRowNormal } from 'components/TableRow/TableRowNormal';
 import { TechCardType } from './TechCard/types';
-import { updateProduct } from '../../store/reducers/products';
-
-export type cat = {
-  id: number;
-  title: string;
-};
-
-const arrayOfCategories: cat[] = [
-  { id: 1, title: '--' },
-  { id: 2, title: 'Напитки' },
-  { id: 3, title: 'Лапша' },
-];
+import { updateProduct } from '../../store/slices/products';
+import { useAppDispatch } from '../../hooks/redux-hooks';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -139,7 +129,7 @@ export const ProductTableList = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const { products } = useSelector(selectProducts);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   console.log(products);
 
@@ -211,7 +201,7 @@ export const ProductTableList = () => {
   };
 
   const updateProductCategories = (id: string, product: ProductType) => {
-    dispatch(updateProduct({ id, product }) as any);
+    dispatch(updateProduct({ id, product }));
   };
 
   return (

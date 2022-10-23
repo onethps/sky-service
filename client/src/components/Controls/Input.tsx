@@ -1,9 +1,15 @@
 import { Box, FormControl, InputAdornment, InputProps } from '@mui/material';
-import React, { FC } from 'react';
+import React, { ChangeEventHandler, FC } from 'react';
 import { TextField } from '@mui/material';
 
 interface InputPropsTypes extends InputProps {
   label?: string;
+  onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  disabled?: boolean;
+  name?: string;
+  endAdornment?: any;
+  type?: string;
+  error?: boolean;
 }
 
 const Input: FC<InputPropsTypes> = (props) => {

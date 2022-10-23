@@ -1,10 +1,12 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
+type shopType = {
+  storeId: string;
+  adminId: string;
+  storeName: string;
+};
 
 const initialState = {
-  userData: {
-    number: 380990519663,
-    email: '',
-  },
   wallet: [
     {
       walletId: 1,
@@ -25,12 +27,12 @@ const initialState = {
   ],
 };
 
-export const techCardsSlice = createSlice({
-  name: 'techCards',
+export const shopSlice = createSlice({
+  name: 'shop',
   initialState,
   reducers: {},
 });
 
 // Action creators are generated for each case reducer function
 
-export const techCardsReducer = techCardsSlice.reducer;
+export const shopReducer = shopSlice.reducer;

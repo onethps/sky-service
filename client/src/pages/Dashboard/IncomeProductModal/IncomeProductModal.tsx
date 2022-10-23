@@ -14,9 +14,10 @@ import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
 import { selectOptionsType } from '../../../components/types';
 import { Controls, Form, Table } from '../../../components';
 import { useDispatch } from 'react-redux';
-import { updateProducts } from '../../../store/reducers/products';
+import { updateProducts } from '../../../store/slices/products';
 import { ProductType } from '../../Products/types';
 import { arrayOfWallet, optionsForSpendCategory } from '../../../constants/constants';
+import { useAppDispatch } from '../../../hooks/redux-hooks';
 
 type initIncomeType = {
   id: string;
@@ -60,7 +61,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   const [tableState, setTableState] = useState<ProductType[]>([{ ...initTableState }]);
   const [error, ,] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -96,7 +97,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   };
 
   const handleUpdateProducts = () => {
-    dispatch(updateProducts({ products: tableState }) as any);
+    dispatch(updateProducts({ products: tableState }));
   };
 
   return (
