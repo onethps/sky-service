@@ -21,38 +21,36 @@ const Register = () => {
   };
 
   return (
-    <Layout>
-      <Grid
-        rowSpacing={{ xs: 1, sm: 2, md: 3 }}
-        container
-        justifyContent="center"
-        alignItems="center"
-        direction="column"
-      >
-        <Grid item>
-          <Controls.Input
-            name={'email'}
-            label={'Email'}
-            value={email}
-            onChange={(event) => setEmail(event.currentTarget.value)}
-          />
-        </Grid>{' '}
-        <Grid item>
-          <Controls.Input
-            name={'password'}
-            label={'Password'}
-            value={password}
-            onChange={(event) => setPassword(event.currentTarget.value)}
-          />
-        </Grid>
-        <Grid item>
-          <Controls.Button
-            text={'REGISTER'}
-            onClick={() => registerHandle(email, password)}
-          />
-        </Grid>
+    <Grid
+      rowSpacing={{ xs: 1, sm: 2, md: 3 }}
+      container
+      justifyContent="center"
+      alignItems="center"
+      direction="column"
+    >
+      <Grid item>
+        <Controls.Input
+          name={'email'}
+          label={'Email'}
+          value={email}
+          onChange={(event) => setEmail(event.currentTarget.value)}
+        />
+      </Grid>{' '}
+      <Grid item>
+        <Controls.Input
+          name={'password'}
+          label={'Password'}
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
+        />
       </Grid>
-    </Layout>
+      <Grid item>
+        <Controls.Button
+          text={'REGISTER'}
+          onClick={() => registerHandle(email, password)}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

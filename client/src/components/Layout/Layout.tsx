@@ -2,12 +2,9 @@ import { Box, Container, CssBaseline, Grid, Toolbar } from '@mui/material';
 import Header from '../Header/Header';
 import Sidebar from '../Sidebar/Sidebar';
 import React, { FC, ReactNode, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
-type LayoutTypes = {
-  children: ReactNode;
-};
-
-const Layout: FC<LayoutTypes> = ({ children }) => {
+const Layout = () => {
   const [open, setOpen] = useState(true);
 
   const toggleDrawer = () => {
@@ -33,7 +30,11 @@ const Layout: FC<LayoutTypes> = ({ children }) => {
       >
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
-          <Grid container>{children}</Grid>
+          <Grid container>
+            <main>
+              <Outlet />
+            </main>
+          </Grid>
         </Container>
       </Box>
     </Box>

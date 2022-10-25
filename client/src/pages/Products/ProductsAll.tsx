@@ -119,7 +119,7 @@ const EnhancedTableHead: FC<EnhancedTableProps> = (props) => {
   );
 };
 
-export const ProductTableList = () => {
+export const ProductsAll = () => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<string>('Наименование');
   const [selected, setSelected] = useState<readonly string[]>([]);
@@ -205,7 +205,7 @@ export const ProductTableList = () => {
   };
 
   return (
-    <Layout>
+    <>
       <EditProductModal
         open={openModal}
         setOpen={setOpenModal}
@@ -275,6 +275,6 @@ export const ProductTableList = () => {
         </Paper>
         <Controls.Button text={'ADD'} onClick={handleAddNewProduct} />
       </Box>
-    </Layout>
+    </>
   );
 };

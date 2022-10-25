@@ -9,7 +9,7 @@ const Dashboard = () => {
   const handleClickOpen = () => setOpen(true);
 
   return (
-    <Layout>
+    <>
       <ChartPerYear />
       <IncomeProductModal open={open} setOpen={setOpen} />
 
@@ -23,7 +23,7 @@ const Dashboard = () => {
           </Button>
         </Card>
       </Grid>
-    </Layout>
+    </>
   );
 };
 
