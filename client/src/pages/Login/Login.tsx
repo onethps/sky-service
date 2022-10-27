@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
 import { Controls } from '../../components/Controls';
 import { Button, Grid } from '@mui/material';
-import Layout from '../../components/Layout/Layout';
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { app } from '../../store/firebase';
 import { ROUTERS } from '../../router/AppRoutes';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../store/slices/auth';
+import { useAppDispatch } from '../../hooks/redux-hooks';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('vasyapupkin@gmail.com');
+  const [password, setPassword] = useState('asdas21312ds');
+  const nav = useNavigate();
 
-  const loginHandle = async (email: string, password: string) => {
-    const auth = getAuth(app);
-    try {
-      const res = await signInWithEmailAndPassword(auth, email, password);
-      console.log(res.user);
-    } catch (err: any) {
-      const errorCode = err.code;
-      const errorMessage = err.message;
-    }
+  const dispatch = useAppDispatch();
+
+  const login = async (email: string, password: string) => {
+    dispatch(loginUser({ email, password, number: '21312' }));
+    nav(ROUTERS.HOME);
   };
 
-  const nav = useNavigate();
   return (
     <Grid
       rowSpacing={{ xs: 1, sm: 2, md: 3 }}
@@ -48,10 +43,10 @@ const Login = () => {
         />
       </Grid>
       <Grid item>
-        <Controls.Button text={'LOGIN'} onClick={() => loginHandle(email, password)} />
+        <Controls.Button text={'LOGIN'} onClick={() => login(email, password)} />
       </Grid>
       <Grid item>
-        <Button onClick={() => nav(ROUTERS.REGISTER)}>REGISTER</Button>
+        <Button onClick={() => login(email, password)}>REGISTER</Button>
       </Grid>
     </Grid>
   );

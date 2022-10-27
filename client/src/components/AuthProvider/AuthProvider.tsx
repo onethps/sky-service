@@ -3,10 +3,10 @@ import { useAuth } from '../../hooks/use-auth';
 import { useNavigate } from 'react-router-dom';
 
 const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const { isAuth } = useAuth();
+  const { email } = useAuth();
   const nav = useNavigate();
 
-  if (!isAuth) {
+  if (!email) {
     nav('/login');
   }
 

@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import Layout from '../../components/Layout/Layout';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Controls } from '../../components/Controls';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { app } from '../../store/firebase';
+import { ROUTERS } from '../../router/AppRoutes';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux-hooks';
+import { registerUser } from '../../store/slices/auth';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const nav = useNavigate();
+  const dispatch = useAppDispatch();
+
   const registerHandle = async (email: string, password: string) => {
-    const auth = getAuth(app);
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(res.user);
-    } catch (err: any) {
-      const errorCode = err.code;
-      const errorMessage = err.message;
-    }
+    dispatch(registerUser({ email, password }));
   };
 
   return (
@@ -49,6 +49,9 @@ const Register = () => {
           text={'REGISTER'}
           onClick={() => registerHandle(email, password)}
         />
+      </Grid>
+      <Grid item>
+        <Button onClick={() => nav(ROUTERS.LOGIN)}>Login</Button>
       </Grid>
     </Grid>
   );
