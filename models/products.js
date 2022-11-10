@@ -28,13 +28,11 @@ const productSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-
-  price: {
+  marginPrice: {
     type: Number,
     default: 0,
   },
-
-  marginPrice: {
+  marginPercent: {
     type: Number,
     default: 0,
   },
