@@ -1,12 +1,7 @@
-import {
-  Button as MuiButton,
-  ButtonProps,
-  ButtonTypeMap,
-  ExtendButtonBase,
-} from '@mui/material';
+import { Button as MuiButton, ButtonProps } from '@mui/material';
 import { FC } from 'react';
 
-type Button = {
+type ButtonType = {
   text?: string;
   size?: string;
   color?: string;
@@ -14,7 +9,7 @@ type Button = {
   onClick?: () => void;
 };
 
-const Button: FC<Button & ButtonProps> = ({
+const Button: FC<ButtonType & ButtonProps> = ({
   text,
   size,
   color,

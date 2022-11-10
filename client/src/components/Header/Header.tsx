@@ -1,6 +1,5 @@
-import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Badge, Box, IconButton, styled, Toolbar, Typography } from '@mui/material';
+import { Badge, Box, IconButton, styled, Toolbar } from '@mui/material';
 import React, { FC, useState } from 'react';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { InsertEmoticon } from '@mui/icons-material';
@@ -42,7 +41,7 @@ const AppBar = styled(MuiAppBar, {
 const Header: FC<HeaderTypes> = () => {
   const [open, setOpen] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const [currentProductCard, setCurrentProductCard] = useState<ProductType | null>(null);
+  const [currentProductCard, _] = useState<ProductType | null>(null);
 
   const location = useLocation();
   const isProductPUrlPath = location.pathname === `/${ROUTERS.PRODUCTS_ALL}`;
