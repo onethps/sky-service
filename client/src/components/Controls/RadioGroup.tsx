@@ -1,11 +1,11 @@
 import {
   FormControl,
-  FormLabel,
-  RadioGroup as MuiRadioGroup,
   FormControlLabel,
+  FormLabel,
   Radio,
-  Typography,
+  RadioGroup as MuiRadioGroup,
   RadioGroupProps,
+  Typography,
 } from '@mui/material';
 import { FC } from 'react';
 

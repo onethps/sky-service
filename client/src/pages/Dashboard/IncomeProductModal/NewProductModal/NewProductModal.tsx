@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
 import { Box, Button, DialogActions, Grid } from '@mui/material';
-import { Controls } from '../../../../components';
-import { addProduct } from '../../../../store/reducers/products';
+import { Controls } from 'components';
+import { selectProducts } from 'pages/Products/selectors';
+import { ProductType } from 'pages/Products/types';
+import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ProductType } from '../../../Products/types';
-import { selectProducts } from '../../../Products/selectors';
+import { addProduct } from 'store/reducers/products';
 import { v4 as uuidv4 } from 'uuid';
 
 type NewProductModalType = {

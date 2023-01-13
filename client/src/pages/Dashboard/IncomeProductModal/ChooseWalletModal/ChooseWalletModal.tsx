@@ -1,9 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
 import { Button, DialogActions, Grid } from '@mui/material';
 import { DataGrid, GridRowParams } from '@mui/x-data-grid';
+import { Controls } from 'components';
+import { selectOptionsType } from 'components/types';
+import React, { FC, useEffect, useState } from 'react';
+
 import { columns, rows } from './dataGrid';
-import { Controls } from '../../../../components';
-import { selectOptionsType } from '../../../../components/types';
 
 type ChooseWalletType = {
   selectWalletValue: string;

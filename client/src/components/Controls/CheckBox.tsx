@@ -1,8 +1,8 @@
 import {
-  FormControl,
-  FormControlLabel,
   Checkbox as MuiCheckbox,
   CheckboxProps,
+  FormControl,
+  FormControlLabel,
 } from '@mui/material';
 import { ChangeEvent, FC, useState } from 'react';
 

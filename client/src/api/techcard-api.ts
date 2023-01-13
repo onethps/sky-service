@@ -1,6 +1,6 @@
 import { instance } from 'api/config';
+import { TechCardType } from 'pages/Products/TechCard/types';
 import { ProductType } from 'pages/Products/types';
-import { TechCardType } from '../pages/Products/TechCard/types';
 
 export const techCardsApi = {
   getTechCards(productId: string) {

@@ -1,14 +1,14 @@
-import React, { FC, useState } from 'react';
-import TableCell from '@mui/material/TableCell';
-import Checkbox from '@mui/material/Checkbox';
-import TableRow from '@mui/material/TableRow';
-import { Box, Collapse, TableBody, TableHead, Typography } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Box, Collapse, TableBody, TableHead, Typography } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
-import { TechCardType } from '../../pages/Products/TechCard/types';
-import { Controls } from '../Controls';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import { Controls } from 'components/Controls';
+import { TechCardType } from 'pages/Products/TechCard/types';
+import React, { FC, useState } from 'react';
 
 type defaultTableRowType = {
   isItemSelected: boolean;

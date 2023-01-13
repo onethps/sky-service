@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
-import TableCell from '@mui/material/TableCell';
-import Checkbox from '@mui/material/Checkbox';
-import TableRow from '@mui/material/TableRow';
 import { TableBody, Typography } from '@mui/material';
-import { ProductType } from '../../pages/Products/types';
-import { Controls } from '../Controls';
+import Checkbox from '@mui/material/Checkbox';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import { Controls } from 'components/Controls';
+import { ProductType } from 'pages/Products/types';
+import React, { FC } from 'react';
 
 type TableRowNormalType = {
   isItemSelected: boolean;

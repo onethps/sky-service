@@ -11,18 +11,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { ChangeEvent, FC } from 'react';
-import { Controls } from '../../../../components';
-import { modProductType, TechCardType } from 'pages/Products/TechCard/types';
-import { categories } from 'pages/Products/TechCard/Table/categories';
-import { v4 as uuidv4 } from 'uuid';
 import Autocomplete from '@mui/material/Autocomplete';
-import { ProductType } from '../../types';
-import { useSelector } from 'react-redux';
-import { selectProducts } from '../../selectors';
 import { styled } from '@mui/material/styles';
-import { optionsPriceFor } from '../TechCard';
-import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from '../../../../helpers';
+import { Controls } from 'components';
+import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'helpers';
+import { selectProducts } from 'pages/Products/selectors';
+import { categories } from 'pages/Products/TechCard/Table/categories';
+import { optionsPriceFor } from 'pages/Products/TechCard/TechCard';
+import { modProductType, TechCardType } from 'pages/Products/TechCard/types';
+import { ProductType } from 'pages/Products/types';
+import React, { ChangeEvent, FC } from 'react';
+import { useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 const GroupHeader = styled('div')(({ theme }) => ({
   position: 'sticky',
@@ -95,7 +95,7 @@ export const ModTable: FC<ModTableType> = ({
     tabIndex: number,
   ) => {
     const value: any = [...initTechCardList];
-    let currentRow = value[techCardIndex].tablesMod[tabIndex];
+    const currentRow = value[techCardIndex].tablesMod[tabIndex];
     currentRow.quantity = +event.target.value;
     currentRow.summ = +(currentRow.quantity * currentRow.price).toFixed(2);
 

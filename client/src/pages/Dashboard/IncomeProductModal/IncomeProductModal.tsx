@@ -7,16 +7,17 @@ import {
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Controls, Form, Table } from 'components';
+import { selectOptionsType } from 'components/types';
+import { arrayOfWallet, optionsForSpendCategory } from 'constants/constants';
 import dayjs, { Dayjs } from 'dayjs';
+import { ProductType } from 'pages/Products/types';
 import React, { ChangeEvent, FC, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
-import { selectOptionsType } from '../../../components/types';
-import { Controls, Form, Table } from '../../../components';
 import { useDispatch } from 'react-redux';
-import { updateProducts } from '../../../store/reducers/products';
-import { ProductType } from '../../Products/types';
-import { arrayOfWallet, optionsForSpendCategory } from '../../../constants/constants';
+import { updateProducts } from 'store/reducers/products';
+import { v4 as uuidv4 } from 'uuid';
+
+import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
 
 type initIncomeType = {
   id: string;

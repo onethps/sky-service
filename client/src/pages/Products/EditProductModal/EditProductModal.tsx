@@ -1,7 +1,12 @@
 import { Box, Divider, SelectChangeEvent, Typography } from '@mui/material';
+import { Controls } from 'components';
+import { TechCard } from 'pages/Products/TechCard/TechCard';
+import { TechCardType } from 'pages/Products/TechCard/types';
+import { EDIT_PRODUCT_TYPES, PRODUCT_TYPES, ProductType } from 'pages/Products/types';
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addProduct } from 'store/reducers/products';
 import { v4 as uuidv4 } from 'uuid';
-import { Controls } from '../../../components/';
 
 import {
   CATEGORIES_ARRAY,
@@ -17,11 +22,6 @@ import {
   unitValues,
 } from './costants';
 import { modalStyles } from './styles';
-import { useDispatch } from 'react-redux';
-import { addProduct } from 'store/reducers/products';
-import { EDIT_PRODUCT_TYPES, PRODUCT_TYPES, ProductType } from 'pages/Products/types';
-import { TechCard } from 'pages/Products/TechCard/TechCard';
-import { TechCardType } from 'pages/Products/TechCard/types';
 
 const initProduct: ProductType = {
   productId: uuidv4(),
@@ -96,8 +96,8 @@ const EditProductModal: FC<EditProductModalType> = ({
   const handleChangeNetPrice = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const price: number = Number(initProductCardState.price);
-    const netPrice: number = Number(e.target.value);
+    const price = Number(initProductCardState.price);
+    const netPrice = Number(e.target.value);
     const calculateNetPrice: number = +(((price - netPrice) / netPrice) * 100).toFixed(2);
 
     setInitProductCardState({
@@ -110,8 +110,8 @@ const EditProductModal: FC<EditProductModalType> = ({
   const handleChangePercentPrice = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const percent: number = Number(event.target.value);
-    const netPrice: number = Number(initProductCardState.netPrice);
+    const percent = Number(event.target.value);
+    const netPrice = Number(initProductCardState.netPrice);
 
     const calculatePercent: number = +((netPrice / 100) * percent + netPrice).toFixed(2);
 
@@ -125,8 +125,8 @@ const EditProductModal: FC<EditProductModalType> = ({
   const handleChangeMarginPrice = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const marginPrice: number = Number(event.target.value);
-    const netCost: number = Number(initProductCardState.netPrice);
+    const marginPrice = Number(event.target.value);
+    const netCost = Number(initProductCardState.netPrice);
     const calculateMarginPrice: number = +(
       ((marginPrice - netCost) / netCost) *
       100

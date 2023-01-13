@@ -1,15 +1,24 @@
 import { Button, Card, Grid, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import IncomeProductModal from './IncomeProductModal/IncomeProductModal';
-import Layout from '../../components/Layout/Layout';
-import ChartPerYear from '../../pages/Dashboard/Chart/ChartPerYear';
+import { Layout } from 'components/Layout/Layout';
+import ChartPerYear from 'pages/Dashboard/Chart/ChartPerYear';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from 'store/reducers/products';
 
-const Dashboard = () => {
+import IncomeProductModal from './IncomeProductModal/IncomeProductModal';
+
+export const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProducts() as any);
+  }, []);
+
   return (
-    <Layout>
+    <>
       <ChartPerYear />
       <IncomeProductModal open={open} setOpen={setOpen} />
 
@@ -23,8 +32,6 @@ const Dashboard = () => {
           </Button>
         </Card>
       </Grid>
-    </Layout>
+    </>
   );
 };
-
-export default Dashboard;

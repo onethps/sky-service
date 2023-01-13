@@ -10,18 +10,19 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
+import { Controls, TableRowGroup } from 'components';
+import { Layout } from 'components/Layout/Layout';
+import { TableRowNormal } from 'components/TableRow/TableRowNormal';
+import { selectProducts } from 'pages/Products/selectors';
+import { ProductType } from 'pages/Products/types';
 import * as React from 'react';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { Controls, TableRowGroup } from '../../components';
-import EditProductModal from './EditProductModal/EditProductModal';
-import Layout from '../../components/Layout/Layout';
-import { HeadCell, headCells } from './tableData';
-import { ProductType } from 'pages/Products/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectProducts } from 'pages/Products/selectors';
-import { TableRowNormal } from 'components/TableRow/TableRowNormal';
+import { updateProduct } from 'store/reducers/products';
+
+import EditProductModal from './EditProductModal/EditProductModal';
+import { HeadCell, headCells } from './tableData';
 import { TechCardType } from './TechCard/types';
-import { updateProduct } from '../../store/reducers/products';
 
 export type cat = {
   id: number;
@@ -215,7 +216,7 @@ export const ProductTableList = () => {
   };
 
   return (
-    <Layout>
+    <>
       <EditProductModal
         open={openModal}
         setOpen={setOpenModal}
@@ -285,6 +286,6 @@ export const ProductTableList = () => {
         </Paper>
         <Controls.Button text={'ADD'} onClick={handleAddNewProduct} />
       </Box>
-    </Layout>
+    </>
   );
 };

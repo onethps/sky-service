@@ -1,7 +1,7 @@
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { Divider, IconButton, List, styled, Toolbar } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import { MainListItems, secondaryListItems } from '../Sidebar/listItems';
+import { MainListItems, secondaryListItems } from 'components/Sidebar/listItems';
 import React, { FC } from 'react';
 
 const drawerWidth = 240;

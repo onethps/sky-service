@@ -1,6 +1,6 @@
 import { Box, Divider, ModalProps, Typography } from '@mui/material';
-import React, { FC } from 'react';
 import { Modal as MuiModal } from '@mui/material';
+import React, { FC } from 'react';
 
 const style = {
   modal: {

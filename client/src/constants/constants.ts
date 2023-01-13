@@ -1,4 +1,4 @@
-import { selectOptionsType } from '../components/types';
+import { selectOptionsType } from 'components/types';
 
 export const unitTypes = {
   item: 'шт',

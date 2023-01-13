@@ -1,4 +1,4 @@
-import { modProductType } from '../pages/Products/TechCard/types';
+import { modProductType } from 'pages/Products/TechCard/types';
 
 export const calcNetValuePerPortion = (array: any[]) => {
   return array.reduce((acc: number, el: modProductType) => {

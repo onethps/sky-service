@@ -7,11 +7,12 @@ import {
   Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import React, { ChangeEvent, FC, useState } from 'react';
-import { Controls } from '../../../components';
-import { ModTable } from './Table/ModTable';
+import { Controls } from 'components';
+import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'helpers';
 import { TechCardType } from 'pages/Products/TechCard/types';
-import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from '../../../helpers';
+import React, { ChangeEvent, FC, useState } from 'react';
+
+import { ModTable } from './Table/ModTable';
 
 const greyBg = grey[200];
 

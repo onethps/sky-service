@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { ProductType } from 'pages/Products/types';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { productsApi } from 'api/products-api';
+import { ProductType } from 'pages/Products/types';
 const initialState = {
   products: [] as ProductType[],
   loading: false,

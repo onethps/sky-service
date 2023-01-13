@@ -1,3 +1,4 @@
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import {
   SelectChangeEvent,
   Table as MuiTable,
@@ -7,20 +8,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { IconButton, TableBody } from '@mui/material';
-import React, { ChangeEvent, FC, SyntheticEvent, useEffect, useState } from 'react';
-import { categories, categoriesType } from './tableDB';
-import { useSelector } from 'react-redux';
-import { selectProducts } from '../../pages/Products/selectors';
-import { v4 as uuidv4 } from 'uuid';
 import Autocomplete from '@mui/material/Autocomplete';
-import { ProductType } from '../../pages/Products/types';
 import Button from '@mui/material/Button';
-import { Controls } from '../Controls';
-import { darken, lighten, styled } from '@mui/material/styles';
-import { NewProductModal } from '../../pages/Dashboard/IncomeProductModal/NewProductModal/NewProductModal';
-import { initTableState } from '../../pages/Dashboard/IncomeProductModal/IncomeProductModal';
+import { styled } from '@mui/material/styles';
+import { Controls } from 'components/Controls';
+import { categories, categoriesType } from 'data/table.data';
+import { initTableState } from 'pages/Dashboard/IncomeProductModal/IncomeProductModal';
+import { NewProductModal } from 'pages/Dashboard/IncomeProductModal/NewProductModal/NewProductModal';
+import { selectProducts } from 'pages/Products/selectors';
+import { ProductType } from 'pages/Products/types';
+import { ChangeEvent, FC, SyntheticEvent, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const columnSpacing = 3;
 
@@ -53,7 +52,7 @@ export const Table: FC<TableType> = ({ state, setState }) => {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const value: any[] = [...state];
-    const eventVal: number = Number(event.target.value);
+    const eventVal = Number(event.target.value);
 
     if (event.target.name === 'quantity') {
       value[index].sum = eventVal * value[index].price;

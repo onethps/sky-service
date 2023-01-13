@@ -1,20 +1,38 @@
+import { App } from '_app';
+import { Dashboard } from './pages/Dashboard/Dashboard';
+import { CssBaseline } from '@mui/material';
+import { Layout } from 'components/Layout/Layout';
+import { ProductSklad } from 'pages/Products/ProductSklad';
+import { ProductTableList } from 'pages/Products/ProductTableList';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-
 import { Provider } from 'react-redux';
-import _app from 'components/App/_app';
+import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from 'store/store';
 
-const container = document.getElementById('root') as HTMLElement;
+export const ROUTERS = {
+  HOME: '/',
+  PRODUCTS_ALL: 'products/all',
+  PRODUCTS_SKLAD: '/products/sklad',
+};
 
-// Create a root.
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: ROUTERS.PRODUCTS_ALL, element: <ProductTableList /> },
+      { path: ROUTERS.PRODUCTS_SKLAD, element: <ProductSklad /> },
+    ],
+  },
+]);
+
+const container = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(container);
 
-// Initial render
 root.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <_app />
-    </Provider>
-  </BrowserRouter>,
+  <Provider store={store}>
+    <CssBaseline />
+    <RouterProvider router={router} />
+  </Provider>,
 );

@@ -1,13 +1,13 @@
+import { InsertEmoticon } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Badge, Box, IconButton, styled, Toolbar } from '@mui/material';
-import React, { FC, useState } from 'react';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import { InsertEmoticon } from '@mui/icons-material';
 import Button from '@mui/material/Button';
+import { ROUTERS } from 'index';
+import EditProductModal from 'pages/Products/EditProductModal/EditProductModal';
+import { ProductType } from 'pages/Products/types';
+import React, { FC, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ROUTERS } from '../../router/AppRoutes';
-import EditProductModal from '../../pages/Products/EditProductModal/EditProductModal';
-import { ProductType } from '../../pages/Products/types';
 
 const drawerWidth = 240;
 
