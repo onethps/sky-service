@@ -1,8 +1,7 @@
 {
     "eslint.workingDirectories": [
-        {
-            "mode": "auto"
-        }
+        "./admin",
+        "./server"
     ],
     "editor.formatOnSave": true,
     "eslint.format.enable": true,
