@@ -1,14 +1,14 @@
-import { Layout } from 'components/Layout/Layout';
-import { ProductSklad } from 'pages/Products/ProductSklad';
-import { ProductTableList } from 'pages/Products/ProductTableList';
+import { ProductTableList } from 'features/ProductsPage/ProductsPage';
+import { ProductSklad } from 'features/ProductsPage/ui/ProductSklad';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { store } from 'store/store';
+import { store } from 'redux TK/store';
+import { Layout } from 'shared/components/Layout/Layout';
 
 import { CssBaseline } from '@mui/material';
 
-import { Dashboard } from './pages/Dashboard/Dashboard';
+import { HomePage } from './features/HomePage/HomePage';
 
 export const ROUTERS = {
   HOME: '/',
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: [
-      { index: true, element: <Dashboard /> },
+      { index: true, element: <HomePage /> },
       { path: ROUTERS.PRODUCTS_ALL, element: <ProductTableList /> },
       { path: ROUTERS.PRODUCTS_SKLAD, element: <ProductSklad /> },
     ],

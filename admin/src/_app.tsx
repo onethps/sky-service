@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { ProductSklad } from 'pages/Products/ProductSklad';
-import { ProductTableList } from 'pages/Products/ProductTableList';
+import { ProductTableList } from 'features/ProductsPage/ProductsPage';
+import { ProductSklad } from 'features/ProductsPage/ui/ProductSklad';
 import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { fetchProducts } from 'store/reducers/products';
 
 import { Dashboard } from '@mui/icons-material';
 
@@ -16,7 +15,7 @@ export const App = () => {
 
   return (
     <>
-      <div>hellos its APP COMPONENTS</div>
+      <div>Hello World</div>
     </>
   );
 };
