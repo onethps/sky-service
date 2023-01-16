@@ -9,6 +9,7 @@ import { TechCard } from 'features/ProductsPage/ui/TechCard/TechCard';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
 import { ProductTypes } from 'features/ProductsPage/utils/constants';
 import { useAppDispatch } from 'hooks/redux-hooks';
+import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -75,7 +76,7 @@ const initTechCard: TechCardType = {
 
 interface EditProductModalType {
   open: boolean;
-  setOpen: (el: boolean) => void;
+  setOpen: (v: boolean) => void;
   currentProduct: ProductType | null;
 }
 
@@ -97,7 +98,7 @@ const EditProductModal: FC<EditProductModalType> = ({
   const toggleModal = () => setOpen(false);
 
   const removeTechCard = (id: string) => {
-    setInitTechCardList(initTechCardList.filter((el) => el.id !== id));
+    setInitTechCardList(initTechCardList.filter((techCard) => techCard.id !== id));
   };
 
   const addNewTechCard = () => {
@@ -225,20 +226,12 @@ const EditProductModal: FC<EditProductModalType> = ({
           />
         </FormControl>
         <Divider sx={modalStyles.divider} />
-        <FormControl>
-          <Select
-            name={'category'}
-            value={initProductCardState.category}
-            label={CATEGORIES_LABEL}
-            onChange={handleInputs}
-          />
-          {CATEGORIES_ARRAY.map((category) => (
-            <MenuItem key={category.id} value={category.title}>
-              {category.title}
-            </MenuItem>
-          ))}
-        </FormControl>
-
+        <CustomSelect
+          name="category"
+          value={initProductCardState.category}
+          label={CATEGORIES_LABEL}
+          menuItems={CATEGORIES_ARRAY}
+        />
         <FormControlLabel
           label={IN_SALE_CHECKBOX_LABEL}
           control={
@@ -280,19 +273,14 @@ const EditProductModal: FC<EditProductModalType> = ({
                 onChange={handleInputs}
               />
             </FormControl>
-            <FormControl>
-              <Select
-                name={'unit'}
-                label={UNIT_VALUE_LABEL}
-                value={initProductCardState.unit}
-                onChange={handleInputs}
-              />
-              {unitValues.map((unit) => (
-                <MenuItem key={unit.title} value={10}>
-                  {unit.title}
-                </MenuItem>
-              ))}
-            </FormControl>
+
+            <CustomSelect
+              name="unit"
+              value={initProductCardState.unit}
+              onChange={handleInputs}
+              label={UNIT_VALUE_LABEL}
+              menuItems={unitValues}
+            />
             <FormControl>
               <InputLabel>{MIN_QUANTITY_LABEL}</InputLabel>
               <Input

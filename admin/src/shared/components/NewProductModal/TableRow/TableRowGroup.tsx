@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
+import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -87,30 +88,28 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
           {row.productType === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
         </TableCell>
         <TableCell align={'left'}>
-          <FormControl>
-            <Select
-              name={'category'}
-              value={row.category}
-              onChange={() => console.log('')}
-            />
-            <MenuItem value="--">--</MenuItem>
-          </FormControl>
+          <CustomSelect
+            name={'category'}
+            value={row.category}
+            menuItems={[{ id: '1', value: '--' }]}
+            label={'Category'}
+          />
         </TableCell>
 
         <TableCell align="right" onClick={handleModalToggle}></TableCell>
         <TableCell align="right" onClick={handleModalToggle}></TableCell>
         <TableCell align="right" onClick={handleModalToggle}></TableCell>
         <TableCell align="left">
-          <FormControl>
-            <Select
-              style={{ background: row.inSale ? 'green' : 'red', color: 'white' }}
-              name={'inSale'}
-              value={row.inSale ? 'Так' : 'Ні'}
-              onChange={() => console.log('')}
-            />
-            <MenuItem>Так</MenuItem>
-            <MenuItem>Ні</MenuItem>
-          </FormControl>
+          <CustomSelect
+            label="inSale"
+            style={{ background: row.inSale ? 'green' : 'red', color: 'white' }}
+            name={'inSale'}
+            value={row.inSale ? 'Так' : 'Ні'}
+            menuItems={[
+              { id: '1', value: 'Так' },
+              { id: '2', value: 'Нi' },
+            ]}
+          />
         </TableCell>
       </TableRow>
 

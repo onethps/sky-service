@@ -1,11 +1,11 @@
 export const unitValues = [
-  { id: 1, title: 'шт.' },
-  { id: 2, title: 'кг.' },
-  { id: 3, title: 'гр.' },
-  { id: 4, title: 'л.' },
+  { id: '1', value: 'шт.' },
+  { id: '2', value: 'кг.' },
+  { id: '3', value: 'гр.' },
+  { id: '4', value: 'л.' },
 ];
 
-export const CATEGORIES_ARRAY = [{ id: 1, title: '--' }];
+export const CATEGORIES_ARRAY = [{ id: '1', value: '--' }];
 export const NAME_LABEL = 'Наименование';
 export const CATEGORIES_LABEL = 'Категория';
 export const IN_SALE_CHECKBOX_LABEL = 'Выставить на продажу';
