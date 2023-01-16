@@ -27,7 +27,7 @@ export const generateNewProductField = (): ProductType => {
     netPrice: 0,
     productType: 'one',
     category: '--',
-    inSale: true,
+    inSale: 'yes',
     marginPrice: 0,
     minQuantity: 0,
     weight: '',

@@ -5,9 +5,9 @@ export type ProductType = {
   _id?: string;
   createdAt?: string;
   name: string;
-  productType: string;
+  productType: 'one' | 'sklad' | 'mod';
   category: string;
-  inSale: boolean;
+  inSale: 'yes' | 'no';
   netPrice: number;
   marginPrice: number;
   price: number;

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch } from 'redux TK/store';
+import { useAppDispatch } from 'hooks/redux-hooks';
 
 import { Button, Card, Grid, Typography } from '@mui/material';
 
-import { fetchProducts } from './bll/middleware/products';
+import { fetchProducts } from '../ProductsPage/bll/middleware/products';
+
 import { SaleChart } from './ui/components/SaleChart';
-import IncomeProductModal from './ui/IncomeProductModal/IncomeProductModal';
+import { IncomeProductModal } from './ui/IncomeProductModal/IncomeProductModal';
 
 export const HomePage = () => {
   const [open, setOpen] = useState(false);

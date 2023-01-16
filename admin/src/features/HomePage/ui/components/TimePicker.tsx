@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Dayjs } from 'dayjs';
 
 import { TextField } from '@mui/material';
-import { TimePicker as MuiTimePicker, TimePickerProps } from '@mui/x-date-pickers';
+import { TimePicker as MuiTimePicker } from '@mui/x-date-pickers';
 
 interface ITimePicker {
   value: Dayjs | null;

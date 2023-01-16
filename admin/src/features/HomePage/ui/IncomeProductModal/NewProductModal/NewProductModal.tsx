@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
-import { addProduct } from 'features/HomePage/bll/middleware/products';
-import { selectProducts } from 'features/ProductsPage/bll/selectors';
+import { addProduct } from 'features/ProductsPage/bll/middleware/products';
 import { ProductType } from 'features/ProductsPage/bll/types';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from 'redux TK/store';
+import { ProductTypes } from 'features/ProductsPage/utils/constants';
+import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
+import { inSaleStatus } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -31,9 +31,9 @@ const generateNewProductFields = () => {
   return {
     productId: uuidv4(),
     name: '',
-    productType: 'one',
+    productType: 'one' as ProductTypes,
     category: '--',
-    inSale: true,
+    inSale: 'yes' as inSaleStatus,
     netPrice: 0,
     marginPrice: 0,
     price: 0,
@@ -53,7 +53,7 @@ export const NewProductModal: FC<NewProductModalType> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const { products } = useSelector(selectProducts);
+  const products = useAppSelector((state) => state.products.products);
 
   const [state, setState] = useState<ProductType>(generateNewProductFields());
 

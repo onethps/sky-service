@@ -82,7 +82,7 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
             onChange={() =>
               updateProductCategories(row._id as string, {
                 ...row,
-                inSale: !row.inSale,
+                inSale: row.inSale === 'no' ? 'yes' : 'no',
               })
             }
           />

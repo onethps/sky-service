@@ -20,8 +20,8 @@ const productSchema = mongoose.Schema({
   category: String,
 
   inSale: {
-    type: Boolean,
-    default: true,
+    type: String,
+    default: "yes",
   },
 
   netPrice: {

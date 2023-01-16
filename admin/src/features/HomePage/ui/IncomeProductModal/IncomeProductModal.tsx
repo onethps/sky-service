@@ -1,13 +1,13 @@
 import React, { ChangeEvent, FC, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { updateProducts } from 'features/HomePage/bll/middleware/products';
+import { updateProducts } from 'features/ProductsPage/bll/middleware/products';
 import { ProductType } from 'features/ProductsPage/bll/types';
 import { useDispatch } from 'react-redux';
-import { Form, Table } from 'shared/components';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
+import { Table } from 'shared/components/NewProductModal/Table/Table';
 import { selectOptionsType } from 'shared/components/types';
-import { arrayOfWallet, optionsForSpendCategory } from 'shared/utlis/constants/constants';
-import { generateNewProductField } from 'shared/utlis/helpers';
+import { arrayOfWallet, optionsForSpendCategory } from 'utlis/constants/constants';
+import { generateNewProductField } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -16,6 +16,7 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  FormGroup,
   Grid,
   MenuItem,
   Radio,
@@ -50,7 +51,7 @@ type IncomeModalTypes = {
   setOpen: (b: boolean) => void;
 };
 
-const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
+export const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   const { open, setOpen } = props;
   const [state, setState] = useState<initIncomeType>({ ...initModalFields });
   const [tableState, setTableState] = useState<ProductType[]>([
@@ -109,7 +110,7 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
       <ModalWrapper open={open} setOpen={setOpen} modalTitle={'Новий прихід товару'}>
         <Grid container>
           <Grid item xs={6} md={12} xl={16}>
-            <Form onSubmit={handleSubmit}>
+            <FormGroup onSubmit={handleSubmit}>
               <DialogTitle>Дата</DialogTitle>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker value={state.date} onChange={handleChangeData} />
@@ -170,12 +171,10 @@ const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
                   Выполнить
                 </Button>
               </DialogActions>
-            </Form>
+            </FormGroup>
           </Grid>
         </Grid>
       </ModalWrapper>
     </>
   );
 };
-
-export default IncomeProductModal;

@@ -1,4 +1,4 @@
-import { ProductTableList } from 'features/ProductsPage/ProductsPage';
+import { ProductsPage } from 'features/ProductsPage/ProductsPage';
 import { ProductSklad } from 'features/ProductsPage/ui/ProductSklad';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: ROUTERS.PRODUCTS_ALL, element: <ProductTableList /> },
+      { path: ROUTERS.PRODUCTS_ALL, element: <ProductsPage /> },
       { path: ROUTERS.PRODUCTS_SKLAD, element: <ProductSklad /> },
     ],
   },

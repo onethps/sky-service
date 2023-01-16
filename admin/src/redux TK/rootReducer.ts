@@ -1,4 +1,4 @@
-import { productsReducer } from 'features/HomePage/bll/productsSlice';
+import { productsReducer } from 'features/ProductsPage/bll/productsSlice';
 import { shopReducer } from 'redux TK/reducers/shop';
 
 import { combineReducers } from '@reduxjs/toolkit';

@@ -16,6 +16,8 @@ import {
   ListSubheader,
 } from '@mui/material';
 
+import { sideBarRoutes } from './constants';
+
 export const secondaryListItems = (
   <>
     <ListSubheader component="div" inset>
@@ -42,29 +44,6 @@ export const secondaryListItems = (
   </>
 );
 
-const ROUTES = {
-  HOME: {
-    title: 'Главная',
-    link: '/',
-  },
-  PRODUCTS_ALL: {
-    title: 'Все Товары',
-    link: '/products/all',
-  },
-  PRODUCTS_SKLAD: {
-    title: 'Складские товары',
-    link: '/products/sklad',
-  },
-  STATISTIC: {
-    title: 'Статистика',
-    link: '/statistic',
-  },
-  FINANCE: {
-    title: 'Финансы',
-    link: '/finance',
-  },
-};
-
 export const MainListItems = () => {
   const navigate = useNavigate();
   const [openCollapseMenu, setOpenCollapseMenu] = useState(false);
@@ -79,11 +58,11 @@ export const MainListItems = () => {
 
   return (
     <>
-      <ListItemButton onClick={() => handleRouteClick(ROUTES.HOME.link)}>
+      <ListItemButton onClick={() => handleRouteClick(sideBarRoutes.HOME.link)}>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
-        <ListItemText primary={ROUTES.HOME.title} />
+        <ListItemText primary={sideBarRoutes.HOME.title} />
       </ListItemButton>
       <ListItemButton onClick={handleClick}>
         <ListItemIcon>
@@ -96,21 +75,21 @@ export const MainListItems = () => {
         <List component="div" disablePadding>
           <ListItemButton
             sx={{ pl: 4 }}
-            onClick={() => handleRouteClick(ROUTES.PRODUCTS_ALL.link)}
+            onClick={() => handleRouteClick(sideBarRoutes.PRODUCTS_ALL.link)}
           >
             <ListItemIcon>
               <LabelIcon />
             </ListItemIcon>
-            <ListItemText primary={ROUTES.PRODUCTS_ALL.title} />
+            <ListItemText primary={sideBarRoutes.PRODUCTS_ALL.title} />
           </ListItemButton>
           <ListItemButton
             sx={{ pl: 4 }}
-            onClick={() => handleRouteClick(ROUTES.PRODUCTS_SKLAD.link)}
+            onClick={() => handleRouteClick(sideBarRoutes.PRODUCTS_SKLAD.link)}
           >
             <ListItemIcon>
               <LabelIcon />
             </ListItemIcon>
-            <ListItemText primary={ROUTES.PRODUCTS_SKLAD.title} />
+            <ListItemText primary={sideBarRoutes.PRODUCTS_SKLAD.title} />
           </ListItemButton>
         </List>
       </Collapse>
@@ -119,13 +98,13 @@ export const MainListItems = () => {
         <ListItemIcon>
           <AddShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText primary={ROUTES.STATISTIC.title} />
+        <ListItemText primary={sideBarRoutes.STATISTIC.title} />
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
           <AddShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText primary={ROUTES.FINANCE.title} />
+        <ListItemText primary={sideBarRoutes.FINANCE.title} />
       </ListItemButton>
     </>
   );

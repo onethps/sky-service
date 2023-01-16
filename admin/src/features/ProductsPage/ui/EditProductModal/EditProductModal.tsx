@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
-import { addProduct } from 'features/HomePage/bll/middleware/products';
+import { addProduct } from 'features/ProductsPage/bll/middleware/products';
 import {
   EDIT_PRODUCT_TYPES,
   PRODUCT_TYPES,
@@ -7,7 +7,8 @@ import {
 } from 'features/ProductsPage/bll/types';
 import { TechCard } from 'features/ProductsPage/ui/TechCard/TechCard';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
-import { useAppDispatch } from 'redux TK/store';
+import { ProductTypes } from 'features/ProductsPage/utils/constants';
+import { useAppDispatch } from 'hooks/redux-hooks';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -47,9 +48,9 @@ import { modalStyles } from './styles';
 const initProduct: ProductType = {
   productId: uuidv4(),
   name: '',
-  productType: PRODUCT_TYPES[0].title,
+  productType: PRODUCT_TYPES[0].title as ProductTypes,
   category: '--',
-  inSale: true,
+  inSale: 'yes',
   quantity: 0,
   unit: 'шт.',
   minQuantity: 0,
@@ -243,7 +244,7 @@ const EditProductModal: FC<EditProductModalType> = ({
           control={
             <Checkbox
               value={initProductCardState.inSale}
-              checked={initProductCardState.inSale}
+              checked={initProductCardState.inSale === 'yes'}
               onChange={handleCheckBox}
             />
           }

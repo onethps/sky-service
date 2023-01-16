@@ -8,9 +8,9 @@ export const productsApi = {
   updateProduct(id: string, product: ProductType) {
     return instance.post<ProductType>(`dashboard/products/${id}`, product);
   },
-  updateProducts(updatedProducts: ProductType[]) {
+  updateProducts(products: ProductType[]) {
     return instance.post<ProductType[]>(`dashboard/products/updateProducts`, {
-      products: updatedProducts,
+      products,
     });
   },
   addProduct(data: ProductType) {

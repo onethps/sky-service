@@ -1,9 +1,8 @@
 import { ChangeEvent, FC, SyntheticEvent, useState } from 'react';
 import { NewProductModal } from 'features/HomePage/ui/IncomeProductModal/NewProductModal/NewProductModal';
-import { selectProducts } from 'features/ProductsPage/bll/selectors';
 import { ProductType } from 'features/ProductsPage/bll/types';
-import { useSelector } from 'react-redux';
-import { generateNewProductField } from 'shared/utlis/helpers';
+import { useAppSelector } from 'hooks/redux-hooks';
+import { generateNewProductField } from 'utlis/helpers';
 
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import {
@@ -46,8 +45,7 @@ type TableType = {
 };
 
 export const Table: FC<TableType> = ({ state, setState }) => {
-  const { products } = useSelector(selectProducts);
-
+  const products = useAppSelector((state) => state.products.products);
   const [sumOfProducts, setSumOfProducts] = useState<number>(0);
   const [sumOfNetPrice, setSumOfNetPrice] = useState<number>(0);
 

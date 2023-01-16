@@ -1,9 +1,6 @@
 import React, { ChangeEvent, FC, useState } from 'react';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
-import {
-  calcNetValuePerHungeredGram,
-  calcNetValuePerPortion,
-} from 'shared/utlis/helpers';
+import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'utlis/helpers';
 
 import {
   Box,

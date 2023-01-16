@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { ProductTableList } from 'features/ProductsPage/ProductsPage';
 import { ProductSklad } from 'features/ProductsPage/ui/ProductSklad';
 import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';

@@ -1,8 +1,12 @@
 import { ProductType } from 'features/ProductsPage/bll/types';
 
+import { GridColDef, GridColumns, GridValueGetterParams } from '@mui/x-data-grid';
+
 import { INewCardFields } from './types';
 
-export const productsFields: readonly INewCardFields[] = [
+export type ProductTypes = 'one' | 'sklad' | 'mod';
+
+export const allProductsFields: INewCardFields[] = [
   {
     _id: 'name',
     numeric: false,
@@ -44,5 +48,53 @@ export const productsFields: readonly INewCardFields[] = [
     numeric: false,
     disablePadding: false,
     label: 'В продаже',
+  },
+];
+
+const productTypes = {
+  one: 'Поштучно',
+  sklad: 'Склад',
+  mod: 'Техкарта',
+};
+
+export const allProductsFields2: GridColDef[] = [
+  {
+    field: 'name',
+    headerName: 'Наименование',
+    minWidth: 300,
+  },
+  {
+    field: 'productType',
+    headerName: 'Тип',
+    valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
+      `${productTypes[params.row.productType]}`,
+  },
+  {
+    field: 'category',
+    headerName: 'Категория',
+    type: 'singleSelect',
+    valueOptions: ['--', '222', '33333'],
+    editable: true,
+  },
+  {
+    field: 'netPrice',
+    headerName: 'Себест.',
+  },
+  {
+    field: 'price',
+    headerName: 'Цена',
+  },
+  {
+    field: 'marginPrice',
+    headerName: 'Наценка',
+  },
+  {
+    field: 'inSale',
+    headerName: 'В продаже',
+    type: 'singleSelect',
+    valueGetter: ({ row }) => `${row.inSale === 'yes' ? 'Да' : 'Нет'}`,
+    valueOptions: ['Да', 'Нет'],
+
+    editable: true,
   },
 ];
