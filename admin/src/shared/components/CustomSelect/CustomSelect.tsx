@@ -1,17 +1,10 @@
 import React from 'react';
 
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  SelectProps,
-} from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@mui/material';
 
 interface CustomSelectProps extends SelectProps {
   menuItems: { id: string; value: string }[];
-  label: string;
+  label?: string;
 }
 
 export const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -21,7 +14,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
 }) => {
   return (
     <FormControl>
-      <InputLabel id={`simple-select-${label}`}>{label}</InputLabel>
+      {label && <InputLabel id={`simple-select-${label}`}>{label}</InputLabel>}
       <Select
         labelId={`simple-select-${label}`}
         id="simple-select"

@@ -1,19 +1,10 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import {
-  Box,
-  Collapse,
-  FormControl,
-  MenuItem,
-  Select,
-  TableBody,
-  TableHead,
-  Typography,
-} from '@mui/material';
+import { Collapse, TableBody, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -89,10 +80,10 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
         </TableCell>
         <TableCell align={'left'}>
           <CustomSelect
-            name={'category'}
+            name="category"
             value={row.category}
             menuItems={[{ id: '1', value: '--' }]}
-            label={'Category'}
+            label="Category"
           />
         </TableCell>
 
@@ -104,10 +95,10 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
             label="inSale"
             style={{ background: row.inSale ? 'green' : 'red', color: 'white' }}
             name={'inSale'}
-            value={row.inSale ? 'Так' : 'Ні'}
+            value={row.inSale ? 'Да' : 'Нет'}
             menuItems={[
-              { id: '1', value: 'Так' },
-              { id: '2', value: 'Нi' },
+              { id: '1', value: 'Да' },
+              { id: '2', value: 'Нет' },
             ]}
           />
         </TableCell>

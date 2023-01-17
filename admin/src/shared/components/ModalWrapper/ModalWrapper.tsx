@@ -26,7 +26,7 @@ export const ModalWrapper: FC<ModalWrapperTypes> = (props) => {
     >
       <Box sx={{ ...style.modal, width: maxWidth ? maxWidth : '80%' }}>
         <Typography variant={'h5'}>{modalTitle}</Typography>
-        <Divider sx={{ m: '10px 0' }} />
+        <Divider sx={{ marginTop: '10px' }} />
         <Box sx={style.window}>{children}</Box>
       </Box>
     </MuiModal>

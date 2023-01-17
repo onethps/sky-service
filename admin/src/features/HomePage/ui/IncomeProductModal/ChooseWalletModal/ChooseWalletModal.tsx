@@ -1,9 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
-import { selectOptionsType } from 'shared/components/types';
 
 import { Button, DialogActions, Grid } from '@mui/material';
 import { DataGrid, GridRowParams } from '@mui/x-data-grid';
+
+import { WalletOptionsType } from '../NewProductModal/constants';
 
 import { mockRows, walletFields } from './constants';
 
@@ -11,8 +12,8 @@ export interface IChooseWalletProps {
   selectWalletValue: string;
   chooseWalletValue: string;
   setSelectWalletValue: (val: string) => void;
-  setSelectWalletOptions: (arr: selectOptionsType[]) => void;
-  selectWalletOptions: selectOptionsType[];
+  setSelectWalletOptions: (arr: WalletOptionsType[]) => void;
+  selectWalletOptions: WalletOptionsType[];
 }
 
 export const ChooseWalletModal: FC<IChooseWalletProps> = ({
@@ -32,14 +33,14 @@ export const ChooseWalletModal: FC<IChooseWalletProps> = ({
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setSelectWalletValue(selectWalletOptions[0].title);
+    setSelectWalletValue(selectWalletOptions[0].value);
   };
 
   const handleClickOnRow = (event: GridRowParams) => {
     const lastId = selectWalletOptions[selectWalletOptions.length - 1].id;
     setSelectWalletOptions([
       ...selectWalletOptions,
-      { id: lastId + 1, title: event.row.name },
+      { id: lastId + 1, value: event.row.name },
     ]);
     setSelectWalletValue(event.row.name);
     setOpenModal(false);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch } from 'hooks/redux-hooks';
+import { useAppDispatch } from 'shared/hooks/redux-hooks';
 
 import { Button, Card, Grid, Typography } from '@mui/material';
 

@@ -1,8 +1,9 @@
 import React, { FC, useState } from 'react';
+import { NewProductModal } from 'features/HomePage/ui/IncomeProductModal/NewProductModal/NewProductModal';
 import { ProductType } from 'features/ProductsPage/bll/types';
 import EditProductModal from 'features/ProductsPage/ui/EditProductModal/EditProductModal';
-import { ROUTERS } from 'index';
 import { useLocation } from 'react-router-dom';
+import { routes } from 'router/constants';
 
 import { InsertEmoticon } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -41,19 +42,20 @@ const AppBar = styled(MuiAppBar, {
 
 const Header: FC<HeaderTypes> = () => {
   const [open, setOpen] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [currentProductCard, _] = useState<ProductType | null>(null);
 
   const location = useLocation();
-  const isProductPUrlPath = location.pathname === `/${ROUTERS.PRODUCTS_ALL}`;
+  const isProductPUrlPath = location.pathname === `/${routes.PRODUCTS_ALL}`;
 
   return (
     <>
-      <EditProductModal
+      {/* <EditProductModal
         open={openModal}
         setOpen={setOpenModal}
         currentProduct={currentProductCard}
-      />
+      /> */}
+
       <AppBar position="absolute" open={open}>
         <Toolbar
           sx={{

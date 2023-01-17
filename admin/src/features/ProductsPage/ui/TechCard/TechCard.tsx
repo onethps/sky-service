@@ -1,18 +1,15 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
+import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'utlis/helpers';
 
 import {
   Box,
   Button,
   Divider,
-  FormControl,
   IconButton,
-  Input,
-  InputLabel,
-  MenuItem,
-  Select,
   SelectChangeEvent,
+  TextField,
   Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
@@ -22,9 +19,9 @@ import { ModTable } from './Table/ModTable';
 const greyBg = grey[200];
 
 export const optionsPriceFor = [
-  { id: 1, title: 'Порцію' },
-  { id: 2, title: 'за 100гр.' },
-  { id: 3, title: 'за 100мл.' },
+  { id: '1', value: 'Порцію' },
+  { id: '2', value: 'за 100гр.' },
+  { id: '3', value: 'за 100мл.' },
 ];
 
 type TechCardTypes = {
@@ -50,16 +47,16 @@ export const TechCard: FC<TechCardTypes> = ({
     setInitTechCardList(values);
   };
 
-  const handleSelectPerPriceCategory = (event: SelectChangeEvent<string>) => {
+  const handleSelectPerPriceCategory = (event: SelectChangeEvent<unknown>) => {
     const values: any = [...initTechCardList];
     values[techIndex][event.target.name] = event.target.value;
 
-    if (event.target.value === optionsPriceFor[0].title) {
+    if (event.target.value === optionsPriceFor[0].value) {
       values[techIndex].netPriceMod = calcNetValuePerPortion(values[techIndex].tablesMod);
     }
     if (
-      event.target.value === optionsPriceFor[1].title ||
-      event.target.value === optionsPriceFor[2].title
+      event.target.value === optionsPriceFor[1].value ||
+      event.target.value === optionsPriceFor[2].value
     ) {
       values[techIndex].netPriceMod = calcNetValuePerHungeredGram(
         values[techIndex].tablesMod,
@@ -71,11 +68,13 @@ export const TechCard: FC<TechCardTypes> = ({
 
   return (
     <Box sx={{ bgcolor: greyBg, padding: 4 }}>
-      <Input
+      <TextField
+        label={'Название'}
         name={'modName'}
         value={currentTechCard.modName}
         onChange={handleChangeInputs}
       />
+
       <Typography variant={'h5'} sx={{ fontWeight: '700', padding: '15px 0' }}>
         Состав
       </Typography>
@@ -97,30 +96,23 @@ export const TechCard: FC<TechCardTypes> = ({
           justifyContent: 'center',
         }}
       >
-        <FormControl>
-          <Select
-            type={'Number'}
-            label={'Цена за'}
-            name={'categoryPerPriceMod'}
-            value={currentTechCard.categoryPerPriceMod}
-            onChange={handleSelectPerPriceCategory}
-          >
-            {optionsPriceFor.map(({ id, title }) => (
-              <MenuItem key={id}>{title}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <CustomSelect
+          type={'Number'}
+          label={'Цена за'}
+          name={'categoryPerPriceMod'}
+          value={currentTechCard.categoryPerPriceMod}
+          onChange={handleSelectPerPriceCategory}
+          menuItems={optionsPriceFor}
+        />
 
-        <FormControl>
-          <InputLabel>Себестоимость</InputLabel>
-          <Input
-            disabled
-            value={`${currentTechCard.netPriceMod} ₴ / ${currentTechCard.categoryPerPriceMod}`}
-          />
-        </FormControl>
+        <TextField
+          label="Себестоимость"
+          disabled
+          value={`${currentTechCard.netPriceMod} ₴ / ${currentTechCard.categoryPerPriceMod}`}
+        />
       </Box>
       <Box
-        component={'form'}
+        component="form"
         autoComplete="off"
         name={'calculateMarginPrice'}
         sx={{
@@ -132,25 +124,24 @@ export const TechCard: FC<TechCardTypes> = ({
           justifyContent: 'center',
         }}
       >
-        <FormControl>
-          <InputLabel>Цена</InputLabel>
-          <Input
-            endAdornment={'₴'}
-            value={currentTechCard.priceMod}
-            name={'price'}
-            onChange={handleChangeInputs}
-          />
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Наценка</InputLabel>
-          <Input
-            endAdornment={'%'}
-            value={currentTechCard.marginPricePercentMod}
-            name={'marginPricePercent'}
-            onChange={handleChangeInputs}
-          />
-        </FormControl>
+        <TextField
+          label="Цена"
+          value={currentTechCard.priceMod}
+          name="price"
+          onChange={handleChangeInputs}
+          InputProps={{
+            endAdornment: '₴',
+          }}
+        />
+        <TextField
+          label="Наценка"
+          value={currentTechCard.marginPricePercentMod}
+          name={'marginPricePercent'}
+          onChange={handleChangeInputs}
+          InputProps={{
+            endAdornment: '%',
+          }}
+        />
       </Box>
       <Box sx={{ display: 'flex' }}>
         <IconButton>

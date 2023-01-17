@@ -24,6 +24,6 @@ export const PRODUCT_TYPES = [
 ];
 
 export const EDIT_PRODUCT_TYPES = [
-  { id: 1, title: 'one', label: 'Поштучно/Ингридиент' },
-  { id: 2, title: 'mod', label: 'Тех.карта/Состав' },
+  { id: '1', value: 'one', label: 'Поштучно/Ингридиент' },
+  { id: '2', value: 'mod', label: 'Тех.карта/Состав' },
 ];

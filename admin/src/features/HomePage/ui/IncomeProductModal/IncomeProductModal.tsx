@@ -1,28 +1,24 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { updateProducts } from 'features/ProductsPage/bll/middleware/products';
 import { ProductType } from 'features/ProductsPage/bll/types';
-import { useDispatch } from 'react-redux';
+import { CustomRadioGroup } from 'shared/components/CustomRadioGroup/CustomRadioGroup';
+import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 import { Table } from 'shared/components/NewProductModal/Table/Table';
-import { selectOptionsType } from 'shared/components/types';
-import { arrayOfWallet, optionsForSpendCategory } from 'utlis/constants/constants';
+import { useAppDispatch } from 'shared/hooks/redux-hooks';
 import { generateNewProductField } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
+  Box,
   Button,
   DialogActions,
-  DialogTitle,
-  FormControl,
-  FormControlLabel,
   FormGroup,
   Grid,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
   SelectChangeEvent,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -30,39 +26,42 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '../components/DatePicker';
 import { TimePicker } from '../components/TimePicker';
 
-import { ChooseWalletModal } from './ChooseWalletModal/ChooseWalletModal';
+import { debitMoneyOptions, optionsForSpendCategory } from './NewProductModal/constants';
+import { WalletOptions } from './WalletOptions/WalletOptions';
 
-type initIncomeType = {
+export type InitIncomeBalanceType = {
   id: string;
   date: Dayjs | null;
   spendCategory: string | unknown;
   debitMoney: string;
 };
 
-const initModalFields: initIncomeType = {
+const initModalFields: InitIncomeBalanceType = {
   id: uuidv4(),
   date: dayjs(),
   spendCategory: 'Приход товара',
   debitMoney: 'yes',
 };
 
-type IncomeModalTypes = {
+interface IncomeProductModalProps {
   open: boolean;
-  setOpen: (b: boolean) => void;
-};
+  setOpen: (v: boolean) => void;
+}
 
-export const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
-  const { open, setOpen } = props;
-  const [state, setState] = useState<initIncomeType>({ ...initModalFields });
-  const [tableState, setTableState] = useState<ProductType[]>([
+export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
+  open,
+  setOpen,
+}) => {
+  const dispatch = useAppDispatch();
+
+  const [state, setState] = React.useState<InitIncomeBalanceType>({ ...initModalFields });
+  const [tableState, setTableState] = React.useState<ProductType[]>([
     generateNewProductField(),
   ]);
-  const [error, ,] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleUpdateProducts = () => {
+    dispatch(updateProducts({ products: tableState }));
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -75,86 +74,67 @@ export const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
   const handleChangeData = (newValue: Dayjs | null) =>
     setState({ ...state, date: newValue });
 
-  const handleSpendCategory = (event: SelectChangeEvent<string>) =>
+  const handleSpendCategory = (event: SelectChangeEvent<unknown>) =>
     setState({ ...state, spendCategory: event.target.value });
 
-  const handleDebitValue = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleDebitMoney = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, debitMoney: e.target.value });
   };
 
-  const [selectWalletOptions, setSelectWalletOptions] = useState<selectOptionsType[]>([
-    ...arrayOfWallet,
-  ]);
-
-  const [selectWalletValue, setSelectWalletValue] = useState<string>(
-    selectWalletOptions[0].title,
-  );
-
-  const handleSelectWalletValue = (event: SelectChangeEvent<string>) => {
-    setSelectWalletValue(event.target.value);
-  };
-
-  const handleUpdateProducts = () => {
-    dispatch(updateProducts({ products: tableState }) as any);
-  };
-
   return (
-    <>
-      <ChooseWalletModal
-        selectWalletValue={selectWalletValue}
-        chooseWalletValue={selectWalletOptions[1].title}
-        setSelectWalletValue={setSelectWalletValue}
-        selectWalletOptions={selectWalletOptions}
-        setSelectWalletOptions={setSelectWalletOptions}
-      />
-      <ModalWrapper open={open} setOpen={setOpen} modalTitle={'Новий прихід товару'}>
-        <Grid container>
-          <Grid item xs={6} md={12} xl={16}>
-            <FormGroup onSubmit={handleSubmit}>
-              <DialogTitle>Дата</DialogTitle>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker value={state.date} onChange={handleChangeData} />
-                <TimePicker value={state.date} onChange={handleChangeData} />
-              </LocalizationProvider>
-              <DialogTitle>Категория трат</DialogTitle>
-              <FormControl>
-                <Select
+    <ModalWrapper open={open} setOpen={setOpen} modalTitle={'Новый приход товара'}>
+      <Grid container>
+        <Grid item xs={6} md={12} xl={16}>
+          <FormGroup>
+            <Box display="flex" flexDirection="column" gap="20px">
+              {/* date */}
+              <Stack gap="10px">
+                <Typography fontWeight="500" variant="h6">
+                  Дата
+                </Typography>
+                <Stack flexDirection="row" gap="15px">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker value={state.date} onChange={handleChangeData} />
+                    <TimePicker value={state.date} onChange={handleChangeData} />
+                  </LocalizationProvider>
+                </Stack>
+              </Stack>
+
+              {/* spending category */}
+              <Stack gap="10px">
+                <Typography fontWeight="500" variant="h6">
+                  Категория трат
+                </Typography>
+                <CustomSelect
                   name={'spendCategory'}
                   value={state.spendCategory as string}
                   onChange={handleSpendCategory}
+                  menuItems={optionsForSpendCategory}
                 />
-                {optionsForSpendCategory.map(({ id, title }) => (
-                  <MenuItem key={id} value={title}>
-                    {title}
-                  </MenuItem>
-                ))}
-              </FormControl>
+              </Stack>
 
-              <DialogTitle>Списать деньги</DialogTitle>
-              <RadioGroup
-                name={'debitMoney'}
-                value={state.debitMoney}
-                onChange={handleDebitValue}
-              >
-                <FormControlLabel value="yes" control={<Radio />} label="Так" />
-                <FormControlLabel value="no" control={<Radio />} label="Ні" />
-              </RadioGroup>
+              {/* balance option */}
+              <Stack gap="10px">
+                <Typography fontWeight="500" variant="h6">
+                  Списать деньги
+                </Typography>
+                <CustomRadioGroup
+                  value={state.debitMoney}
+                  onChange={handleDebitMoney}
+                  radioItems={debitMoneyOptions}
+                />
+              </Stack>
 
-              {state.debitMoney === 'yes' ? (
-                <FormControl>
-                  <Select value={selectWalletValue} onChange={handleSelectWalletValue} />
-                  {selectWalletOptions.map(({ id, title }) => (
-                    <MenuItem key={id} value={title}>
-                      {title}
-                    </MenuItem>
-                  ))}
-                </FormControl>
-              ) : null}
+              {/* wallet flow */}
+              <WalletOptions state={state} />
 
+              {/* techcard table */}
               <Table state={tableState} setState={setTableState} />
 
+              {/* buttons */}
               <DialogActions sx={{ display: 'flex', width: '100%' }}>
                 <Button
+                  fullWidth
                   onClick={handleClose}
                   sx={{ display: 'flex', flexGrow: 1 }}
                   variant="contained"
@@ -163,18 +143,18 @@ export const IncomeProductModal: FC<IncomeModalTypes> = (props) => {
                   Очистить
                 </Button>
                 <Button
+                  fullWidth
                   onClick={handleUpdateProducts}
-                  sx={{ display: 'flex', flexGrow: 1 }}
                   variant="contained"
                   color="success"
                 >
                   Выполнить
                 </Button>
               </DialogActions>
-            </FormGroup>
-          </Grid>
+            </Box>
+          </FormGroup>
         </Grid>
-      </ModalWrapper>
-    </>
+      </Grid>
+    </ModalWrapper>
   );
 };

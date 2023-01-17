@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { routes } from 'router/constants';
 
 import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -58,7 +59,7 @@ export const MainListItems = () => {
 
   return (
     <>
-      <ListItemButton onClick={() => handleRouteClick(sideBarRoutes.HOME.link)}>
+      <ListItemButton onClick={() => handleRouteClick('/')}>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
@@ -75,7 +76,7 @@ export const MainListItems = () => {
         <List component="div" disablePadding>
           <ListItemButton
             sx={{ pl: 4 }}
-            onClick={() => handleRouteClick(sideBarRoutes.PRODUCTS_ALL.link)}
+            onClick={() => handleRouteClick(routes.PRODUCTS_ALL)}
           >
             <ListItemIcon>
               <LabelIcon />
@@ -84,7 +85,7 @@ export const MainListItems = () => {
           </ListItemButton>
           <ListItemButton
             sx={{ pl: 4 }}
-            onClick={() => handleRouteClick(sideBarRoutes.PRODUCTS_SKLAD.link)}
+            onClick={() => handleRouteClick(routes.WAREHOUSE)}
           >
             <ListItemIcon>
               <LabelIcon />

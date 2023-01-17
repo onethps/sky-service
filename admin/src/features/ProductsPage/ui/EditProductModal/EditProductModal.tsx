@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
-import { addProduct } from 'features/ProductsPage/bll/middleware/products';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { addProduct, updateProduct } from 'features/ProductsPage/bll/middleware/products';
 import {
   EDIT_PRODUCT_TYPES,
   PRODUCT_TYPES,
@@ -8,9 +8,10 @@ import {
 import { TechCard } from 'features/ProductsPage/ui/TechCard/TechCard';
 import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
 import { ProductTypes } from 'features/ProductsPage/utils/constants';
-import { useAppDispatch } from 'hooks/redux-hooks';
+import { CustomRadioGroup } from 'shared/components/CustomRadioGroup/CustomRadioGroup';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
+import { useAppDispatch } from 'shared/hooks/redux-hooks';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -18,16 +19,9 @@ import {
   Button,
   Checkbox,
   Divider,
-  FormControl,
   FormControlLabel,
-  FormLabel,
-  Input,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
   SelectChangeEvent,
+  TextField,
   Typography,
 } from '@mui/material';
 
@@ -89,6 +83,8 @@ const EditProductModal: FC<EditProductModalType> = ({
     ...initProduct,
   });
 
+  console.log(initProductCardState);
+
   const [initTechCardList, setInitTechCardList] = useState<TechCardType[]>([
     { ...initTechCard },
   ]);
@@ -111,7 +107,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     setInitProductCardState({
       ...initProductCardState,
       [event.target.name]: Number(event.target.value)
-        ? +event.target.value
+        ? Number(event.target.value)
         : event.target.value,
     });
   };
@@ -125,7 +121,7 @@ const EditProductModal: FC<EditProductModalType> = ({
 
     setInitProductCardState({
       ...initProductCardState,
-      [e.target.name]: e.target.value,
+      [e.target.name]: Number(e.target.value),
       marginPrice: calculateNetPrice,
     });
   };
@@ -140,7 +136,7 @@ const EditProductModal: FC<EditProductModalType> = ({
 
     setInitProductCardState({
       ...initProductCardState,
-      [event.target.name]: event.target.value,
+      [event.target.name]: Number(event.target.value),
       price: calculatePercent,
     });
   };
@@ -157,7 +153,7 @@ const EditProductModal: FC<EditProductModalType> = ({
 
     setInitProductCardState({
       ...initProductCardState,
-      [event.target.name]: event.target.value,
+      [event.target.name]: Number(event.target.value),
       marginPrice: calculateMarginPrice,
     });
   };
@@ -177,6 +173,11 @@ const EditProductModal: FC<EditProductModalType> = ({
     }
     setOpen(false);
   };
+
+  const handleUpdateProduct = () =>
+    dispatch(
+      updateProduct({ id: initProductCardState._id!, product: initProductCardState }),
+    );
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
     const check = event.target.checked;
@@ -198,33 +199,21 @@ const EditProductModal: FC<EditProductModalType> = ({
   }, [currentProduct]);
 
   return (
-    <ModalWrapper modalTitle={'Карточка'} open={open} setOpen={toggleModal}>
+    <ModalWrapper modalTitle="Карточка" open={open} setOpen={toggleModal}>
       <Box sx={modalStyles.wrapper}>
-        <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">Тип товара</FormLabel>
-          <RadioGroup
-            name={'productType'}
-            value={initProductCardState.productType}
-            onChange={handleInputs}
-          />
-          {EDIT_PRODUCT_TYPES.map((type) => (
-            <FormControlLabel
-              key={type.label}
-              value={type.title}
-              control={<Radio />}
-              label={type.label}
-            />
-          ))}
-        </FormControl>
-        <FormControl>
-          <InputLabel>{NAME_LABEL}</InputLabel>
-          <Input
-            name={'name'}
-            value={initProductCardState.name}
-            onChange={handleInputs}
-            error={!initProductCardState.name}
-          />
-        </FormControl>
+        <CustomRadioGroup
+          name="productType"
+          value={initProductCardState.productType}
+          radioItems={EDIT_PRODUCT_TYPES}
+          onChange={handleInputs}
+        />
+        <TextField
+          label={NAME_LABEL}
+          name={'name'}
+          value={initProductCardState.name}
+          onChange={handleInputs}
+          error={!initProductCardState.name}
+        />
         <Divider sx={modalStyles.divider} />
         <CustomSelect
           name="category"
@@ -264,15 +253,12 @@ const EditProductModal: FC<EditProductModalType> = ({
         ) : (
           <>
             <Divider sx={modalStyles.divider} />
-            <FormControl>
-              <InputLabel>{QUANTITY_LABEL}</InputLabel>
-              <Input
-                name={'quantity'}
-                type={'Number'}
-                value={initProductCardState.quantity}
-                onChange={handleInputs}
-              />
-            </FormControl>
+            <TextField
+              label={QUANTITY_LABEL}
+              name={'quantity'}
+              value={initProductCardState.quantity}
+              onChange={handleInputs}
+            />
 
             <CustomSelect
               name="unit"
@@ -281,55 +267,59 @@ const EditProductModal: FC<EditProductModalType> = ({
               label={UNIT_VALUE_LABEL}
               menuItems={unitValues}
             />
-            <FormControl>
-              <InputLabel>{MIN_QUANTITY_LABEL}</InputLabel>
-              <Input
-                name={'minQuantity'}
-                type={'Number'}
-                value={initProductCardState.minQuantity}
-                onChange={handleInputs}
-              />
-            </FormControl>
+            <TextField
+              label={MIN_QUANTITY_LABEL}
+              name={'minQuantity'}
+              value={initProductCardState.minQuantity}
+              onChange={handleInputs}
+            />
+
             <Box sx={modalStyles.calculatePrice}>
-              <FormControl>
-                <InputLabel>{NET_COST}</InputLabel>
-                <Input
-                  name={'netPrice'}
-                  type={'Number'}
-                  value={initProductCardState.netPrice}
-                  onChange={handleChangeNetPrice}
-                  endAdornment={'₴'}
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel>{MARGIN_PERCENT}</InputLabel>
-                <Input
-                  name={'marginPrice'}
-                  type={'Number'}
-                  value={initProductCardState.marginPrice}
-                  onChange={handleChangePercentPrice}
-                  endAdornment={'%'}
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel>{PRICE}</InputLabel>
-                <Input
-                  name={'price'}
-                  type={'Number'}
-                  value={initProductCardState.price}
-                  onChange={handleChangeMarginPrice}
-                  endAdornment={'₴'}
-                />
-              </FormControl>
+              <TextField
+                label={NET_COST}
+                name={'netPrice'}
+                value={initProductCardState.netPrice}
+                onChange={handleChangeNetPrice}
+                InputProps={{
+                  endAdornment: '₴',
+                  type: 'number',
+                }}
+              />
+
+              <TextField
+                label={MARGIN_PERCENT}
+                name={'marginPrice'}
+                type={'number'}
+                value={initProductCardState.marginPrice}
+                onChange={handleChangePercentPrice}
+                InputProps={{
+                  endAdornment: '%',
+                }}
+              />
+              <TextField
+                label={PRICE}
+                name={'price'}
+                type={'number'}
+                value={initProductCardState.price}
+                onChange={handleChangeMarginPrice}
+                InputProps={{
+                  endAdornment: '₴',
+                }}
+              />
             </Box>
           </>
         )}
 
         <Box sx={modalStyles.buttons}>
-          <Button variant="contained" color="error">
+          <Button fullWidth variant="contained" color="error">
             Видалити
           </Button>
-          <Button onClick={handleAddNewProduct} color="primary" variant="contained">
+          <Button
+            fullWidth
+            onClick={handleUpdateProduct}
+            color="primary"
+            variant="contained"
+          >
             Зберегти
           </Button>
         </Box>

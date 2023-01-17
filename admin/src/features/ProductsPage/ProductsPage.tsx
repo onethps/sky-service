@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { updateProduct } from 'features/ProductsPage/bll/middleware/products';
 import { ProductType } from 'features/ProductsPage/bll/types';
-import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
+import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 
 import { Box } from '@mui/material';
 import { grey } from '@mui/material/colors';

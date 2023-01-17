@@ -1,10 +1,9 @@
-import React, { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { ProductType } from 'features/ProductsPage/bll/types';
 import { categories } from 'features/ProductsPage/ui/TechCard/Table/categories';
 import { optionsPriceFor } from 'features/ProductsPage/ui/TechCard/TechCard';
-import { modProductType, TechCardType } from 'features/ProductsPage/ui/TechCard/types';
-import { useAppSelector } from 'hooks/redux-hooks';
-import { useSelector } from 'react-redux';
+import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
+import { useAppSelector } from 'shared/hooks/redux-hooks';
 import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,10 +11,8 @@ import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import {
   Box,
   Button,
-  FormControl,
   IconButton,
   Input,
-  InputLabel,
   Table as MuiTable,
   TableBody,
   TableCell,
@@ -102,12 +99,12 @@ export const ModTable: FC<ModTableType> = ({
     currentRow.quantity = +event.target.value;
     currentRow.summ = +(currentRow.quantity * currentRow.price).toFixed(2);
 
-    if (optionsPriceFor[0].title === currentTechCard.categoryPerPriceMod) {
+    if (optionsPriceFor[0].value === currentTechCard.categoryPerPriceMod) {
       value[techCardIndex].netPriceMod = calcNetValuePerPortion(
         value[techCardIndex].tablesMod,
       );
     }
-    if (optionsPriceFor[1].title === currentTechCard.categoryPerPriceMod) {
+    if (optionsPriceFor[1].value === currentTechCard.categoryPerPriceMod) {
       value[techCardIndex].netPriceMod = calcNetValuePerHungeredGram(
         value[techCardIndex].tablesMod,
       );

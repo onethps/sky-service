@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, SyntheticEvent, useState } from 'react';
 import { NewProductModal } from 'features/HomePage/ui/IncomeProductModal/NewProductModal/NewProductModal';
 import { ProductType } from 'features/ProductsPage/bll/types';
-import { useAppSelector } from 'hooks/redux-hooks';
+import { useAppSelector } from 'shared/hooks/redux-hooks';
 import { generateNewProductField } from 'utlis/helpers';
 
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
@@ -170,7 +170,7 @@ export const Table: FC<TableType> = ({ state, setState }) => {
                     renderGroup={(params) => (
                       <>
                         <GroupHeader onClick={addNewProductModalToggle}>
-                          Додати товар
+                          Добавить товар
                         </GroupHeader>
                         <GroupItems>{params.children}</GroupItems>
                       </>

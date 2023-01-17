@@ -1,24 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { addProduct } from 'features/ProductsPage/bll/middleware/products';
 import { ProductType } from 'features/ProductsPage/bll/types';
 import { ProductTypes } from 'features/ProductsPage/utils/constants';
-import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks';
+import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
+import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 import { inSaleStatus } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-  Box,
-  Button,
-  DialogActions,
-  FormControl,
-  Grid,
-  Input,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material';
+import { Box, Button, DialogActions, Grid, TextField } from '@mui/material';
+
+import { unitOptions } from './constants';
 
 type NewProductModalType = {
   open: boolean;
@@ -74,8 +66,12 @@ export const NewProductModal: FC<NewProductModalType> = ({
     if (state.name === '' || state.price === 0) {
       return;
     }
-    dispatch(addProduct({ product: state }));
-    setOpen(false);
+    dispatch(addProduct({ product: state }))
+      .unwrap()
+      .then(() => {
+        setOpen(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -86,103 +82,95 @@ export const NewProductModal: FC<NewProductModalType> = ({
     <ModalWrapper
       open={open}
       setOpen={setOpen}
-      modalTitle={'Додати товар'}
+      modalTitle={'Добавить товар'}
       maxWidth="400px"
     >
-      <Grid container>
-        <Grid item xs={6} md={12} xl={16}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '30px',
-              marginBottom: '50px',
-            }}
-          >
+      <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '30px',
+          }}
+        >
+          <TextField
+            label={'Наименование'}
+            name={'name'}
+            value={state.name}
+            onChange={handleInputs}
+            error={!state.name}
+          />
+
+          <CustomSelect
+            label={'Категория'}
+            name={'category'}
+            value={state.category}
+            onChange={handleInputs}
+            menuItems={[{ id: '1', value: '--' }]}
+          />
+
+          <CustomSelect
+            label={'Единица измерения'}
+            name="unit"
+            value={state.unit}
+            onChange={handleInputs}
+            menuItems={unitOptions}
+          />
+
+          {state.unit === 'шт.' ? (
             <TextField
-              label={'Найменування'}
-              name={'name'}
-              value={state.name}
+              label={'Вес штуки'}
+              name={'weight'}
+              value={state.weight}
               onChange={handleInputs}
-              error={!state.name}
+              InputProps={{
+                endAdornment: 'гр.',
+              }}
             />
+          ) : null}
 
-            <FormControl>
-              <Select
-                label={'Категорія'}
-                name={'category'}
-                value={state.category}
-                onChange={handleInputs}
-              >
-                <MenuItem value={1}>--</MenuItem>
-              </Select>
-            </FormControl>
+          <TextField
+            label="Себестоимость"
+            name={'price'}
+            value={state.price}
+            onChange={handleInputs}
+            error={!state.price}
+            InputProps={{
+              endAdornment: '₴',
+            }}
+          />
 
-            <FormControl>
-              <Select
-                label={'Одиниця виміру'}
-                name={'unit'}
-                value={state.unit}
-                onChange={handleInputs}
-              >
-                <MenuItem value="kg">kg</MenuItem>
-                <MenuItem value="шт">шт.</MenuItem>
-              </Select>
-            </FormControl>
+          <TextField
+            label="Mинимальный остаток"
+            name={'minQuantity'}
+            value={state.minQuantity}
+            onChange={handleInputs}
+            InputProps={{
+              endAdornment: state.unit,
+            }}
+          />
+        </Box>
 
-            {state.unit === 'шт.' ? (
-              <FormControl>
-                <InputLabel>Вага штуки</InputLabel>
-                <Input
-                  name={'weight'}
-                  value={state.weight}
-                  onChange={handleInputs}
-                  endAdornment={'гр.'}
-                />
-              </FormControl>
-            ) : null}
-
-            <FormControl>
-              <InputLabel>Собівартість</InputLabel>
-              <Input
-                name={'price'}
-                value={state.price}
-                onChange={handleInputs}
-                error={!state.price}
-                endAdornment={'₴'}
-              />
-            </FormControl>
-
-            <FormControl>
-              <InputLabel>Мінімальний залишок</InputLabel>
-              <Input
-                name={'minQuantity'}
-                value={state.minQuantity}
-                onChange={handleInputs}
-                endAdornment={state.unit}
-              />
-            </FormControl>
-          </Box>
-          <DialogActions sx={{ display: 'flex', width: '100%' }}>
-            <Button
-              onClick={handleCloseModal}
-              sx={{ display: 'flex', flexGrow: 1 }}
-              variant="contained"
-              color="inherit"
-            >
-              Скасувати
-            </Button>
-            <Button
-              onClick={handleAddProduct}
-              sx={{ display: 'flex', flexGrow: 1 }}
-              variant="contained"
-              color="success"
-            >
-              Створити
-            </Button>
-          </DialogActions>
-        </Grid>
-      </Grid>
+        {/* button actions */}
+        <DialogActions sx={{ marginTop: '50px' }}>
+          <Button
+            fullWidth
+            onClick={handleCloseModal}
+            variant="contained"
+            color="inherit"
+          >
+            Отменить
+          </Button>
+          <Button
+            fullWidth
+            onClick={handleAddProduct}
+            variant="contained"
+            color="success"
+          >
+            Добавить
+          </Button>
+        </DialogActions>
+      </Box>
     </ModalWrapper>
   );
 };
