@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 import { Alert, AlertProps, Box, Snackbar } from '@mui/material';
 import { DataGrid, GridRowModel } from '@mui/x-data-grid';
 
-import { columns } from './table-setup';
+import { columns } from './TableWarehouseConfig';
 
 export const WarehousePage = () => {
   const products = useAppSelector((state) => state.products.products);
@@ -32,7 +32,7 @@ export const WarehousePage = () => {
   return (
     <Box
       sx={{
-        height: 300,
+        minHeight: 500,
         width: '100%',
         '& .super-app-theme--header': {
           backgroundColor: 'red',

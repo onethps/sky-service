@@ -1,8 +1,7 @@
 import { ProductType } from 'features/ProductsPage/bll/types';
 
-import EditIcon from '@mui/icons-material/Edit';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { makeStyles, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import {
   GridCellParams,
   GridColDef,
@@ -11,26 +10,6 @@ import {
 } from '@mui/x-data-grid';
 
 const currency = '₴';
-
-const useStyles = makeStyles({
-  root: {
-    '& .super-app.red': {
-      backgroundColor: 'red', // you need to configure the background colors to the colorKey
-      color: '#1a3e72',
-      fontWeight: '600',
-    },
-    '& .super-app.blue': {
-      backgroundColor: 'blue',
-      color: '#1a3e72',
-      fontWeight: '600',
-    },
-    '& .super-app.orange': {
-      backgroundColor: 'orange',
-      color: '#1a3e72',
-      fontWeight: '600',
-    },
-  },
-});
 
 export const columns: GridColDef[] = [
   {
