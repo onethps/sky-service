@@ -1,20 +1,13 @@
-import { useEffect } from 'react';
-import { ProductSklad } from 'features/ProductsPage/ui/ProductSklad';
-import { useDispatch } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
+import { router } from 'router/AppRouter';
 
-import { Dashboard } from '@mui/icons-material';
+import { CssBaseline } from '@mui/material';
 
 export const App = () => {
-  // const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   dispatch(fetchProducts() as any);
-  // }, []);
-
   return (
     <>
-      <div>Hello World</div>
+      <CssBaseline />
+      <RouterProvider router={router} />
     </>
   );
 };

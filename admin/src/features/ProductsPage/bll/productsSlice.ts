@@ -16,17 +16,6 @@ export const { reducer, actions } = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.fulfilled, (state, { payload }) => {
-        // const res: any[] = [];
-        // payload.forEach((pr) => {
-        //   if (pr.productType === 'mod') {
-        //     res.push(pr, ...pr.mod);
-        //     return;
-        //   }
-        //   res.push(pr);
-        // });
-
-        // console.log(res);
-
         state.products = payload;
       })
 

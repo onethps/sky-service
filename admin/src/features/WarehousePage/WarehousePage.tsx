@@ -4,6 +4,7 @@ import { ProductType } from 'features/ProductsPage/bll/types';
 import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 
 import { Alert, AlertProps, Box, Snackbar } from '@mui/material';
+import { red, yellow } from '@mui/material/colors';
 import { DataGrid, GridRowModel } from '@mui/x-data-grid';
 
 import { columns } from './TableWarehouseConfig';
@@ -34,8 +35,12 @@ export const WarehousePage = () => {
       sx={{
         minHeight: 500,
         width: '100%',
-        '& .super-app-theme--header': {
-          backgroundColor: 'red',
+        '& .data-grid-warehouse-quantity-color': {
+          backgroundColor: yellow[600],
+        },
+        '& .data-grid-warehouse-price-color': {
+          backgroundColor: red[600],
+          color: 'white',
         },
       }}
     >

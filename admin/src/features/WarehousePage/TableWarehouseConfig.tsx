@@ -32,9 +32,12 @@ export const columns: GridColDef[] = [
     valueOptions: ['--', '222', '33333'],
     valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
       `${Number(params.row.quantity)} ${params.row.unit}`,
-    editable: true,
-    cellClassName: (params: GridCellParams<ProductType>) => 'super-app-theme--header',
-    // `${params.row.quantity <= params.row.minQuantity ? 'super-app-theme--header' : ''}`,
+    cellClassName: (params: GridCellParams<ProductType>) => {
+      if (params.row.quantity <= params.row.minQuantity) {
+        return 'data-grid-warehouse-quantity-color';
+      }
+      return '';
+    },
   },
 
   {
@@ -54,18 +57,26 @@ export const columns: GridColDef[] = [
     headerName: 'Цена',
     editable: true,
     type: 'number',
-    renderCell: (params: GridRenderCellParams<string>) => (
-      <>
-        {params.row.productType !== 'mod' && (
-          <Stack direction="row" gap="10px" alignItems="center">
-            <Typography variant="body2">
-              {params.row.price.toFixed(2)} {currency}
-            </Typography>
-            <EditOutlinedIcon fontSize="small" />
-            {/* <Typography>{params.row.price}</Typography> */}
-          </Stack>
-        )}
-      </>
-    ),
+    renderCell: (params: GridRenderCellParams<string>) => {
+      return (
+        <>
+          {params.row.productType !== 'mod' && (
+            <Stack direction="row" gap="10px" alignItems="center">
+              <Typography variant="body2">
+                {params.row.price.toFixed(2)} {currency}
+              </Typography>
+              <EditOutlinedIcon fontSize="small" />
+              {/* <Typography>{params.row.price}</Typography> */}
+            </Stack>
+          )}
+        </>
+      );
+    },
+    cellClassName: (params: GridCellParams<ProductType>) => {
+      if (params.row.price === 0 && params.row.productType !== 'mod') {
+        return 'data-grid-warehouse-price-color';
+      }
+      return '';
+    },
   },
 ];
