@@ -35,6 +35,7 @@ export const WarehousePage = () => {
       sx={{
         minHeight: 500,
         width: '100%',
+        backgroundColor: 'white',
         '& .data-grid-warehouse-quantity-color': {
           backgroundColor: yellow[600],
         },

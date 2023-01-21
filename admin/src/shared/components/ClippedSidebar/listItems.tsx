@@ -69,7 +69,7 @@ export const MainListItems = () => {
         <ListItemIcon>
           <Inventory2Icon />
         </ListItemIcon>
-        <ListItemText primary={'Товари'} />
+        <ListItemText primary={'Товары'} />
         {openCollapseMenu ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openCollapseMenu} timeout="auto" unmountOnExit>

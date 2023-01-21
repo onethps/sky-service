@@ -50,12 +50,6 @@ const Header: FC<HeaderTypes> = () => {
 
   return (
     <>
-      {/* <EditProductModal
-        open={openModal}
-        setOpen={setOpenModal}
-        currentProduct={currentProductCard}
-      /> */}
-
       <AppBar position="absolute" open={open}>
         <Toolbar
           sx={{
