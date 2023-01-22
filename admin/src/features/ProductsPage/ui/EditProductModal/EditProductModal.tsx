@@ -312,7 +312,7 @@ const EditProductModal: FC<EditProductModalType> = ({
 
         <Box sx={modalStyles.buttons}>
           <Button fullWidth variant="contained" color="error">
-            Видалити
+            Удалить
           </Button>
           <Button
             fullWidth
@@ -320,7 +320,7 @@ const EditProductModal: FC<EditProductModalType> = ({
             color="primary"
             variant="contained"
           >
-            Зберегти
+            Сохранить
           </Button>
         </Box>
       </Box>

@@ -35,27 +35,6 @@ export const HomePage = () => {
   return (
     <Container>
       <Stack gap="50px">
-        <IncomeProductModal open={open} setOpen={setOpen} />
-        {/* actions */}
-        <Box>
-          <Typography
-            textAlign="left"
-            component="h1"
-            variant="h4"
-            align="center"
-            marginBottom="20px"
-          >
-            Создать документ
-          </Typography>
-          <Card variant="outlined">
-            <CardContent>
-              <Button variant="contained" onClick={handleClickOpen}>
-                Приход товара
-              </Button>
-            </CardContent>
-          </Card>
-        </Box>
-
         {/* sales chart  */}
         <Box>
           <Typography

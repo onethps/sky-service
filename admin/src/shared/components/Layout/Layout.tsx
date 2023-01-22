@@ -6,7 +6,7 @@ import { Box, Container, Grid, Toolbar } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
 import AppBarHeader from '../AppBarHeader/AppBarHeader';
-import ClippedDrawer from '../ClippedSidebar/ClippedSidebar';
+import { ClippedDrawer } from '../ClippedSidebar/ClippedSidebar';
 
 export const Layout = () => {
   const [open, setOpen] = useState(true);
