@@ -16,6 +16,7 @@ export const columns: GridColDef[] = [
     field: 'name',
     headerName: 'Наименование',
     minWidth: 300,
+    flex: 1,
   },
 
   {
@@ -24,6 +25,8 @@ export const columns: GridColDef[] = [
     type: 'singleSelect',
     valueOptions: ['--', '222', '33333'],
     editable: true,
+    minWidth: 150,
+    flex: 1,
   },
   {
     field: 'quantity',
@@ -38,22 +41,31 @@ export const columns: GridColDef[] = [
       }
       return '';
     },
+    minWidth: 150,
+    flex: 1,
   },
 
   {
     field: 'netPrice',
+    minWidth: 150,
+    flex: 1,
     headerName: 'Себест.',
     valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
       `${Number(params.row.netPrice).toFixed(2)} ${currency}`,
   },
+
   {
     field: 'spend',
+    minWidth: 150,
+    flex: 1,
     headerName: 'Затрат',
     valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
       `${Number(params.row.quantity * params.row.netPrice).toFixed(2)} ${currency} `,
   },
   {
     field: 'price',
+    minWidth: 150,
+    flex: 1,
     headerName: 'Цена',
     editable: true,
     type: 'number',

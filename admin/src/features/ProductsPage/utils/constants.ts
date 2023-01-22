@@ -62,6 +62,7 @@ export const allProductsFields2: GridColDef[] = [
     field: 'name',
     headerName: 'Наименование',
     minWidth: 300,
+    flex: 1,
   },
   {
     field: 'productType',
@@ -75,26 +76,35 @@ export const allProductsFields2: GridColDef[] = [
     type: 'singleSelect',
     valueOptions: ['--', '222', '33333'],
     editable: true,
+    minWidth: 150,
+    flex: 1,
   },
   {
     field: 'netPrice',
     headerName: 'Себест.',
+    minWidth: 150,
+    flex: 1,
   },
   {
     field: 'price',
     headerName: 'Цена',
+    minWidth: 150,
+    flex: 1,
   },
   {
     field: 'marginPrice',
     headerName: 'Наценка',
+    minWidth: 150,
+    flex: 1,
   },
   {
     field: 'inSale',
+    minWidth: 150,
+    flex: 1,
     headerName: 'В продаже',
     type: 'singleSelect',
     valueGetter: ({ row }) => `${row.inSale === 'yes' ? 'Да' : 'Нет'}`,
     valueOptions: ['Да', 'Нет'],
-
     editable: true,
   },
 ];

@@ -26,11 +26,8 @@ export const Layout = () => {
         sx={{ flexGrow: 1, p: 3, backgroundColor: grey[100], minHeight: '100vh' }}
       >
         <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
-          <Grid container>
-            <Outlet />
-          </Grid>
-        </Container>
+
+        <Outlet />
       </Box>
     </Box>
   );

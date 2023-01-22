@@ -33,8 +33,7 @@ export const WarehousePage = () => {
   return (
     <Box
       sx={{
-        minHeight: 500,
-        width: '100%',
+        height: 500,
         backgroundColor: 'white',
         '& .data-grid-warehouse-quantity-color': {
           backgroundColor: yellow[600],
