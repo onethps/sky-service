@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { walletOptions, WalletOptionsType } from 'features/HomePage/constants/constants';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 
 import { SelectChangeEvent } from '@mui/material';
 
-import { ChooseWalletModal } from '../ChooseWalletModal/ChooseWalletModal';
-import { InitIncomeBalanceType } from '../IncomeProductModal';
-import { walletOptions, WalletOptionsType } from '../NewProductModal/constants';
+import { ChooseWalletModal } from './ChooseWalletModal';
+import { BalanceType } from './IncomeProduct';
 
 interface WalletOptionsProps {
-  state: InitIncomeBalanceType;
+  state: BalanceType;
 }
 
 export const WalletOptions: React.FC<WalletOptionsProps> = ({ state }) => {
   const [selectWalletOptions, setSelectWalletOptions] =
-    React.useState<WalletOptionsType[]>(walletOptions);
+    useState<WalletOptionsType[]>(walletOptions);
 
   const [selectWalletValue, setSelectWalletValue] = React.useState<string>(
     selectWalletOptions[0].value,
@@ -24,7 +24,7 @@ export const WalletOptions: React.FC<WalletOptionsProps> = ({ state }) => {
 
     // TODO: FIX THIS BUG
     setSelectWalletOptions(() => {
-      // rewrite third element with new balance value (no needed list of balance)
+      // rewrite third element with new balance value (no needed list of balances)
       const copy = [...walletOptions];
       const newValue = {
         id: (copy.length + 1).toString(),

@@ -1,11 +1,11 @@
-import { ProductType } from 'features/ProductsPage/bll/types';
+import { IProduct } from 'interfaces/product.interfaces';
 
 import { createSlice } from '@reduxjs/toolkit';
 
 import { addProduct, fetchProducts, updateProduct } from './middleware/products';
 
 const initialState = {
-  products: [] as ProductType[],
+  products: [] as IProduct[],
   loading: false,
 };
 
@@ -25,7 +25,7 @@ export const { reducer, actions } = createSlice({
 
       .addCase(updateProduct.fulfilled, (state, { payload }) => {
         const findIndex = state.products.findIndex(
-          (product) => product._id === payload._id,
+          (product) => product.id === payload.id,
         );
         state.products[findIndex] = payload;
       });

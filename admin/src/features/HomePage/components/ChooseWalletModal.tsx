@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
+import {
+  balanceMock,
+  walletFields,
+  WalletOptionsType,
+} from 'features/HomePage/constants/constants';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 
 import { Button, DialogActions, Grid } from '@mui/material';
 import { DataGrid, GridRowParams } from '@mui/x-data-grid';
-
-import { WalletOptionsType } from '../NewProductModal/constants';
-
-import { mockRows, walletFields } from './constants';
 
 export interface IChooseWalletProps {
   selectWalletValue: string;
@@ -51,7 +52,7 @@ export const ChooseWalletModal: FC<IChooseWalletProps> = ({
         <Grid item xs={6} md={12} xl={16}>
           <DataGrid
             columns={walletFields}
-            rows={mockRows}
+            rows={balanceMock}
             autoHeight={true}
             disableSelectionOnClick
             onRowClick={(event) => handleClickOnRow(event)}

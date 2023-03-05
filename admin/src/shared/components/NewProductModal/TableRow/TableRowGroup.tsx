@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
+import { TechCardType } from 'features/ProductsPage/types/types';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -33,7 +33,7 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
   };
 
   const handleModalToggle = () => {
-    handleModal(row._id as string);
+    handleModal(row.id as string);
   };
 
   return (
@@ -43,7 +43,7 @@ export const TableRowGroup: FC<defaultTableRowType> = ({
         role="checkbox"
         aria-checked={isItemSelected}
         tabIndex={-1}
-        key={row._id}
+        key={row.id}
         selected={isItemSelected}
         sx={{ cursor: 'pointer' }}
       >

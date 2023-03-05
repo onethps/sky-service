@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { ProductType } from 'features/ProductsPage/bll/types';
+import { IProduct } from 'interfaces/product.interfaces';
 
 import { FormControl, MenuItem, Select, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
@@ -8,11 +8,11 @@ import TableRow from '@mui/material/TableRow';
 
 type TableRowNormalType = {
   isItemSelected: boolean;
-  row: ProductType;
+  row: IProduct;
   handleClick: (event: any, name: string) => void;
   labelId: string;
   handleModal: (id: string) => void;
-  updateProductCategories: (id: string, product: ProductType) => void;
+  updateProductCategories: (id: string, product: IProduct) => void;
 };
 
 export const TableRowNormal: FC<TableRowNormalType> = ({
@@ -29,7 +29,7 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
       role="checkbox"
       aria-checked={isItemSelected}
       tabIndex={-1}
-      key={row._id}
+      key={row.id}
       selected={isItemSelected}
       sx={{ cursor: 'pointer' }}
     >
@@ -48,14 +48,14 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
         id={labelId}
         scope="row"
         padding="none"
-        onClick={() => handleModal(row._id as string)}
+        onClick={() => handleModal(row.id as string)}
         sx={{ textAlign: 'center', paddingRight: '40px' }}
       >
         {row.name}
       </TableCell>
 
-      <TableCell align="left" onClick={() => handleModal(row._id as string)}>
-        {row.productType === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
+      <TableCell align="left" onClick={() => handleModal(row.id as string)}>
+        {row.type === 'one' ? 'Поштучно/Ингридиент' : 'Тех.карта'}
       </TableCell>
       <TableCell align={'left'}>
         <FormControl>
@@ -64,25 +64,25 @@ export const TableRowNormal: FC<TableRowNormalType> = ({
           </Select>
         </FormControl>
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-        <Typography>{row.netPrice} ₴</Typography>
+      <TableCell align="right" onClick={() => handleModal(row.id as string)}>
+        <Typography>{row.price} ₴</Typography>
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
+      <TableCell align="right" onClick={() => handleModal(row.id as string)}>
         {row.price} ₴
       </TableCell>
-      <TableCell align="right" onClick={() => handleModal(row._id as string)}>
-        {row.marginPrice} %
+      <TableCell align="right" onClick={() => handleModal(row.id as string)}>
+        {row.price} %
       </TableCell>
       <TableCell align="left">
         <FormControl>
           <Select
-            style={{ background: row.inSale ? 'green' : 'red', color: 'white' }}
+            style={{ background: row.saleStatus ? 'green' : 'red', color: 'white' }}
             name={'inSale'}
-            value={row.inSale ? 'Так' : 'Ні'}
+            value={row.saleStatus ? 'Так' : 'Ні'}
             onChange={() =>
-              updateProductCategories(row._id as string, {
+              updateProductCategories(row.id as string, {
                 ...row,
-                inSale: row.inSale === 'no' ? 'yes' : 'no',
+                saleStatus: row.saleStatus,
               })
             }
           />

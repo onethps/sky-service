@@ -1,4 +1,4 @@
-import { ProductType } from 'features/ProductsPage/bll/types';
+import { IProduct } from 'interfaces/product.interfaces';
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Stack, Typography } from '@mui/material';
@@ -33,9 +33,9 @@ export const columns: GridColDef[] = [
     headerName: 'Количество',
     type: 'singleSelect',
     valueOptions: ['--', '222', '33333'],
-    valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
+    valueGetter: (params: GridValueGetterParams<any, IProduct>) =>
       `${Number(params.row.quantity)} ${params.row.unit}`,
-    cellClassName: (params: GridCellParams<ProductType>) => {
+    cellClassName: (params: GridCellParams<IProduct>) => {
       if (params.row.quantity <= params.row.minQuantity) {
         return 'data-grid-warehouse-quantity-color';
       }
@@ -50,8 +50,8 @@ export const columns: GridColDef[] = [
     minWidth: 150,
     flex: 1,
     headerName: 'Себест.',
-    valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
-      `${Number(params.row.netPrice).toFixed(2)} ${currency}`,
+    valueGetter: (params: GridValueGetterParams<any, IProduct>) =>
+      `${Number(params.row.price).toFixed(2)} ${currency}`,
   },
 
   {
@@ -59,8 +59,8 @@ export const columns: GridColDef[] = [
     minWidth: 150,
     flex: 1,
     headerName: 'Затрат',
-    valueGetter: (params: GridValueGetterParams<any, ProductType>) =>
-      `${Number(params.row.quantity * params.row.netPrice).toFixed(2)} ${currency} `,
+    valueGetter: (params: GridValueGetterParams<any, IProduct>) =>
+      `${Number(params.row.quantity * params.row.price).toFixed(2)} ${currency} `,
   },
   {
     field: 'price',
@@ -84,7 +84,7 @@ export const columns: GridColDef[] = [
         </>
       );
     },
-    cellClassName: (params: GridCellParams<ProductType>) => {
+    cellClassName: (params: GridCellParams<IProduct>) => {
       if (params.row.price === 0 && params.row.productType !== 'mod') {
         return 'data-grid-warehouse-price-color';
       }

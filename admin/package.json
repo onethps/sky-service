@@ -71,6 +71,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "prettier": "^2.8.2",
+    "react-hook-form": "^7.43.4",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.1",
     "recharts": "^2.1.14",

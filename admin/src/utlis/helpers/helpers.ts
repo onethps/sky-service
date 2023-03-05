@@ -1,5 +1,5 @@
-import { ProductType } from 'features/ProductsPage/bll/types';
-import { modProductType } from 'features/ProductsPage/ui/TechCard/types';
+import { modProductType } from 'features/ProductsPage/types/types';
+import { IProduct, UnitType } from 'interfaces/product.interfaces';
 import { v4 as uuidv4 } from 'uuid';
 
 export const calcNetValuePerPortion = (array: any[]) => {
@@ -16,21 +16,19 @@ export const calcNetValuePerHungeredGram = (array: any[]) => {
   }, 0);
 };
 
-export const generateNewProductField = (): ProductType => {
+export const generateNewProductField = (): IProduct => {
   return {
-    productId: uuidv4(),
+    id: uuidv4(),
     name: '',
-    quantity: 0,
-    unit: 'шт',
+    unit: 'шт' as UnitType,
+    type: 'one' as const,
     price: 0,
-    sum: 0,
-    netPrice: 0,
-    productType: 'one',
     category: '--',
-    inSale: 'yes',
-    marginPrice: 0,
+    saleStatus: true,
+    percent: 0,
+    quantity: 0,
     minQuantity: 0,
     weight: '',
-    mod: [],
+    modIds: [],
   };
 };

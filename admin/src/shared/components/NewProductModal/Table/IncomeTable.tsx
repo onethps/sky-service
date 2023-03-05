@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, SyntheticEvent, useState } from 'react';
-import { NewProductModal } from 'features/HomePage/ui/IncomeProductModal/NewProductModal/NewProductModal';
-import { ProductType } from 'features/ProductsPage/bll/types';
+import { NewProductModal } from 'features/HomePage/components/NewProductModal';
+import { IProduct } from 'interfaces/product.interfaces';
 import { useAppSelector } from 'shared/hooks/redux-hooks';
 import { generateNewProductField } from 'utlis/helpers';
 
@@ -8,6 +8,7 @@ import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import {
   IconButton,
   Input,
+  InputAdornment,
   Select,
   SelectChangeEvent,
   Table as MuiTable,
@@ -40,11 +41,11 @@ const GroupItems = styled('ul')({
 });
 
 type TableType = {
-  state: ProductType[];
-  setState: (table: ProductType[]) => void;
+  productList: IProduct[];
+  setProductList: (productList: IProduct[]) => void;
 };
 
-export const Table: FC<TableType> = ({ state, setState }) => {
+export const IncomeTable: FC<TableType> = ({ productList, setProductList }) => {
   const products = useAppSelector((state) => state.products.products);
   const [sumOfProducts, setSumOfProducts] = useState<number>(0);
   const [sumOfNetPrice, setSumOfNetPrice] = useState<number>(0);
@@ -53,30 +54,30 @@ export const Table: FC<TableType> = ({ state, setState }) => {
     index: number,
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const value: any[] = [...state];
+    const value: any[] = [...productList];
     const eventVal = Number(event.target.value);
 
     if (event.target.name === 'quantity') {
       value[index].sum = eventVal * value[index].price;
-      calcOfProducts(state, setSumOfProducts, 'sum');
+      calcOfProducts(productList, setSumOfProducts, 'sum');
     }
     if (event.target.name === 'sum') {
-      calcOfProducts(state, setSumOfProducts, 'sum');
+      calcOfProducts(productList, setSumOfProducts, 'sum');
     }
     if (event.target.name === 'netPrice') {
-      calcOfProducts(state, setSumOfNetPrice, 'netPrice');
+      calcOfProducts(productList, setSumOfNetPrice, 'netPrice');
     }
 
     value[index][event.target.name] = Number(event.target.value)
       ? +event.target.value
       : event.target.value;
-    setState(value);
+    setProductList(value);
   };
 
   const handleSelects = (index: number, event: SelectChangeEvent<unknown>) => {
-    const value: any = [...state];
+    const value: any = [...productList];
     value[index][event.target.name] = event.target.value;
-    setState(value);
+    setProductList(value);
   };
 
   const calcOfProducts = (
@@ -89,15 +90,15 @@ export const Table: FC<TableType> = ({ state, setState }) => {
   };
 
   const addNewRow = () => {
-    const value: ProductType[] = [...state];
-    const newRow: ProductType = generateNewProductField();
+    const value: IProduct[] = [...productList];
+    const newRow: IProduct = generateNewProductField();
     value.push(newRow);
-    setState(value);
+    setProductList(value);
   };
   const handleRemoveTableRow = (index: number) => {
-    const value: any = [...state];
+    const value: any = [...productList];
     value.splice(index, 1);
-    setState(value);
+    setProductList(value);
   };
 
   const handleInput = (value: string | null, index: number) => {
@@ -105,12 +106,11 @@ export const Table: FC<TableType> = ({ state, setState }) => {
       return;
     }
 
-    const productIndex = products.findIndex((el) => el.name === value);
-    const currentProduct = products[productIndex];
-    const values = [...state];
-
+    const currentProduct = products.find((product) => product.name === value);
+    const values = [...productList];
+    if (!currentProduct) return;
     values[index] = { ...currentProduct };
-    setState(values);
+    setProductList(values);
   };
 
   const [openNewProductModal, setOpenNewProductModal] = useState(false);
@@ -123,11 +123,11 @@ export const Table: FC<TableType> = ({ state, setState }) => {
     setOpenNewProductModal(true);
   };
 
-  const setNewProductInTableRow = (index: number, newProduct: ProductType) => {
-    const tableData = [...state];
+  const setNewProductInTableRow = (index: number, newProduct: IProduct) => {
+    const tableData = [...productList];
 
     tableData[index] = { ...newProduct };
-    setState(tableData);
+    setProductList(tableData);
   };
 
   return (
@@ -142,7 +142,7 @@ export const Table: FC<TableType> = ({ state, setState }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {state.map((row: ProductType, index: number) => {
+        {productList.map((row: IProduct, index: number) => {
           return (
             <>
               <NewProductModal
@@ -152,7 +152,7 @@ export const Table: FC<TableType> = ({ state, setState }) => {
                 setNewProductInTableRow={setNewProductInTableRow}
               />
               <TableRow
-                key={row.productId}
+                key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell style={{ width: '40%', whiteSpace: 'nowrap' }}>
@@ -165,7 +165,7 @@ export const Table: FC<TableType> = ({ state, setState }) => {
                     )}
                     groupBy={(o) => ' '}
                     options={
-                      products.length ? products.map((el: ProductType) => el.name) : [' ']
+                      products.length ? products.map((el: IProduct) => el.name) : [' ']
                     }
                     renderGroup={(params) => (
                       <>
@@ -178,10 +178,17 @@ export const Table: FC<TableType> = ({ state, setState }) => {
                   />
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-                  <Input
+                  <TextField
+                    variant="outlined"
                     name={'quantity'}
+                    size="small"
                     value={row.quantity}
                     onChange={(e) => handleInputs(index, e)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">{row.unit}</InputAdornment>
+                      ),
+                    }}
                   />
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
@@ -194,23 +201,29 @@ export const Table: FC<TableType> = ({ state, setState }) => {
                   /> */}
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-                  <Input
+                  <TextField
+                    size="small"
+                    variant="outlined"
                     name={'price'}
                     value={row.price}
                     onChange={(e) => handleInputs(index, e)}
                   />
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-                  <Input
+                  <TextField
+                    size="small"
+                    variant="outlined"
                     name={'sum'}
-                    value={row.sum}
+                    value={row.price}
                     onChange={(e) => handleInputs(index, e)}
                   />
                 </TableCell>
                 <TableCell style={{ width: '10%', whiteSpace: 'nowrap' }}>
-                  <Input
-                    name={'netPrice'}
-                    value={row.netPrice}
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    name={'price'}
+                    value={row.price}
                     onChange={(e) => handleInputs(index, e)}
                   />
                 </TableCell>

@@ -1,11 +1,16 @@
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
+import {
+  debitMoneyOptions,
+  optionsForSpendCategory,
+} from 'features/HomePage/constants/constants';
 import { updateProducts } from 'features/ProductsPage/bll/middleware/products';
-import { ProductType } from 'features/ProductsPage/bll/types';
+import { IProduct } from 'interfaces/product.interfaces';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { CustomRadioGroup } from 'shared/components/CustomRadioGroup/CustomRadioGroup';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
-import { Table } from 'shared/components/NewProductModal/Table/Table';
+import { IncomeTable } from 'shared/components/NewProductModal/Table/IncomeTable';
 import { useAppDispatch } from 'shared/hooks/redux-hooks';
 import { generateNewProductField } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,20 +28,20 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-import { DatePicker } from '../components/DatePicker';
-import { TimePicker } from '../components/TimePicker';
+import { DatePicker } from './DatePicker';
+import { IncomeTable2 } from './IncomeTable2';
+import { ProductItem } from './ProductItem';
+import { TimePicker } from './TimePicker';
+import { WalletOptions } from './WalletOptions';
 
-import { debitMoneyOptions, optionsForSpendCategory } from './NewProductModal/constants';
-import { WalletOptions } from './WalletOptions/WalletOptions';
-
-export type InitIncomeBalanceType = {
+export type BalanceType = {
   id: string;
   date: Dayjs | null;
   spendCategory: string | unknown;
   debitMoney: string;
 };
 
-const initModalFields: InitIncomeBalanceType = {
+const defaultValues: BalanceType = {
   id: uuidv4(),
   date: dayjs(),
   spendCategory: 'Приход товара',
@@ -54,8 +59,10 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const [state, setState] = React.useState<InitIncomeBalanceType>({ ...initModalFields });
-  const [tableState, setTableState] = React.useState<ProductType[]>([
+  const [state, setState] = React.useState<BalanceType>({
+    ...defaultValues,
+  });
+  const [tableState, setTableState] = React.useState<IProduct[]>([
     generateNewProductField(),
   ]);
 
@@ -80,6 +87,20 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
   const handleDebitMoney = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, debitMoney: e.target.value });
   };
+
+  const { handleSubmit, reset, control } = useForm({
+    defaultValues: {
+      products: [{ name: 'vino', count: '', price: '', sum: '', netPrice: '' }],
+    },
+    mode: 'onChange',
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'products',
+  });
+
+  const onSubmit = (data: any) => console.log(data);
 
   return (
     <ModalWrapper open={open} setOpen={setOpen} modalTitle={'Новый приход товара'}>
@@ -128,8 +149,40 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
               {/* wallet flow */}
               <WalletOptions state={state} />
 
-              {/* techcard table */}
-              <Table state={tableState} setState={setTableState} />
+              <Typography fontWeight="500" variant="h6">
+                Список товаров
+              </Typography>
+
+              {/* product list  */}
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {fields.map((field, index) => (
+                  <Stack key={field.id} flexDirection="row">
+                    <ProductItem control={control} index={index} />
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => remove(index)}
+                    >
+                      X
+                    </Button>
+                  </Stack>
+                ))}
+                <Button
+                  variant="contained"
+                  sx={{
+                    flexGrow: 0,
+                    width: 50,
+                  }}
+                  onClick={() => {
+                    append({ name: 'vino', count: '', price: '', sum: '', netPrice: '' });
+                  }}
+                >
+                  +
+                </Button>
+                <input type="submit" />
+              </form>
+              {/* <IncomeTable2 productList={tableState} setProductList={setTableState} /> */}
+              {/* <IncomeTable productList={tableState} setProductList={setTableState} /> */}
 
               {/* buttons */}
               <DialogActions sx={{ display: 'flex', width: '100%' }}>

@@ -20,11 +20,11 @@ app.use(
 );
 dotenv.config();
 
-app.use("/dashboard/products", productRoutes);
-app.use("/dashboard/reports", reportRoutes);
-app.use("/dashboard/settings", reportRoutes);
-app.use("/dashboard/user", userRoutes);
-app.use("/dashboard/store", storeRoutes);
+app.use("/products", productRoutes);
+app.use("/reports", reportRoutes);
+app.use("/settings", reportRoutes);
+app.use("/user", userRoutes);
+app.use("/store", storeRoutes);
 
 const PORT = process.env.PORT || 5500;
 

@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
-import { NewProductModal } from 'features/HomePage/ui/IncomeProductModal/NewProductModal/NewProductModal';
-import { ProductType } from 'features/ProductsPage/bll/types';
-import EditProductModal from 'features/ProductsPage/ui/EditProductModal/EditProductModal';
+import { NewProductModal } from 'features/HomePage/components/NewProductModal';
+import EditProductModal from 'features/ProductsPage/components/EditProductModal';
+import { IProduct } from 'interfaces/product.interfaces';
 import { useLocation } from 'react-router-dom';
 import { routes } from 'router/constants';
 
@@ -43,7 +43,7 @@ const AppBar = styled(MuiAppBar, {
 const Header: FC<HeaderTypes> = () => {
   const [open, setOpen] = useState(true);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [currentProductCard, _] = useState<ProductType | null>(null);
+  const [currentProductCard, _] = useState<IProduct | null>(null);
 
   const location = useLocation();
   const isProductPUrlPath = location.pathname === `/${routes.PRODUCTS_ALL}`;

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const productSchema = mongoose.Schema({
-  productId: {
+  id: {
     type: String,
     required: true,
   },
@@ -13,28 +13,22 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  productType: {
+  type: {
     type: String,
     required: true,
   },
   category: String,
 
-  inSale: {
-    type: String,
-    default: "yes",
-  },
-
-  netPrice: {
-    type: Number,
-    default: 0,
+  saleStatus: {
+    type: Boolean,
+    default: true,
   },
 
   price: {
     type: Number,
     default: 0,
   },
-
-  marginPrice: {
+  percent: {
     type: Number,
     default: 0,
   },
@@ -43,15 +37,15 @@ const productSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  unit: {
-    type: String,
-    required: true,
-  },
   minQuantity: {
     type: Number,
     default: 0,
   },
-  mod: {
+  unit: {
+    type: String,
+    required: true,
+  },
+  modIds: {
     type: Array,
     default: [],
   },

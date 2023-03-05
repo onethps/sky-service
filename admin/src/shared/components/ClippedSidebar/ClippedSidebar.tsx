@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IncomeProductModal } from 'features/HomePage/ui/IncomeProductModal/IncomeProductModal';
+import { IncomeProductModal } from 'features/HomePage/components/IncomeProduct';
 
 import MailIcon from '@mui/icons-material/Mail';
 import InboxIcon from '@mui/icons-material/MoveToInbox';

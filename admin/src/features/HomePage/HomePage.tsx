@@ -1,37 +1,14 @@
-import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import { useAppDispatch } from 'shared/hooks/redux-hooks';
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-} from '@mui/material';
-
-import { fetchProducts } from '../ProductsPage/bll/middleware/products';
+import { Box, Card, CardContent, Container, Stack, Typography } from '@mui/material';
 
 import {
   linearChartOptions,
   pieChartOptions,
   splineChartOptions,
 } from './constants/chart.options';
-import { IncomeProductModal } from './ui/IncomeProductModal/IncomeProductModal';
 
 export const HomePage = () => {
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => setOpen(true);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
-
   return (
     <Container>
       <Stack gap="50px">

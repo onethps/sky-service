@@ -1,6 +1,6 @@
 import React from 'react';
 import { updateProduct } from 'features/ProductsPage/bll/middleware/products';
-import { ProductType } from 'features/ProductsPage/bll/types';
+import { IProduct } from 'interfaces/product.interfaces';
 import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 
 import { Alert, AlertProps, Box, Snackbar } from '@mui/material';
@@ -24,8 +24,8 @@ export const WarehousePage = () => {
     setSnackbar({ children: error.message, severity: 'error' });
   }, []);
 
-  const processRowUpdate = (newRow: GridRowModel<ProductType>) => {
-    const data = dispatch(updateProduct({ id: newRow._id!, product: newRow })).unwrap();
+  const processRowUpdate = (newRow: GridRowModel<IProduct>) => {
+    const data = dispatch(updateProduct({ id: newRow.id!, product: newRow })).unwrap();
     setSnackbar({ children: 'Price successfully saved', severity: 'success' });
     return data.then((res) => res);
   };
@@ -48,7 +48,7 @@ export const WarehousePage = () => {
         columns={columns}
         rows={products}
         processRowUpdate={processRowUpdate}
-        getRowId={(row: ProductType) => row._id!}
+        getRowId={(row: IProduct) => row.id!}
         onProcessRowUpdateError={handleProcessRowUpdateError}
         experimentalFeatures={{ newEditingApi: true }}
       />

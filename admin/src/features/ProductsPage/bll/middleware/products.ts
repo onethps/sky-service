@@ -1,10 +1,10 @@
-import { ProductType } from 'features/ProductsPage/bll/types';
-import { productsApi } from 'features/ProductsPage/dal/products-api';
+import { productsApi } from 'features/ProductsPage/api/products-api';
+import { IProduct } from 'interfaces/product.interfaces';
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchProducts = createAsyncThunk<
-  ProductType[],
+  IProduct[],
   undefined,
   {
     rejectValue: string;
@@ -19,14 +19,14 @@ export const fetchProducts = createAsyncThunk<
 });
 
 export const addProduct = createAsyncThunk<
-  ProductType,
-  { product: ProductType },
+  IProduct,
+  { product: IProduct },
   {
     rejectValue: string;
   }
->('products/addProduct', async (param: { product: ProductType }, { rejectWithValue }) => {
+>('products/addProduct', async ({ product }, { rejectWithValue }) => {
   try {
-    const res = await productsApi.addProduct(param.product);
+    const res = await productsApi.addProduct(product);
     return res.data;
   } catch (error) {
     return rejectWithValue(error as string);
@@ -34,8 +34,8 @@ export const addProduct = createAsyncThunk<
 });
 
 export const updateProduct = createAsyncThunk<
-  ProductType,
-  { id: string; product: ProductType },
+  IProduct,
+  { id: string; product: IProduct },
   {
     rejectValue: string;
   }
@@ -49,8 +49,8 @@ export const updateProduct = createAsyncThunk<
 });
 
 export const updateProducts = createAsyncThunk<
-  ProductType[],
-  { products: ProductType[] },
+  IProduct[],
+  { products: IProduct[] },
   {
     rejectValue: string;
   }

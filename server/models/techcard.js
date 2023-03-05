@@ -5,23 +5,22 @@ const TechCardSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  modName: {
+  ingredients: {
+    type: Array,
+    default: [],
+  },
+  name: {
     type: String,
     required: true,
   },
-  id: String,
-  modTables: {
-    type: Array,
-  },
-  categoryPerPriceMod: String,
-  netPriceMod: {
+  unit: {
     type: String,
   },
-  priceMod: {
-    type: String,
+  percent: {
+    type: Number,
   },
-  marginPricePercentMod: {
-    type: String,
+  price: {
+    type: Number,
   },
 });
 

@@ -15,8 +15,8 @@ export const createProduct = async (req, res, next) => {
 
 export const updateProduct = async (req, res, next) => {
   try {
-    const video = await Product.findById(req.params.id);
-    if (!video) return next(404, "Not found Product");
+    const product = await Product.findById(req.params.id);
+    if (!product) return next(404, "Not found Product");
 
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -73,7 +73,8 @@ export const findProduct = async (req, res, next) => {
 
 export const getAllProducts = async (req, res, next) => {
   try {
-    let products = await Product.find().sort({ createdAt: -1 });
+    const products = await Product.find().sort({ createdAt: -1 });
+    console.log(req.body);
     res.status(200).json(products);
   } catch (err) {
     next(err);

@@ -1,5 +1,5 @@
 import { ChangeEvent, FC } from 'react';
-import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
+import { TechCardType } from 'features/ProductsPage/types/types';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'utlis/helpers';
 
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
-import { ModTable } from './Table/ModTable';
+import { ModTable } from './ModTable';
 
 const greyBg = grey[200];
 

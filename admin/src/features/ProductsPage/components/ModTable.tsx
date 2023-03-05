@@ -1,8 +1,8 @@
 import { ChangeEvent, FC } from 'react';
-import { ProductType } from 'features/ProductsPage/bll/types';
-import { categories } from 'features/ProductsPage/ui/TechCard/Table/categories';
-import { optionsPriceFor } from 'features/ProductsPage/ui/TechCard/TechCard';
-import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
+import { optionsPriceFor } from 'features/ProductsPage/components/TechCard';
+import { categories } from 'features/ProductsPage/constants/categories.data';
+import { TechCardType } from 'features/ProductsPage/types/types';
+import { IProduct } from 'interfaces/product.interfaces';
 import { useAppSelector } from 'shared/hooks/redux-hooks';
 import { calcNetValuePerHungeredGram, calcNetValuePerPortion } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
@@ -86,7 +86,7 @@ export const ModTable: FC<ModTableType> = ({
     const product = products.filter((el) => el.name === newValue)[0];
     const values: any = [...initTechCardList];
     values[techCardIndex].tablesMod[tabIndex]['name'] = newValue;
-    values[techCardIndex].tablesMod[tabIndex]['price'] = product.netPrice;
+    values[techCardIndex].tablesMod[tabIndex]['price'] = product.price;
     setInitTechCardList(values);
   };
 
@@ -139,9 +139,7 @@ export const ModTable: FC<ModTableType> = ({
                 <Autocomplete
                   value={row.name}
                   defaultValue={null}
-                  options={
-                    products.length ? products.map((el: ProductType) => el.name) : [' ']
-                  }
+                  options={products.length ? products.map((el: IProduct) => el.name) : []}
                   onChange={(event, newValue) => handleName(event, newValue, index)}
                   renderInput={(params) => (
                     <TextField {...params} label={'Name'} error={!row.name} />

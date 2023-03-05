@@ -1,40 +1,20 @@
 import { FC, useEffect, useState } from 'react';
+import { unitOptions } from 'features/HomePage/constants/constants';
 import { addProduct } from 'features/ProductsPage/bll/middleware/products';
-import { ProductType } from 'features/ProductsPage/bll/types';
-import { ProductTypes } from 'features/ProductsPage/utils/constants';
+import { IProduct } from 'interfaces/product.interfaces';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
-import { inSaleStatus } from 'types';
+import { generateNewProductField } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Box, Button, DialogActions, Grid, TextField } from '@mui/material';
-
-import { unitOptions } from './constants';
+import { Box, Button, DialogActions, TextField } from '@mui/material';
 
 type NewProductModalType = {
   open: boolean;
   setOpen: (value: boolean) => void;
   index: number;
-  setNewProductInTableRow: (index: number, newProduct: ProductType) => void;
-};
-
-const generateNewProductFields = () => {
-  return {
-    productId: uuidv4(),
-    name: '',
-    productType: 'one' as ProductTypes,
-    category: '--',
-    inSale: 'yes' as inSaleStatus,
-    netPrice: 0,
-    marginPrice: 0,
-    price: 0,
-    quantity: 1,
-    unit: 'шт',
-    minQuantity: 0,
-    weight: '',
-    mod: [],
-  };
+  setNewProductInTableRow: (index: number, newProduct: IProduct) => void;
 };
 
 export const NewProductModal: FC<NewProductModalType> = ({
@@ -47,11 +27,12 @@ export const NewProductModal: FC<NewProductModalType> = ({
 
   const products = useAppSelector((state) => state.products.products);
 
-  const [state, setState] = useState<ProductType>(generateNewProductFields());
+  const [product, setProduct] = useState<IProduct>(generateNewProductField());
 
   const handleInputs = (event: any) => {
-    setState({
-      ...state,
+    setProduct({
+      ...product,
+      id: uuidv4(),
       [event.target.name]: Number(event.target.value)
         ? +event.target.value
         : event.target.value,
@@ -63,10 +44,10 @@ export const NewProductModal: FC<NewProductModalType> = ({
   };
 
   const handleAddProduct = () => {
-    if (state.name === '' || state.price === 0) {
+    if (product.name === '' || product.price === 0) {
       return;
     }
-    dispatch(addProduct({ product: state }))
+    dispatch(addProduct({ product }))
       .unwrap()
       .then(() => {
         setOpen(false);
@@ -75,7 +56,7 @@ export const NewProductModal: FC<NewProductModalType> = ({
   };
 
   useEffect(() => {
-    setNewProductInTableRow(index, state);
+    setNewProductInTableRow(index, product);
   }, [products]);
 
   return (
@@ -96,15 +77,15 @@ export const NewProductModal: FC<NewProductModalType> = ({
           <TextField
             label={'Наименование'}
             name={'name'}
-            value={state.name}
+            value={product.name}
             onChange={handleInputs}
-            error={!state.name}
+            error={!product.name}
           />
 
           <CustomSelect
             label={'Категория'}
             name={'category'}
-            value={state.category}
+            value={product.category}
             onChange={handleInputs}
             menuItems={[{ id: '1', value: '--' }]}
           />
@@ -112,16 +93,17 @@ export const NewProductModal: FC<NewProductModalType> = ({
           <CustomSelect
             label={'Единица измерения'}
             name="unit"
-            value={state.unit}
+            value={product.unit}
             onChange={handleInputs}
             menuItems={unitOptions}
           />
 
-          {state.unit === 'шт.' ? (
+          {product.unit === 'шт' ? (
             <TextField
+              variant="outlined"
               label={'Вес штуки'}
               name={'weight'}
-              value={state.weight}
+              value={product.weight}
               onChange={handleInputs}
               InputProps={{
                 endAdornment: 'гр.',
@@ -132,9 +114,9 @@ export const NewProductModal: FC<NewProductModalType> = ({
           <TextField
             label="Себестоимость"
             name={'price'}
-            value={state.price}
+            value={product.price}
             onChange={handleInputs}
-            error={!state.price}
+            error={!product.price}
             InputProps={{
               endAdornment: '₴',
             }}
@@ -143,10 +125,10 @@ export const NewProductModal: FC<NewProductModalType> = ({
           <TextField
             label="Mинимальный остаток"
             name={'minQuantity'}
-            value={state.minQuantity}
+            value={product.minQuantity}
             onChange={handleInputs}
             InputProps={{
-              endAdornment: state.unit,
+              endAdornment: product.unit,
             }}
           />
         </Box>

@@ -1,17 +1,14 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { addProduct, updateProduct } from 'features/ProductsPage/bll/middleware/products';
-import {
-  EDIT_PRODUCT_TYPES,
-  PRODUCT_TYPES,
-  ProductType,
-} from 'features/ProductsPage/bll/types';
-import { TechCard } from 'features/ProductsPage/ui/TechCard/TechCard';
-import { TechCardType } from 'features/ProductsPage/ui/TechCard/types';
-import { ProductTypes } from 'features/ProductsPage/utils/constants';
+import { EDIT_PRODUCT_TYPES, PRODUCT_TYPES } from 'features/ProductsPage/bll/types';
+import { TechCard } from 'features/ProductsPage/components/TechCard';
+import { TechCardType } from 'features/ProductsPage/types/types';
+import { IProduct } from 'interfaces/product.interfaces';
 import { CustomRadioGroup } from 'shared/components/CustomRadioGroup/CustomRadioGroup';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 import { useAppDispatch } from 'shared/hooks/redux-hooks';
+import { generateNewProductField } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -37,23 +34,8 @@ import {
   QUANTITY_LABEL,
   UNIT_VALUE_LABEL,
   unitValues,
-} from './costants';
-import { modalStyles } from './styles';
-
-const initProduct: ProductType = {
-  productId: uuidv4(),
-  name: '',
-  productType: PRODUCT_TYPES[0].title as ProductTypes,
-  category: '--',
-  inSale: 'yes',
-  quantity: 0,
-  unit: 'шт.',
-  minQuantity: 0,
-  netPrice: 0,
-  marginPrice: 0,
-  price: 0,
-  mod: [],
-};
+} from '../constants/constants';
+import { modalStyles } from '../styles/styles';
 
 const initTechCard: TechCardType = {
   productId: '',
@@ -68,29 +50,31 @@ const initTechCard: TechCardType = {
   marginPricePercentMod: 0,
 };
 
-interface EditProductModalType {
+interface EditProductModalProps {
   open: boolean;
   setOpen: (v: boolean) => void;
-  currentProduct: ProductType | null;
+  currentProduct: IProduct | null;
 }
 
-const EditProductModal: FC<EditProductModalType> = ({
+type ProductTypeWithFields = IProduct & { marginPrice: number };
+
+const EditProductModal: FC<EditProductModalProps> = ({
   open,
   setOpen,
   currentProduct,
 }) => {
-  const [initProductCardState, setInitProductCardState] = useState<ProductType>({
-    ...initProduct,
-  });
+  const dispatch = useAppDispatch();
 
-  console.log(initProductCardState);
+  const [initProductCardState, setInitProductCardState] = useState<ProductTypeWithFields>(
+    { ...generateNewProductField(), marginPrice: 0 },
+  );
 
   const [initTechCardList, setInitTechCardList] = useState<TechCardType[]>([
     { ...initTechCard },
   ]);
 
-  const dispatch = useAppDispatch();
-  const isTechCardCategory = initProductCardState.productType === PRODUCT_TYPES[1].title;
+  const isTechCardCategory = initProductCardState.type === 'mod';
+
   const toggleModal = () => setOpen(false);
 
   const removeTechCard = (id: string) => {
@@ -130,7 +114,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const percent = Number(event.target.value);
-    const netPrice = Number(initProductCardState.netPrice);
+    const netPrice = Number(initProductCardState.price);
 
     const calculatePercent: number = +((netPrice / 100) * percent + netPrice).toFixed(2);
 
@@ -145,7 +129,7 @@ const EditProductModal: FC<EditProductModalType> = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const marginPrice = Number(event.target.value);
-    const netCost = Number(initProductCardState.netPrice);
+    const netCost = Number(initProductCardState.price);
     const calculateMarginPrice: number = +(
       ((marginPrice - netCost) / netCost) *
       100
@@ -163,21 +147,25 @@ const EditProductModal: FC<EditProductModalType> = ({
       return;
     }
     if (isTechCardCategory) {
-      dispatch(
-        addProduct({
-          product: { ...initProductCardState, mod: [...initTechCardList] },
-        }),
-      );
+      return;
+      // TODO:// FIX FETCHING WITH ISTECHCARD
+      // dispatch(
+      //   addProduct({
+      //     product: { ...initProductCardState, mod: [...initTechCardList] },
+      //   }),
+      // );
     } else {
       dispatch(addProduct({ product: initProductCardState }));
     }
     setOpen(false);
   };
 
-  const handleUpdateProduct = () =>
+  const handleUpdateProduct = () => {
+    console.log('update PD', initProductCardState);
     dispatch(
-      updateProduct({ id: initProductCardState._id!, product: initProductCardState }),
+      updateProduct({ id: initProductCardState.id!, product: initProductCardState }),
     );
+  };
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
     const check = event.target.checked;
@@ -187,23 +175,21 @@ const EditProductModal: FC<EditProductModalType> = ({
     });
   };
 
-  useEffect(() => {
-    if (!currentProduct) {
-      setInitProductCardState({
-        ...initProduct,
-      });
-      return;
-    }
+  // useEffect(() => {
+  //   if (!currentProduct) {
+  //     setInitProductCardState({ ...generateNewProductField(), marginPrice: 0 });
+  //     return;
+  //   }
 
-    setInitProductCardState(currentProduct);
-  }, [currentProduct]);
+  //   setInitProductCardState(currentProduct);
+  // }, [currentProduct]);
 
   return (
     <ModalWrapper modalTitle="Карточка" open={open} setOpen={toggleModal}>
       <Box sx={modalStyles.wrapper}>
         <CustomRadioGroup
           name="productType"
-          value={initProductCardState.productType}
+          value={initProductCardState.type}
           radioItems={EDIT_PRODUCT_TYPES}
           onChange={handleInputs}
         />
@@ -225,8 +211,8 @@ const EditProductModal: FC<EditProductModalType> = ({
           label={IN_SALE_CHECKBOX_LABEL}
           control={
             <Checkbox
-              value={initProductCardState.inSale}
-              checked={initProductCardState.inSale === 'yes'}
+              value={initProductCardState.saleStatus}
+              checked={initProductCardState.saleStatus}
               onChange={handleCheckBox}
             />
           }
@@ -278,7 +264,7 @@ const EditProductModal: FC<EditProductModalType> = ({
               <TextField
                 label={NET_COST}
                 name={'netPrice'}
-                value={initProductCardState.netPrice}
+                value={initProductCardState.price}
                 onChange={handleChangeNetPrice}
                 InputProps={{
                   endAdornment: '₴',
