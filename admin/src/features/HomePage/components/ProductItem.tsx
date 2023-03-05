@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { IProduct } from 'interfaces/product.interfaces';
-import { Controller } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue } from 'react-hook-form';
 import { useAppSelector } from 'shared/hooks/redux-hooks';
 
 import { Autocomplete, Box, Stack, TextField } from '@mui/material';
@@ -23,10 +23,23 @@ const GroupItems = styled('ul')({
 interface ProductItemProps {
   control: any;
   index: number;
+  updateInputs: any;
 }
 
-export const ProductItem: FC<ProductItemProps> = ({ control, index }) => {
+export const ProductItem: FC<ProductItemProps> = ({ control, index, updateInputs }) => {
   const products = useAppSelector((state) => state.products.products);
+
+  const handleAutoComplete = (data: any, onChange: (...event: any[]) => void) => {
+    const product = products.find((product) => product.name === data);
+    onChange(data);
+    if (!product) return;
+    updateInputs(index, {
+      quantity: product.quantity,
+      name: product.name,
+      price: product.price,
+      unit: product.unit,
+    });
+  };
 
   return (
     <Stack flexDirection="row" width="100%" gap="5px">
@@ -37,11 +50,14 @@ export const ProductItem: FC<ProductItemProps> = ({ control, index }) => {
           <Autocomplete
             sx={{
               flexGrow: 1,
+              minWidth: 200,
             }}
             renderInput={(params) => <TextField {...params} label={'Наименование'} />}
             groupBy={(o) => ''}
-            options={products.length ? products.map((el: IProduct) => el.name) : [' ']}
-            onChange={(_, data) => onChange(data.value)}
+            options={
+              products.length ? [...products.map((el: IProduct) => el.name), ''] : [' ']
+            }
+            onChange={(_, data) => handleAutoComplete(data, onChange)}
             value={value}
             renderGroup={(params) => (
               <Box key={params.children?.toString()}>
@@ -53,18 +69,27 @@ export const ProductItem: FC<ProductItemProps> = ({ control, index }) => {
         )}
       />
       <Controller
-        name={`products.${index}.count`}
+        name={`products.${index}.quantity`}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextField
             sx={{
-              flex: 0.5,
+              flex: 0.3,
+              minWidth: 100,
             }}
             onChange={onChange}
             value={value}
             label={'К-лво'}
             InputProps={{
-              endAdornment: <InputAdornment position="end">кг</InputAdornment>,
+              endAdornment: (
+                <Controller
+                  name={`products.${index}.unit`}
+                  control={control}
+                  render={({ field: { value } }) => (
+                    <InputAdornment position="end">{value}</InputAdornment>
+                  )}
+                />
+              ),
             }}
           />
         )}
@@ -73,21 +98,42 @@ export const ProductItem: FC<ProductItemProps> = ({ control, index }) => {
         name={`products.${index}.price`}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <TextField onChange={onChange} value={value} label={'Цена'} />
+          <TextField
+            sx={{
+              minWidth: 100,
+            }}
+            onChange={onChange}
+            value={value}
+            label={'Цена'}
+          />
         )}
       />
       <Controller
         name={`products.${index}.sum`}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <TextField onChange={onChange} value={value} label={'Сума'} />
+          <TextField
+            sx={{
+              minWidth: 100,
+            }}
+            onChange={onChange}
+            value={value}
+            label={'Сума'}
+          />
         )}
       />
       <Controller
         name={`products.${index}.netPrice`}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <TextField onChange={onChange} value={value} label={'Цена розн.'} />
+          <TextField
+            sx={{
+              minWidth: 100,
+            }}
+            onChange={onChange}
+            value={value}
+            label={'Цена розн.'}
+          />
         )}
       />
     </Stack>

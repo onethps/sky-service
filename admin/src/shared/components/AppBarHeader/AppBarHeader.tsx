@@ -62,7 +62,7 @@ function AppBarHeader() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            SKY SERVICE
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
