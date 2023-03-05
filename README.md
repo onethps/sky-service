@@ -4,4 +4,4 @@
 
 ## Screenshots
 
-![App Screenshot](https://user-images.githubusercontent.com/40173213/222983966-f6a4e9a1-122f-488c-b545-fcdc455d83be.png)
+![App Screenshot](https://user-images.githubusercontent.com/40173213/222984062-4b8d4e69-29ee-4f19-a303-f9f99981aa4e.png)
