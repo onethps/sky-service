@@ -1,57 +1,60 @@
 import React, { useState } from 'react';
-import { walletOptions, WalletOptionsType } from 'features/HomePage/constants/constants';
+import { Controller } from 'react-hook-form';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 
 import { SelectChangeEvent } from '@mui/material';
 
 import { ChooseWalletModal } from './ChooseWalletModal';
-import { BalanceType } from './IncomeProduct';
 
 interface WalletOptionsProps {
-  state: BalanceType;
+  wallet: any;
+  setWallet: (v: any) => void;
+  isShowedWalletInput: boolean;
 }
 
-export const WalletOptions: React.FC<WalletOptionsProps> = ({ state }) => {
-  const [selectWalletOptions, setSelectWalletOptions] =
-    useState<WalletOptionsType[]>(walletOptions);
+export const optionsInitWalletSelect = [
+  { id: '1', value: 'Нет' },
+  { id: '2', value: 'Выбрать счет' },
+];
 
-  const [selectWalletValue, setSelectWalletValue] = React.useState<string>(
-    selectWalletOptions[0].value,
-  );
+export const WalletOptions: React.FC<WalletOptionsProps> = ({
+  wallet,
+  setWallet,
+  isShowedWalletInput,
+}) => {
+  const [options, setOptions] = useState(optionsInitWalletSelect);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleSelectWallet = (event: SelectChangeEvent<unknown>) => {
-    setSelectWalletValue(event.target.value as string);
+  const handleSelectWallet = (newValue: string) => {
+    if (newValue === 'Выбрать счет') {
+      setIsOpen(true);
+      return;
+    }
 
-    // TODO: FIX THIS BUG
-    setSelectWalletOptions(() => {
-      // rewrite third element with new balance value (no needed list of balances)
-      const copy = [...walletOptions];
-      const newValue = {
-        id: (copy.length + 1).toString(),
-        value: event.target.value as string,
-      };
-      copy[1] = newValue;
-      return copy;
-    });
+    setWallet(newValue);
+
+    const tempOptions = [...options];
+    tempOptions[2] = { id: (tempOptions.length + 1).toString(), value: newValue };
+    setOptions(tempOptions);
   };
 
   return (
     <>
       <ChooseWalletModal
-        selectWalletValue={selectWalletValue}
-        chooseWalletValue={selectWalletOptions[1].value}
-        setSelectWalletValue={setSelectWalletValue}
-        selectWalletOptions={selectWalletOptions}
-        setSelectWalletOptions={setSelectWalletOptions}
+        isOpenModal={isOpen}
+        setIsOpenModal={setIsOpen}
+        handleInputValue={handleSelectWallet}
       />
-      {state.debitMoney === 'yes' ? (
+      {isShowedWalletInput && (
         <CustomSelect
-          name={'debitMoney'}
-          menuItems={selectWalletOptions}
-          value={selectWalletValue}
-          onChange={handleSelectWallet}
+          sx={{
+            maxWidth: 245,
+          }}
+          menuItems={options}
+          value={wallet}
+          onChange={(event) => handleSelectWallet(event.target.value as string)}
         />
-      ) : null}
+      )}
     </>
   );
 };

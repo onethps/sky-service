@@ -21,16 +21,6 @@ export const unitOptions = [
   { id: '5', value: 'мл.' },
 ];
 
-export type WalletOptionsType = {
-  id: string;
-  value: string;
-};
-
-export const walletOptions = [
-  { id: '1', value: 'Нет' },
-  { id: '2', value: 'Выбрать счет' },
-];
-
 export const balanceMock = [
   {
     id: 1,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   debitMoneyOptions,
@@ -27,6 +27,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker as MuiDesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 import { ProductItem } from './ProductItem';
+import { WalletOptions } from './WalletOptions';
 
 export type BalanceType = {
   id: string;
@@ -45,8 +46,9 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
   setOpen,
 }) => {
   const dispatch = useAppDispatch();
+  const [wallet, setWallet] = useState('Нет');
 
-  const { handleSubmit, reset, control } = useForm({
+  const { handleSubmit, control, watch } = useForm({
     defaultValues: {
       date: dayjs(),
       time: dayjs(),
@@ -61,6 +63,8 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
     control,
     name: 'products',
   });
+
+  const watchWalletInputOption = watch('debitMoney');
 
   const onSubmit = (data: any) => console.log(data);
 
@@ -116,6 +120,9 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
                   control={control}
                   render={({ field: { onChange, value } }) => (
                     <CustomSelect
+                      sx={{
+                        maxWidth: 245,
+                      }}
                       value={value}
                       onChange={onChange}
                       menuItems={optionsForSpendCategory}
@@ -143,7 +150,12 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
               </Stack>
 
               {/* wallet flow */}
-              {/* <WalletOptions state={state} /> */}
+
+              <WalletOptions
+                wallet={wallet}
+                setWallet={setWallet}
+                isShowedWalletInput={watchWalletInputOption === 'yes'}
+              />
 
               <Typography fontWeight="500" variant="h6">
                 Список товаров

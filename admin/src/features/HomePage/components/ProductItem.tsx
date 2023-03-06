@@ -34,6 +34,7 @@ export const ProductItem: FC<ProductItemProps> = ({ control, index, updateInputs
     onChange(data);
     if (!product) return;
     updateInputs(index, {
+      id: product.id,
       quantity: product.quantity,
       name: product.name,
       price: product.price,
