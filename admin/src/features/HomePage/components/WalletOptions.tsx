@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { Controller } from 'react-hook-form';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
-
-import { SelectChangeEvent } from '@mui/material';
 
 import { ChooseWalletModal } from './ChooseWalletModal';
 
@@ -30,9 +27,7 @@ export const WalletOptions: React.FC<WalletOptionsProps> = ({
       setIsOpen(true);
       return;
     }
-
     setWallet(newValue);
-
     const tempOptions = [...options];
     tempOptions[2] = { id: (tempOptions.length + 1).toString(), value: newValue };
     setOptions(tempOptions);

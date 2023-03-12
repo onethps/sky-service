@@ -1,6 +1,4 @@
-import React, { FC, useState } from 'react';
-import { NewProductModal } from 'features/HomePage/components/NewProductModal';
-import EditProductModal from 'features/ProductsPage/components/EditProductModal';
+import { FC, useState } from 'react';
 import { IProduct } from 'interfaces/product.interfaces';
 import { useLocation } from 'react-router-dom';
 import { routes } from 'router/constants';

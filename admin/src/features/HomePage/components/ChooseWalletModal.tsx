@@ -1,9 +1,36 @@
-import React, { FC, useEffect, useState } from 'react';
-import { balanceMock, walletFields } from 'features/HomePage/constants/constants';
+import React, { FC } from 'react';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 
 import { Button, DialogActions, Grid } from '@mui/material';
 import { DataGrid, GridRowParams } from '@mui/x-data-grid';
+
+export const walletFields = [
+  {
+    field: 'name',
+    headerName: 'Наименование',
+    minWidth: 300,
+    flex: 1,
+  },
+  {
+    field: 'balance',
+    headerName: 'Баланс',
+    minWidth: 300,
+    flex: 1,
+  },
+];
+
+export const balanceMock = [
+  {
+    id: 1,
+    name: 'Balance1',
+    balance: 222,
+  },
+  {
+    id: 2,
+    name: 'Balance2',
+    balance: 33334,
+  },
+];
 
 export interface IChooseWalletProps {
   handleInputValue: (v: string) => void;

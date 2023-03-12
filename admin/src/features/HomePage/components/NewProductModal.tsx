@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { unitOptions } from 'features/HomePage/constants/constants';
 import { addProduct } from 'features/ProductsPage/bll/middleware/products';
 import { IProduct } from 'interfaces/product.interfaces';
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
@@ -9,6 +8,8 @@ import { generateNewProductField } from 'utlis/helpers';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Box, Button, DialogActions, TextField } from '@mui/material';
+
+import { unitOptions } from '../constants/constants';
 
 type NewProductModalType = {
   open: boolean;

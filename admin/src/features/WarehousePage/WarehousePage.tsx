@@ -3,11 +3,23 @@ import { updateProduct } from 'features/ProductsPage/bll/middleware/products';
 import { IProduct } from 'interfaces/product.interfaces';
 import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 
-import { Alert, AlertProps, Box, Snackbar } from '@mui/material';
+import { Alert, AlertProps, Box, Snackbar, styled } from '@mui/material';
 import { red, yellow } from '@mui/material/colors';
 import { DataGrid, GridRowModel } from '@mui/x-data-grid';
 
 import { columns } from './TableWarehouseConfig';
+
+const DataGridWrapperStyle = styled(Box)(({ theme }) => ({
+  height: 500,
+  backgroundColor: 'white',
+  '& .data-grid-warehouse-quantity-color': {
+    backgroundColor: yellow[600],
+  },
+  '& .data-grid-warehouse-price-color': {
+    backgroundColor: red[600],
+    color: 'white',
+  },
+}));
 
 export const WarehousePage = () => {
   const products = useAppSelector((state) => state.products.products);
@@ -31,19 +43,7 @@ export const WarehousePage = () => {
   };
 
   return (
-    <Box
-      sx={{
-        height: 500,
-        backgroundColor: 'white',
-        '& .data-grid-warehouse-quantity-color': {
-          backgroundColor: yellow[600],
-        },
-        '& .data-grid-warehouse-price-color': {
-          backgroundColor: red[600],
-          color: 'white',
-        },
-      }}
-    >
+    <DataGridWrapperStyle>
       <DataGrid
         columns={columns}
         rows={products}
@@ -62,6 +62,6 @@ export const WarehousePage = () => {
           <Alert {...snackbar} onClose={handleCloseSnackbar} />
         </Snackbar>
       )}
-    </Box>
+    </DataGridWrapperStyle>
   );
 };

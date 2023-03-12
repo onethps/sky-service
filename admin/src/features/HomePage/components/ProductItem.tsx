@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { IProduct } from 'interfaces/product.interfaces';
 import { Control, Controller, UseFormSetValue } from 'react-hook-form';
 import { useAppSelector } from 'shared/hooks/redux-hooks';
@@ -24,9 +24,17 @@ interface ProductItemProps {
   control: any;
   index: number;
   updateInputs: any;
+  watch: any;
+  setValue: any;
 }
 
-export const ProductItem: FC<ProductItemProps> = ({ control, index, updateInputs }) => {
+export const ProductItem: FC<ProductItemProps> = ({
+  control,
+  index,
+  updateInputs,
+  watch,
+  setValue,
+}) => {
   const products = useAppSelector((state) => state.products.products);
 
   const handleAutoComplete = (data: any, onChange: (...event: any[]) => void) => {
@@ -41,6 +49,19 @@ export const ProductItem: FC<ProductItemProps> = ({ control, index, updateInputs
       unit: product.unit,
     });
   };
+
+  const watchPrice = watch([`products.${index}.quantity`, `products.${index}.price`]);
+
+  const calculatePrice = (value1: string, value2: string) => {
+    if (!value1 || !value2) return;
+    return +value1 * +value2;
+  };
+
+  useEffect(() => {
+    if (watchPrice) {
+      setValue(`products.${index}.sum`, calculatePrice(watchPrice[0], watchPrice[1]));
+    }
+  }, [watchPrice]);
 
   return (
     <Stack flexDirection="row" width="100%" gap="5px">

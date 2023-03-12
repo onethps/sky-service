@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IProduct } from 'interfaces/product.interfaces';
-import { useAppDispatch, useAppSelector } from 'shared/hooks/redux-hooks';
 
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { DataGrid, GridCellParams } from '@mui/x-data-grid';
 
-import { fetchProducts } from './bll/middleware/products';
 import EditProductModal from './components/EditProductModal';
 import { ProductColFields } from './constants/constants';
+import { useFetchProducts } from './hooks/useFetchProducts';
+
+const DataGridWrapperStyle = styled(Box)(({ theme }) => ({
+  '& .data-grid-rows--Filled': {
+    bgcolor: grey[100],
+    '&:hover': {
+      bgcolor: grey[100],
+    },
+  },
+}));
 
 export const ProductsPage = () => {
-  const products = useAppSelector((state) => state.products.products);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
+  const { products } = useFetchProducts();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -45,16 +47,7 @@ export const ProductsPage = () => {
   };
 
   return (
-    <Box
-      sx={{
-        '& .data-grid-rows--Filled': {
-          bgcolor: grey[100],
-          '&:hover': {
-            bgcolor: grey[100],
-          },
-        },
-      }}
-    >
+    <DataGridWrapperStyle>
       <DataGrid
         sx={{ minHeight: 500, minWidth: 1000, backgroundColor: 'white' }}
         getRowId={(row: IProduct) => row.id}
@@ -74,6 +67,6 @@ export const ProductsPage = () => {
         setOpen={setOpenModal}
         currentProduct={currentProductCard}
       />
-    </Box>
+    </DataGridWrapperStyle>
   );
 };

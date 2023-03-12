@@ -7,8 +7,11 @@ import {
   pieChartOptions,
   splineChartOptions,
 } from './constants/chart.options';
+import { useFetchShopData } from './hooks/useFetchShopData';
 
 export const HomePage = () => {
+  const { store } = useFetchShopData('64052aacfb4241b0b57d3997');
+  console.log(store);
   return (
     <Container>
       <Stack gap="50px">

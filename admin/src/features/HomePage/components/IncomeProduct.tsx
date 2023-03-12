@@ -9,13 +9,11 @@ import { CustomRadioGroup } from 'shared/components/CustomRadioGroup/CustomRadio
 import { CustomSelect } from 'shared/components/CustomSelect/CustomSelect';
 import { ModalWrapper } from 'shared/components/ModalWrapper/ModalWrapper';
 import { useAppDispatch } from 'shared/hooks/redux-hooks';
-import { v4 as uuidv4 } from 'uuid';
 
 import {
   Box,
   Button,
   DialogActions,
-  FormGroup,
   Grid,
   Stack,
   TextField,
@@ -48,12 +46,12 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
   const dispatch = useAppDispatch();
   const [wallet, setWallet] = useState('Нет');
 
-  const { handleSubmit, control, watch } = useForm({
+  const { handleSubmit, control, watch, setValue } = useForm({
     defaultValues: {
       date: dayjs(),
       time: dayjs(),
       spendCategory: '',
-      debitMoney: '',
+      debitMoney: 'yes',
       products: [{ name: '', quantity: '', price: '', sum: '', netPrice: '' }],
     },
     mode: 'onChange',
@@ -139,6 +137,7 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
                 <Controller
                   name={`debitMoney`}
                   control={control}
+                  defaultValue={'yes'}
                   render={({ field: { onChange, value } }) => (
                     <CustomRadioGroup
                       value={value}
@@ -166,7 +165,13 @@ export const IncomeProductModal: React.FC<IncomeProductModalProps> = ({
               <Box display="flex" gap={3} flexDirection="column">
                 {fields.map((field, index) => (
                   <Stack key={field.id} flexDirection="row">
-                    <ProductItem control={control} index={index} updateInputs={update} />
+                    <ProductItem
+                      control={control}
+                      watch={watch}
+                      setValue={setValue}
+                      index={index}
+                      updateInputs={update}
+                    />
                     <Button
                       variant="contained"
                       color="error"

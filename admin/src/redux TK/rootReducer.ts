@@ -1,5 +1,5 @@
+import { shopReducer } from 'features/HomePage/bll/shopSlice';
 import { productsReducer } from 'features/ProductsPage/bll/productsSlice';
-import { shopReducer } from 'redux TK/reducers/shop';
 
 import { combineReducers } from '@reduxjs/toolkit';
 

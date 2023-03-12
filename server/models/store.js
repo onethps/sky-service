@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 
 const StoreSchema = mongoose.Schema({
-  storeName: {
+  email: {
     type: String,
     required: true,
   },
-  adminId: {
+  name: {
+    type: String,
+    required: true,
+  },
+  password: {
     type: String,
     required: true,
   },

@@ -20,31 +20,3 @@ export const unitOptions = [
   { id: '4', value: 'л.' },
   { id: '5', value: 'мл.' },
 ];
-
-export const balanceMock = [
-  {
-    id: 1,
-    name: 'Balance1',
-    balance: 222,
-  },
-  {
-    id: 2,
-    name: 'Balance2',
-    balance: 33334,
-  },
-];
-
-export const walletFields = [
-  {
-    field: 'name',
-    headerName: 'Наименование',
-    minWidth: 300,
-    flex: 1,
-  },
-  {
-    field: 'balance',
-    headerName: 'Баланс',
-    minWidth: 300,
-    flex: 1,
-  },
-];
