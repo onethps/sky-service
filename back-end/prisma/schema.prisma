@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type ModsIngredients {
+  name     String
+  netto    Int
+  price    Float
+  quantity Int
+}
+
+model balances {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  balance Float
+  name    String
+  storeId stores @relation(fields: [id], references: [id])
+}
+
+model mods {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  ingredients ModsIngredients[]
+  name        String
+  percent     Float
+  price       Float
+  productId   products          @relation(fields: [id], references: [id])
+  unit        String
+}
+
+model products {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  category    String
+  createdAt   DateTime @db.Date
+  minQuantity Int
+  modIds      Json?
+  name        String
+  percent     Int
+  price       Int
+  quantity    Int
+  saleStatus  Boolean
+  type        String
+  unit        String
+  mods        mods[]
+  storeId     stores   @relation(fields: [id], references: [id])
+}
+
+model stores {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  address  String
+  name     String
+  userId   users      @relation(fields: [id], references: [id])
+  balances balances[]
+  products products[]
+}
+
+model users {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
+  name     String
+  password String
+  stores   stores[]
+}
