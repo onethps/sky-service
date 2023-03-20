@@ -10,13 +10,12 @@ import {
 import { useFetchShopData } from './hooks/useFetchShopData';
 
 export const HomePage = () => {
-  const { store } = useFetchShopData('64052aacfb4241b0b57d3997');
-  console.log(store);
+  // const { store } = useFetchShopData('64052aacfb4241b0b57d3997');
   return (
-    <Container>
-      <Stack gap="50px">
-        {/* sales chart  */}
-        <Box>
+    <Stack gap="50px">
+      {/* sales chart  */}
+      <Card elevation={0}>
+        <CardContent>
           <Typography
             textAlign="left"
             component="h1"
@@ -41,49 +40,49 @@ export const HomePage = () => {
             </CardContent>
           </Card>
           {/* pie charts */}
-        </Box>
-        <Box>
-          <Typography
-            textAlign="left"
-            component="h1"
-            variant="h4"
-            align="center"
-            marginBottom="20px"
+        </CardContent>
+      </Card>
+      <Box>
+        <Typography
+          textAlign="left"
+          component="h1"
+          variant="h4"
+          align="center"
+          marginBottom="20px"
+        >
+          Статистика
+        </Typography>
+        <Stack display="flex" flexDirection="row" gap="20px">
+          <Card
+            sx={{
+              flex: 1,
+            }}
           >
-            Статистика
-          </Typography>
-          <Stack display="flex" flexDirection="row" gap="20px">
-            <Card
-              sx={{
-                flex: 1,
-              }}
-            >
-              <CardContent>
-                <Chart
-                  type="donut"
-                  options={pieChartOptions}
-                  series={pieChartOptions.series}
-                  height="100%"
-                />
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                flex: 1,
-              }}
-            >
-              <CardContent>
-                <Chart
-                  type="area"
-                  options={splineChartOptions}
-                  series={splineChartOptions.series}
-                  height="100%"
-                />
-              </CardContent>
-            </Card>
-          </Stack>
-        </Box>
-      </Stack>
-    </Container>
+            <CardContent>
+              <Chart
+                type="donut"
+                options={pieChartOptions}
+                series={pieChartOptions.series}
+                height="100%"
+              />
+            </CardContent>
+          </Card>
+          <Card
+            sx={{
+              flex: 1,
+            }}
+          >
+            <CardContent>
+              <Chart
+                type="area"
+                options={splineChartOptions}
+                series={splineChartOptions.series}
+                height="100%"
+              />
+            </CardContent>
+          </Card>
+        </Stack>
+      </Box>
+    </Stack>
   );
 };

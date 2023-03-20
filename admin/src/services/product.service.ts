@@ -1,9 +1,9 @@
-import { IProduct } from 'interfaces/product.interfaces';
-import { instance } from 'services/config';
+import { IProduct } from './../interfaces/product.interfaces';
+import { instance } from './api.interceptor';
 
-export const productsApi = {
+export const ProductService = {
   getProducts() {
-    return instance.get<IProduct[]>('/products/');
+    return instance.get<IProduct[]>('/product/');
   },
   updateProduct(id: string, product: IProduct) {
     return instance.put<IProduct>(`/products/${id}`, product);

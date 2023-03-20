@@ -8,7 +8,7 @@ export class ProductController {
 	constructor(private readonly productService: ProductService) {}
 
 	@Get()
-	@Auth()
+	// @Auth()
 	async getAll() {
 		return this.productService.getAll()
 	}

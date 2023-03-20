@@ -9,9 +9,9 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { MainListItems, secondaryListItems } from './listItems';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
-export const ClippedDrawer = () => {
+export const Sidebar = () => {
   const [isToggledModal, setIsToggledModal] = React.useState(false);
   return (
     <>
@@ -24,7 +24,6 @@ export const ClippedDrawer = () => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            backgroundColor: grey[100],
             border: 'none',
           },
         }}

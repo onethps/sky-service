@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function AppBarHeader() {
+export function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -39,14 +39,13 @@ function AppBarHeader() {
   return (
     <AppBar
       position="fixed"
-      elevation={3}
+      elevation={0}
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
       <Container maxWidth="xl">
         <Toolbar sx={{ maxHeight: 40 }} disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -166,4 +165,3 @@ function AppBarHeader() {
     </AppBar>
   );
 }
-export default AppBarHeader;

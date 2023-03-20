@@ -1,4 +1,4 @@
-import { productsApi } from 'features/ProductsPage/api/products-api';
+import { ProductService } from 'features/ProductsPage/api/products-api';
 import { IProduct } from 'interfaces/product.interfaces';
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -11,7 +11,7 @@ export const fetchProducts = createAsyncThunk<
   }
 >('products/fetchProducts', async (_, { rejectWithValue }) => {
   try {
-    const res = await productsApi.getProducts();
+    const res = await ProductService.getProducts();
     return res.data;
   } catch (error) {
     return rejectWithValue(error as string);
@@ -26,7 +26,7 @@ export const addProduct = createAsyncThunk<
   }
 >('products/addProduct', async ({ product }, { rejectWithValue }) => {
   try {
-    const res = await productsApi.addProduct(product);
+    const res = await ProductService.addProduct(product);
     return res.data;
   } catch (error) {
     return rejectWithValue(error as string);
@@ -41,7 +41,7 @@ export const updateProduct = createAsyncThunk<
   }
 >('products/updateProduct', async ({ id, product }, { rejectWithValue }) => {
   try {
-    const res = await productsApi.updateProduct(id, product);
+    const res = await ProductService.updateProduct(id, product);
     return res.data;
   } catch (error) {
     return rejectWithValue(error as string);
@@ -56,7 +56,7 @@ export const updateProducts = createAsyncThunk<
   }
 >('products/updateProducts', async ({ products }, { rejectWithValue }) => {
   try {
-    const response = await productsApi.updateProducts(products);
+    const response = await ProductService.updateProducts(products);
     return response.data;
   } catch (error) {
     return rejectWithValue(error as string);

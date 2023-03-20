@@ -6,7 +6,11 @@ import { Layout } from 'shared/components/Layout/Layout';
 
 import { ProductsPage } from '../features/ProductsPage/ProductsPage';
 
-import { routes } from './constants';
+export const ROUTES = {
+  HOME: '/',
+  PRODUCTS_ALL: 'products/all',
+  WAREHOUSE: '/products/warehouse',
+};
 
 export const router = createBrowserRouter([
   {
@@ -14,8 +18,8 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: routes.PRODUCTS_ALL, element: <ProductsPage /> },
-      { path: routes.WAREHOUSE, element: <WarehousePage /> },
+      { path: ROUTES.PRODUCTS_ALL, element: <ProductsPage /> },
+      { path: ROUTES.WAREHOUSE, element: <WarehousePage /> },
     ],
   },
   {
